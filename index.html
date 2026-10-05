@@ -1863,7 +1863,8 @@ document.querySelectorAll('#drillSide button[data-deck]').forEach(button => {
 
 /* ---------------- keyboard ---------------- */
 document.addEventListener('keydown', e => {
-  if (document.getElementById('practiceView').hidden || document.querySelector('dialog[open]') || e.target.closest('input, textarea, select, button, a, [contenteditable="true"]')) return;
+  if (document.getElementById('practiceView').hidden || document.querySelector('dialog[open]') || e.target.closest('.app-menu, input, textarea, select, [contenteditable="true"]')) return;
+  if (e.key === ' ' && e.target.closest('button, a')) return;
   if (mode === 'speak'){
     if (e.key === ' '){ e.preventDefault(); T.running ? stopTimer() : startTimer(); }
     if (e.key === 'n' || e.key === 'N') document.getElementById('sNext')?.click();
