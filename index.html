@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Past tenses — swipe test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#22303F;
+    --ink-soft:#5C6B7A;
+    --line:#E3E1EA;
+    --paper:#FFFFFF;
+
+    --ps:#3C6E9F;   /* Past Simple      */
+    --pc:#2E8B77;   /* Past Continuous  */
+    --pp:#C98A2B;   /* Past Perfect     */
+    --pr:#E5574F;   /* Present Perfect  */
+
+    --yes:#2E8B77;
+    --no:#D2544C;
+
+    --r:22px;
+    --shadow:0 18px 50px -18px rgba(34,48,63,.35), 0 2px 6px rgba(34,48,63,.06);
+    --display:"Plus Jakarta Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      radial-gradient(120% 90% at 12% 0%,  #EAF1FB 0%, rgba(234,241,251,0) 60%),
+      radial-gradient(110% 85% at 92% 12%, #F6EEF8 0%, rgba(246,238,248,0) 62%),
+      radial-gradient(120% 100% at 60% 100%, #FDF0EA 0%, rgba(253,240,234,0) 65%),
+      linear-gradient(168deg,#F7F9FD 0%,#FAF7FB 55%,#FDF7F3 100%);
+    background-attachment:fixed;
+    display:flex; flex-direction:column;
+    min-height:100dvh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- shell ---------- */
+  .top{
+    padding:22px 20px 0;
+    display:flex; align-items:center; gap:14px;
+    max-width:620px; width:100%; margin:0 auto;
+  }
+  .rail{flex:1; height:4px; border-radius:99px; background:rgba(34,48,63,.10); overflow:hidden}
+  .rail i{display:block; height:100%; width:0%; border-radius:99px; background:var(--ink); transition:width .45s cubic-bezier(.2,.8,.2,1)}
+  .count{font-size:12px; font-variant-numeric:tabular-nums; letter-spacing:.04em; color:var(--ink-soft); white-space:nowrap}
+  .tally{display:flex; gap:8px; font-size:12px; font-weight:600; font-variant-numeric:tabular-nums}
+  .tally span{display:inline-flex; align-items:center; gap:5px; color:var(--ink-soft)}
+  .tally b{font-weight:700}
+  .pip{width:7px;height:7px;border-radius:50%}
+  .shuffle-btn{
+    font:inherit; font-size:12px; font-weight:700;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:99px; padding:8px 13px; cursor:pointer;
+    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+    white-space:nowrap;
+  }
+  .shuffle-btn:hover{background:#FAFAFC}
+  .shuffle-btn:active{transform:translateY(1px)}
+  .shuffle-btn:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+
+  main{flex:1; display:flex; align-items:center; justify-content:center; padding:14px 16px}
+  .stage{position:relative; width:100%; max-width:520px; height:min(540px,70dvh)}
+  .stage.speaking{height:min(620px,74dvh)}
+  .stage.reading{height:min(650px,76dvh)}
+
+  /* ---------- card ---------- */
+  .card{
+    position:absolute; inset:0;
+    background:var(--paper);
+    border-radius:var(--r);
+    box-shadow:var(--shadow);
+    padding:26px 26px 22px;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+    touch-action:pan-y;
+    will-change:transform;
+    border:1px solid rgba(227,225,234,.9);
+  }
+  .card::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:5px;
+    background:var(--accent,linear-gradient(90deg,var(--ps),var(--pc),var(--pp),var(--pr)));
+    opacity:1;
+  }
+  .card.behind{pointer-events:none}
+
+  .task{
+    font-size:11px; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .cardhead{display:flex; align-items:center; justify-content:space-between; gap:10px}
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 14px 8px 11px; border-radius:99px;
+    background:var(--tint,#EFF1F6); color:var(--accent,var(--ink));
+    font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+    line-height:1;
+  }
+  .badge svg{width:15px; height:15px; flex:none}
+  .qno{font-size:11px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:.08em; color:#C2BFCA}
+
+  .sentence{
+    position:relative;
+    margin:4px 0 0;
+    padding:20px 20px 20px 24px;
+    background:var(--tint,linear-gradient(180deg,#F8FAFD 0%,#F5F7FC 100%));
+    border-radius:16px;
+  }
+  .sentence::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px; width:4px;
+    border-radius:99px; background:var(--accent,var(--ink)); opacity:.9;
+  }
+  .prompt{
+    font-family:var(--display);
+    font-size:clamp(23px,4.9vw,29px);
+    line-height:1.38;
+    margin:0;
+    font-weight:600;
+    letter-spacing:-.014em;
+    color:#1B2733;
+  }
+  .prompt em{font-style:italic; color:var(--pr)}
+  .prompt b{font-weight:800; color:var(--pr)}
+  .prompt .blank{
+    display:inline-block; min-width:82px; border-bottom:3px solid rgba(34,48,63,.28);
+    margin:0 3px; vertical-align:-2px;
+  }
+  .prompt .cue{
+    font-family:var(--sans); font-size:.62em; font-weight:700;
+    color:var(--accent,var(--ps)); background:#fff;
+    border:1px solid rgba(34,48,63,.10); box-shadow:0 1px 2px rgba(34,48,63,.05);
+    padding:3px 9px; border-radius:8px;
+    vertical-align:.14em; margin-left:2px; letter-spacing:0;
+  }
+  .context{margin-top:14px; font-size:14.5px; line-height:1.55; color:var(--ink-soft)}
+
+  .scroll{flex:1; overflow-y:auto; margin:0 -6px; padding:0 6px; scrollbar-width:thin; display:flex; flex-direction:column}
+  .scroll .inner{margin-top:auto; margin-bottom:auto; width:100%}
+
+  /* hint + answer panels */
+  .panel{
+    margin-top:16px; border-radius:14px; padding:14px 16px;
+    font-size:14.5px; line-height:1.6;
+    animation:rise .28s cubic-bezier(.2,.8,.2,1);
+  }
+  .panel h4{margin:0 0 5px; font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:700}
+  .panel.theory{background:#EFF4FA; color:#2A4560} .panel.theory h4{color:var(--ps)}
+  .panel.example{background:#EDF6F3; color:#22503F} .panel.example h4{color:var(--pc)}
+  .panel.answer{background:#FBF0EE; color:#5B2723} .panel.answer h4{color:var(--pr)}
+  .panel.words{background:#FBF4E7; color:#4E3A15} .panel.words h4{color:var(--pp)}
+  .panel.words dl{margin:0}
+  .panel.words dt{font-weight:700; color:#2E2413; margin-top:9px}
+  .panel.words dt:first-child{margin-top:0}
+  .panel.words dd{margin:2px 0 0; line-height:1.5}
+  .panel.words .ua{display:block; font-weight:600; color:var(--pp)}
+  .panel.answer .sol{font-family:var(--display); font-weight:700; font-size:19.5px; line-height:1.42; letter-spacing:-.01em; color:#3A1E1B; display:block; margin-bottom:8px}
+  @keyframes rise{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+  .tense-tag{
+    display:inline-block; margin-top:10px; padding:5px 11px; border-radius:99px;
+    font-size:11.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#fff;
+  }
+
+  /* buttons inside card */
+  .tools{display:flex; gap:8px; margin-top:18px; flex-wrap:wrap}
+  .btn{
+    font:inherit; font-size:13.5px; font-weight:600;
+    border-radius:12px; padding:11px 14px; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn:hover{background:#FAFAFC}
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+  .btn[disabled]{opacity:.42; cursor:default}
+  .btn.primary{background:var(--ink); border-color:var(--ink); color:#fff; flex:1; min-width:150px}
+  .btn.primary:hover{background:#2C3E52}
+  .btn .k{font-weight:400; color:#9AA4AF; margin-left:6px; font-size:12px}
+  .btn.primary .k{color:#93A5B6}
+
+  .drill-decks{
+    display:flex; gap:6px; margin:14px 0 10px;
+    padding:4px; border:1px solid var(--line); border-radius:12px;
+    background:#F7F8FB;
+  }
+  .drill-decks button{
+    font:inherit; font-family:var(--sans); font-size:12px; font-weight:700;
+    flex:1; padding:8px 10px; border-radius:9px; cursor:pointer;
+    border:1px solid transparent; background:transparent; color:var(--ink-soft);
+  }
+  .drill-decks button.on{background:#fff; border-color:var(--line); color:var(--ink); box-shadow:0 1px 3px rgba(34,48,63,.06)}
+  .drill-decks button:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+
+  .verdict{display:flex; gap:10px; margin-top:16px}
+  .verdict .btn{flex:1; padding:13px 12px; font-size:14px}
+  .btn.yes{background:var(--yes); border-color:var(--yes); color:#fff}
+  .btn.no{background:#fff; border-color:#EBBFBC; color:var(--no)}
+
+  /* swipe stamps */
+  .stamp{
+    position:absolute; top:26px; padding:7px 14px; border-radius:10px;
+    font-size:13px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+    opacity:0; pointer-events:none; border:2.5px solid;
+  }
+  .stamp.r{right:24px; transform:rotate(11deg); color:var(--yes); border-color:var(--yes); background:rgba(46,139,119,.06)}
+  .stamp.l{left:24px;  transform:rotate(-11deg); color:var(--no);  border-color:var(--no);  background:rgba(210,84,76,.06)}
+
+  footer{
+    padding:26px 16px 30px; text-align:center;
+    font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:#9BA3AE;
+  }
+  footer b{font-weight:600; color:#6C7683}
+
+  /* ---------- results ---------- */
+  .result{
+    position:absolute; inset:0; background:var(--paper); border-radius:var(--r);
+    box-shadow:var(--shadow); padding:30px 28px; display:flex; flex-direction:column;
+    animation:rise .35s cubic-bezier(.2,.8,.2,1); overflow-y:auto;
+  }
+  .score{font-family:var(--display); font-weight:800; font-size:58px; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+  .score small{font-size:22px; font-weight:600; color:var(--ink-soft)}
+  .bars{margin-top:22px; display:flex; flex-direction:column; gap:13px}
+  .bar-row{display:grid; grid-template-columns:1fr auto; gap:6px; font-size:13.5px}
+  .bar-track{grid-column:1/-1; height:7px; border-radius:99px; background:#EFEEF3; overflow:hidden}
+  .bar-track i{display:block; height:100%; border-radius:99px; transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .missed{margin-top:20px; font-size:13.5px; color:var(--ink-soft); line-height:1.6}
+  .missed li{margin-bottom:6px}
+
+
+  /* ---------- mode switch ---------- */
+  .modes{
+    max-width:760px; width:100%; margin:20px auto 0; padding:0 20px;
+    display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
+    position:relative; z-index:41;
+  }
+  .modes button{
+    font:inherit; font-size:13px; font-weight:600; font-family:var(--sans);
+    padding:8px 16px; border-radius:99px; cursor:pointer;
+    border:1px solid transparent; background:transparent; color:var(--ink-soft);
+    transition:background .18s ease, color .18s ease;
+    white-space:nowrap;
+  }
+  .modes button.on{background:#fff; color:var(--ink); border-color:var(--line); box-shadow:0 1px 3px rgba(34,48,63,.07)}
+  .modes button:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+  .modes .hint-toggle.on{background:var(--ink); color:#fff; border-color:var(--ink)}
+
+  /* ---------- speaking card ---------- */
+  .speak-decks{
+    display:flex; gap:6px; margin:14px 0 4px;
+    padding:4px; border:1px solid var(--line); border-radius:12px;
+    background:#F7F8FB;
+  }
+  .speak-decks button{
+    font:inherit; font-family:var(--sans); font-size:12px; font-weight:700;
+    flex:1; padding:8px 10px; border-radius:9px; cursor:pointer;
+    border:1px solid transparent; background:transparent; color:var(--ink-soft);
+  }
+  .speak-decks button.on{background:#fff; border-color:var(--line); color:var(--ink); box-shadow:0 1px 3px rgba(34,48,63,.06)}
+  .speak-decks button:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+  .cue{font-family:var(--display); font-size:clamp(21px,4.6vw,26px); font-weight:700; line-height:1.32; letter-spacing:-.014em; margin:6px 0 0; color:#1B2733}
+  .saylist{margin:14px 0 0; padding:0; list-style:none}
+  .saylist li{position:relative; padding-left:18px; font-size:14.5px; line-height:1.6; color:var(--ink-soft); margin-bottom:3px}
+  .saylist li::before{content:""; position:absolute; left:3px; top:10px; width:5px; height:5px; border-radius:50%; background:#C3CEDC}
+  .saylist .lead{padding-left:0; font-weight:600; color:var(--ink); margin-bottom:6px}
+  .saylist .lead::before{display:none}
+
+  .board{
+    margin-top:16px; min-height:56px; border-radius:14px; padding:11px 12px;
+    background:#F6F8FC; border:1px dashed #CBD6E3;
+    display:flex; flex-wrap:wrap; gap:7px; align-items:flex-start;
+  }
+  .board .empty{font-size:13px; color:#98A3B0; padding:5px 2px}
+  .chip{
+    font:inherit; font-family:var(--sans); font-size:13.5px; font-weight:600;
+    padding:7px 11px; border-radius:10px; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .chip:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+  .chip .x{color:#B4BDC7; font-weight:700}
+  .chip.used{background:#E9F5F1; border-color:#A8D7C8; color:#1F6F5C; text-decoration:line-through}
+  .chip.used .x{color:#7FBBA9}
+  .tray{margin-top:16px}
+  .tray h5{margin:14px 0 7px; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:700}
+  .tray h5:first-child{margin-top:0}
+  .tray .row{display:flex; flex-wrap:wrap; gap:7px}
+  .tray .chip{font-weight:500; background:#FBFBFC}
+  .tray .chip.taken{opacity:.35; pointer-events:none}
+
+  .speak-side-hints{
+    position:fixed; left:clamp(18px, 3vw, 42px); top:clamp(42px, 7vh, 82px);
+    width:min(260px, 24vw);
+    max-height:calc(100dvh - 56px); overflow-y:auto; padding-right:4px;
+    display:flex; flex-direction:column; gap:10px;
+    scrollbar-width:thin;
+    z-index:40;
+  }
+  .speak-side-hints[hidden]{display:none}
+  .drill-side{
+    position:fixed; right:clamp(18px,3vw,42px); top:clamp(145px,19vh,190px);
+    width:min(220px,22vw); display:flex; flex-direction:column; gap:10px;
+    z-index:30;
+  }
+  .drill-side[hidden]{display:none}
+  .drill-side-title{
+    padding:0 4px 2px; font-size:10px; font-weight:800; letter-spacing:.12em;
+    text-transform:uppercase; color:#8B96A3;
+  }
+  .drill-side button{
+    width:100%; min-height:54px; display:flex; align-items:center; justify-content:space-between;
+    gap:10px; padding:12px 14px; border:1px solid var(--line); border-radius:14px;
+    background:rgba(255,255,255,.88); color:var(--ink-soft); cursor:pointer;
+    font:700 12px/1.3 var(--sans); text-align:left;
+    box-shadow:0 2px 8px rgba(34,48,63,.04);
+    transition:transform .12s ease, border-color .16s ease, background .16s ease;
+  }
+  .drill-side button:hover{transform:translateY(-1px); border-color:#C8D1DC}
+  .drill-side button:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+  .drill-side button b{
+    min-width:30px; padding:4px 7px; border-radius:99px; background:#EEF1F5;
+    color:#697786; font-size:10px; text-align:center; font-variant-numeric:tabular-nums;
+  }
+  .drill-side button.on{
+    border-color:#E9A4A0; background:#FFF5F4; color:var(--pr);
+    box-shadow:0 8px 22px rgba(229,87,79,.12);
+  }
+  .drill-side button.on b{background:var(--pr); color:#fff}
+  body.drill-mode main{padding-left:16px; padding-right:16px}
+  .tense-hint{
+    border:1px solid var(--line); border-radius:12px; background:#fff;
+    overflow:hidden;
+  }
+  .tense-hint summary{
+    list-style:none; cursor:pointer; padding:10px 11px;
+    font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--hint-c,var(--ink));
+  }
+  .tense-hint summary::-webkit-details-marker{display:none}
+  .tense-hint[open] summary{border-bottom:1px solid var(--line); background:var(--hint-tint,#F7F8FB)}
+  .tense-hint .hint-body{padding:10px 11px 11px; display:flex; flex-direction:column; gap:8px}
+  .tense-hint code{
+    font:600 12.5px/1.45 var(--sans); color:var(--ink);
+    background:#F6F8FC; border:1px solid #E6EAF0; border-radius:8px;
+    padding:7px 8px; white-space:normal;
+  }
+  .tense-hint .hint-example{font-size:13px; line-height:1.45; color:var(--ink-soft)}
+  .hint-keys{display:flex; flex-wrap:wrap; gap:6px}
+  .hint-key{
+    display:inline-flex; align-items:center; border-radius:8px;
+    border:1px solid var(--line); background:#fff; color:var(--ink-soft);
+    padding:5px 8px; font-size:12px; font-weight:700;
+  }
+  body.hints-open main{
+    padding-left:calc(min(260px, 24vw) + clamp(54px, 6vw, 84px));
+  }
+  @media (max-width:900px){
+    .stage.speaking{max-width:520px; height:min(700px,78dvh)}
+    body.hints-open main{padding-left:16px}
+    body.hints-open::before{
+      content:""; position:fixed; inset:64px 0 0; z-index:38;
+      background:rgba(34,48,63,.18); backdrop-filter:blur(2px);
+      -webkit-backdrop-filter:blur(2px);
+    }
+    .speak-side-hints{
+      left:16px; right:16px; top:72px; width:auto;
+      max-height:calc(100dvh - 92px); padding:12px;
+      background:rgba(248,250,253,.98); border:1px solid var(--line);
+      border-radius:18px; box-shadow:0 22px 60px rgba(34,48,63,.28);
+      z-index:40;
+    }
+  }
+  @media (max-width:1000px){
+    .drill-side{
+      position:relative; inset:auto; width:calc(100% - 32px); margin:12px auto 0;
+      flex-direction:row; justify-content:center; overflow-x:auto; padding:4px; background:#F4F6FA;
+      border:1px solid var(--line); border-radius:15px; scrollbar-width:none;
+    }
+    .drill-side::-webkit-scrollbar{display:none}
+    .drill-side-title{display:none}
+    .drill-side button{min-width:145px; min-height:46px; padding:9px 11px; box-shadow:none}
+  }
+
+  /* ---------- reading mode ---------- */
+  .stage.reading{max-width:980px}
+  .read-steps{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:6px;
+    margin:14px 0 10px; padding:4px; border:1px solid var(--line);
+    border-radius:12px; background:#F7F8FB;
+  }
+  .read-steps button{
+    font:inherit; border:1px solid transparent; background:transparent; cursor:pointer;
+    text-align:center; padding:8px 6px; border-radius:9px;
+    font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .read-steps button.on{background:#fff; border-color:var(--line); color:var(--ink); box-shadow:0 1px 3px rgba(34,48,63,.06)}
+  .read-steps button:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+  .reading-swipe-card{cursor:grab}
+  .reading-swipe-card.swiping{cursor:grabbing}
+  .swipe-story-hint{margin:-3px 2px 8px; text-align:right; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#96A1AD}
+  .reading-title{font-family:var(--display); font-size:clamp(22px,4vw,27px); line-height:1.28; margin:4px 0 14px; font-weight:800; color:#1B2733}
+  .reading-layout{
+    display:grid; grid-template-columns:minmax(0,1.45fr) minmax(240px,.78fr);
+    gap:24px; align-items:start;
+  }
+  .reading-text{font-size:15px; line-height:1.72; color:#415061}
+  .reading-text p{margin:0 0 13px}
+  .story-timeline{
+    position:sticky; top:0; border:1px solid #DCE5EF; border-radius:16px;
+    background:linear-gradient(180deg,#F8FBFE 0%,#F3F7FB 100%);
+    padding:15px 14px 13px;
+  }
+  .timeline-heading{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:13px}
+  .timeline-heading h4{margin:0; font-size:11px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; color:var(--ps)}
+  .timeline-heading span{font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#94A0AD}
+  .timeline-list{display:flex; flex-direction:column}
+  .timeline-item{display:grid; grid-template-columns:50px 18px minmax(0,1fr); gap:7px; min-height:66px}
+  .timeline-time{padding-top:3px; text-align:right; font-size:9px; line-height:1.25; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:#7A8795}
+  .timeline-mark{position:relative; display:flex; justify-content:center}
+  .timeline-dot{position:relative; z-index:1; width:12px; height:12px; margin-top:3px; border:3px solid var(--ps); border-radius:50%; background:#fff; box-shadow:0 0 0 3px #E2ECF6}
+  .timeline-item:not(:last-child) .timeline-mark::after{content:""; position:absolute; top:15px; bottom:-3px; left:50%; width:2px; transform:translateX(-50%); background:linear-gradient(var(--ps),#C8D8E8)}
+  .timeline-event{padding:0 0 13px}
+  .timeline-subject{display:block; margin-bottom:3px; font-size:12px; line-height:1.25; font-weight:800; color:#213A54}
+  .timeline-action{display:block; font-size:11.5px; line-height:1.42; color:#59697A}
+  .write-box{
+    width:100%; min-height:210px; resize:vertical; border:1px solid var(--line);
+    border-radius:14px; padding:14px 15px; font:inherit; font-size:15px;
+    line-height:1.55; color:var(--ink); background:#FBFCFE;
+  }
+  .write-box:focus{outline:3px solid rgba(34,48,63,.18); border-color:#AEB8C5}
+  .reading-prompt{font-size:15px; line-height:1.6; color:var(--ink-soft); margin:0 0 14px}
+  .reading-notes{
+    margin-top:14px; border-radius:14px; padding:13px 15px;
+    background:#F6F8FC; border:1px solid #E6EAF0; color:var(--ink-soft);
+    font-size:14px; line-height:1.55; white-space:pre-wrap;
+  }
+  .reading-timer{border-top:1px solid var(--line); margin:16px -26px -22px; padding:16px 26px 18px}
+  .reading-timer .clockrow .btn.primary{flex:1}
+
+  @media (max-width:700px){
+    .stage.reading{max-width:520px; height:min(720px,78dvh)}
+    .reading-layout{grid-template-columns:1fr; gap:16px}
+    .story-timeline{position:relative}
+  }
+
+  /* ---------- timer ---------- */
+  .timer{border-top:1px solid var(--line); margin:14px -26px -22px; padding:14px 26px 18px}
+  .phases{display:flex; gap:6px; margin-bottom:11px}
+  .phases button{
+    font:inherit; font-family:var(--sans); font-size:12px; font-weight:600; flex:1;
+    padding:7px 8px; border-radius:9px; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--ink-soft);
+  }
+  .phases button.on{background:var(--ink); border-color:var(--ink); color:#fff}
+  .clockrow{display:flex; align-items:center; gap:12px}
+  .clock{
+    font-family:var(--display); font-weight:800; font-size:38px; letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums; line-height:1; min-width:104px;
+  }
+  .clock.low{color:var(--no)}
+  .clockrow .btn{padding:11px 14px}
+  .clockrow .btn.primary{flex:1; min-width:0}
+  .tbar{height:4px; border-radius:99px; background:#EDEDF1; overflow:hidden; margin-top:12px}
+  .tbar i{display:block; height:100%; width:100%; border-radius:99px; background:var(--pc); transition:width .95s linear}
+  .tbar i.speak{background:var(--pr)}
+  @media (max-width:430px){ .timer{margin:14px -20px -18px; padding:14px 20px 16px} }
+
+  @media (max-width:430px){
+    .card{padding:22px 20px 18px; border-radius:18px}
+    .stage{height:min(600px,74dvh)}
+    .btn.primary{min-width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body class="drill-mode">
+
+<div class="modes">
+  <button data-m="drill" class="on">Grammar drill</button>
+  <button data-m="speak">Speaking</button>
+  <button data-m="read">Reading</button>
+  <button class="hint-toggle" id="hintsToggle" type="button" aria-expanded="false">Hints</button>
+</div>
+
+<div class="speak-side-hints" id="globalHints" hidden></div>
+
+<aside class="drill-side" id="drillSide" aria-label="Grammar drill decks">
+  <div class="drill-side-title">Grammar decks</div>
+  <button type="button" data-deck="present-perfect" class="on">
+    <span>Present Perfect</span><b>50</b>
+  </button>
+  <button type="button" data-deck="tenses">
+    <span>Mixed tenses</span><b>112</b>
+  </button>
+  <button type="button" data-deck="verbs">
+    <span>Verb forms</span><b>20</b>
+  </button>
+</aside>
+
+<div class="top" id="hud">
+  <div class="count" id="count">1 / 5</div>
+  <div class="rail"><i id="rail"></i></div>
+  <div class="tally">
+    <span><i class="pip" style="background:var(--yes)"></i><b id="tYes">0</b></span>
+    <span><i class="pip" style="background:var(--no)"></i><b id="tNo">0</b></span>
+  </div>
+  <button class="shuffle-btn" id="shuffle">Shuffle</button>
+</div>
+
+<main><div class="stage" id="stage"></div></main>
+
+<footer>Platon Tsuz <b>·</b> English tutor</footer>
+
+<script>
+/* ------------------------------------------------------------------
+   QUESTION BANK
+   Add more objects to this array — the app handles any length.
+   tense: "ps" Past Simple · "pc" Past Continuous
+          "pp" Past Perfect · "pr" Present Perfect
+   task:  the instruction shown at the top of the card
+-------------------------------------------------------------------*/
+const QUESTIONS = [
+  { task:"Put the correct form", tense:"pc",
+    prompt:"At nine o'clock I ______ (check) the schedule when the client called.",
+    context:"Long action or short action?",
+    answer:"At nine o'clock I was checking the schedule when the client called.",
+    terms:[{w:"schedule", d:"the plan of what happens on which day", ua:"графік"},
+           {w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"I have sent the quote to the client yesterday.",
+    context:"Yesterday is a finished time. Change the verb.",
+    answer:"I sent the quote to the client yesterday.",
+    terms:[{w:"quote", d:"the price you offer a client for a job", ua:"комерційна пропозиція"},
+           {w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"When I got to the office, the delivery ______ (already / arrive).",
+    context:"Which happened first?",
+    answer:"When I got to the office, the delivery had already arrived.",
+    terms:[{w:"delivery", d:"parts or materials brought to you", ua:"доставка"},
+           {w:"already", d:"sooner than expected — goes before the main verb", ua:"вже"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"How long have you worked as a project manager?",
+    context:"Use for or since.",
+    answer:"I have worked as a project manager for six years. / …since 2020.",
+    terms:[{w:"manager", d:"the person in charge of a team or a building", ua:"керівник, менеджер"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"I was work on the report when my phone rang.",
+    context:"After was, the verb needs its –ing form.",
+    answer:"I was working on the report when my phone rang.",
+    terms:[{w:"report", d:"a written summary of what was done", ua:"звіт"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"We ______ (finish) the boiler service last Friday.",
+    context:"The time is closed, so the tense is too.",
+    answer:"We finished the boiler service last Friday.",
+    terms:[{w:"boiler", d:"the machine that heats water for the building", ua:"котел"}] },
+
+  { task:"Fix the mistake", tense:"pp",
+    prompt:"The client signed the contract after we have sent the quote.",
+    context:"The earlier action needs the earlier tense.",
+    answer:"The client signed the contract after we had sent the quote.",
+    terms:[{w:"quote", d:"the price you offer a client for a job", ua:"комерційна пропозиція"},
+           {w:"contract", d:"the signed agreement about the work and the price", ua:"договір"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"The team ______ (already / finish) the service in the first building.",
+    context:"Where does already go?",
+    answer:"The team has already finished the service in the first building.",
+    theory:"Already and just sit between have/has and the third form. Yet goes at the end of negatives and questions.",
+    terms:[{w:"already", d:"sooner than expected — goes before the main verb", ua:"вже"}] },
+
+  { task:"Answer the question", tense:"pc",
+    prompt:"What were you doing at seven o'clock yesterday evening?",
+    context:"Say what was in progress, and where you were.",
+    answer:"At seven I was driving home. / I was training at the gym.",
+    terms:[{w:"was / were + –ing", d:"the form for an action in progress at a past moment", ua:"тривала дія в минулому"}] },
+
+  { task:"Describe the situation", tense:"ps",
+    prompt:"Last Tuesday: no hot water in the whole building, two technicians sent out, four hours of work.",
+    context:"Tell the story in two or three sentences.",
+    answer:"Last Tuesday the hot water stopped in the whole building. We sent two technicians and they worked for four hours.",
+    terms:[{w:"hot water", d:"the heated water supply in a building", ua:"гаряче водопостачання"},
+           {w:"technicians", d:"the workers who repair and service equipment", ua:"техніки, майстри"}] },
+
+  { task:"Answer the question", tense:"pp",
+    prompt:"Why couldn't the team finish on Friday?",
+    context:"Give the reason that happened earlier.",
+    answer:"Because the parts hadn't arrived. / Because the client had changed the plan.",
+    terms:[{w:"had + third form", d:"the form for the earlier of two past actions", ua:"дія, що сталася раніше"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"I am working in this company since 2019.",
+    context:"The job started in the past and is still true.",
+    answer:"I have worked in this company since 2019.",
+    example:"I have lived here for six years. · She has been in the team since March.",
+    terms:[{w:"since", d:"used with a starting point: since Monday, since 2019", ua:"з, від (певного моменту)"}] },
+
+  { task:"Describe the situation", tense:"pc",
+    prompt:"Tuesday, 8 a.m. Rain. Two vans in traffic. You waiting in the office.",
+    context:"Three things happening at the same moment.",
+    answer:"At eight it was raining, two vans were sitting in traffic and I was waiting in the office.",
+    terms:[{w:"vans", d:"the small work vehicles for tools and parts", ua:"службові фургони"},
+           {w:"traffic", d:"all the cars on the road", ua:"дорожній рух, затори"}] },
+
+  { task:"Answer the question", tense:"ps",
+    prompt:"What did you do at work yesterday?",
+    context:"Two or three sentences about a finished day.",
+    answer:"Yesterday I visited two clients, checked the schedule for next week and answered about forty emails.",
+    terms:[{w:"Past Simple", d:"the form for a finished action at a finished time", ua:"простий минулий час"}] },
+
+  { task:"Describe the situation", tense:"pp",
+    prompt:"You came to the gym at eight. Your coach left at half past seven.",
+    context:"One sentence. Which action was first?",
+    answer:"When I got to the gym, my coach had already left.",
+    terms:[{w:"coach", d:"the person who teaches you how to train", ua:"тренер"},
+           {w:"gym", d:"the place where you train with weights and machines", ua:"спортзал"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"Have you ever went to a training course abroad?",
+    context:"After have, use the third form.",
+    answer:"Have you ever been to a training course abroad?",
+    terms:[{w:"ever", d:"at any time in your life — used in questions", ua:"коли-небудь"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"The pump ______ (leak) all morning, so we shut it down.",
+    context:"It continued over a long period.",
+    answer:"The pump was leaking all morning, so we shut it down.",
+    terms:[{w:"leak", d:"when water escapes from a pipe", ua:"протікання, витік"},
+           {w:"pump", d:"the machine that pushes water through the pipes", ua:"насос"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"Last month the team have replaced all the radiators in the office.",
+    context:"Last month is over.",
+    answer:"Last month the team replaced all the radiators in the office.",
+    terms:[{w:"radiators", d:"the metal panels on the wall that heat a room", ua:"радіатори, батареї"},
+           {w:"replaced", d:"took out the old part and put in a new one", ua:"замінили"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"We couldn't start because the supplier ______ (not / deliver) the valves.",
+    context:"The reason came before the problem.",
+    answer:"We couldn't start because the supplier had not delivered the valves. (hadn't delivered)",
+    terms:[{w:"valves", d:"the parts that open and close the flow in a pipe", ua:"клапани, вентилі"},
+           {w:"supplier", d:"a company that sells you materials or parts", ua:"постачальник"}] },
+
+  { task:"Describe the situation", tense:"pr",
+    prompt:"Today's list: three jobs closed, one still open.",
+    context:"Say what is done and what is not done yet.",
+    answer:"I have closed three jobs today, but I haven't finished the last one yet.",
+    terms:[{w:"have / has + third form", d:"the form that links a past action to now", ua:"дія з результатом у теперішньому"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"They were talk about the budget when I came in.",
+    context:"One ending is missing.",
+    answer:"They were talking about the budget when I came in.",
+    terms:[{w:"budget", d:"the money planned for a job", ua:"бюджет"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"The client ______ (not / approve) the budget last week.",
+    context:"Negative, finished time.",
+    answer:"The client did not approve the budget last week. (didn't approve)",
+    terms:[{w:"budget", d:"the money planned for a job", ua:"бюджет"},
+           {w:"approve", d:"to say officially that something is accepted", ua:"затверджувати"}] },
+
+  { task:"Fix the mistake", tense:"pp",
+    prompt:"After I checked the pressure, I had called the engineer.",
+    context:"The tenses are the wrong way round.",
+    answer:"After I had checked the pressure, I called the engineer.",
+    terms:[{w:"engineer", d:"a specialist who designs and checks technical systems", ua:"інженер"},
+           {w:"pressure", d:"the force of water or gas inside a system", ua:"тиск"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"We ______ (not / receive) the spare parts yet.",
+    context:"Not done, and we still expect it.",
+    answer:"We have not received the spare parts yet. (haven't received)",
+    terms:[{w:"spare parts", d:"extra parts kept for repairs", ua:"запчастини"},
+           {w:"yet", d:"up to now — goes at the end of negatives and questions", ua:"досі, ще (не)"}] },
+
+  { task:"Answer the question", tense:"pc",
+    prompt:"What were you working on this time last week?",
+    context:"Use was or were plus –ing.",
+    answer:"This time last week I was preparing the quote for the hotel.",
+    terms:[{w:"was / were + –ing", d:"the form for an action in progress at a past moment", ua:"тривала дія в минулому"}] },
+
+  { task:"Describe the situation", tense:"ps",
+    prompt:"Your gym session on Sunday: bench press, forty minutes, a new personal best.",
+    context:"Three short sentences about a finished session.",
+    answer:"On Sunday I did bench press for forty minutes. I felt strong and I set a new personal best.",
+    terms:[{w:"personal best", d:"the heaviest or fastest result you have ever done", ua:"особистий рекорд"},
+           {w:"bench press", d:"the exercise where you push a bar up while lying down", ua:"жим лежачи"}] },
+
+  { task:"Answer the question", tense:"pp",
+    prompt:"Why did the client complain?",
+    context:"The reason happened before the complaint.",
+    answer:"Because nobody had called him back. / Because we had missed the service date.",
+    terms:[{w:"complain", d:"to say you are not happy about something", ua:"скаржитися"},
+           {w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"______ you ______ (speak) to the client about the delay?",
+    context:"A question with no stated time.",
+    answer:"Have you spoken to the client about the delay?",
+    terms:[{w:"delay", d:"when something happens later than planned", ua:"затримка"},
+           {w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Describe the situation", tense:"pc",
+    prompt:"Yesterday at the gym: you on the treadmill, music in your ears, someone waiting for the machine.",
+    context:"Say what was happening around you.",
+    answer:"I was running on the treadmill and listening to music, and a guy was waiting for the machine.",
+    terms:[{w:"treadmill", d:"the running machine at the gym", ua:"бігова доріжка"},
+           {w:"gym", d:"the place where you train with weights and machines", ua:"спортзал"},
+           {w:"for", d:"used with a length of time: for two hours, for five years", ua:"протягом"}] },
+
+  { task:"Answer the question", tense:"ps",
+    prompt:"How did your last big job go?",
+    context:"It is finished. Say one good thing and one problem.",
+    answer:"It went well. We finished on time, but the new pumps arrived two weeks late.",
+    terms:[{w:"Past Simple", d:"the form for a finished action at a finished time", ua:"простий минулий час"}] },
+
+  { task:"Describe the situation", tense:"pp",
+    prompt:"Monday: the pump broke. Tuesday: you came in and found out.",
+    context:"One sentence with two past actions.",
+    answer:"When I came in on Tuesday, the pump had already broken.",
+    terms:[{w:"pump", d:"the machine that pushes water through the pipes", ua:"насос"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"What have you finished today?",
+    context:"Today is not over, so the result still counts.",
+    answer:"I have finished the monthly report and I have called two suppliers.",
+    terms:[{w:"have / has + third form", d:"the form that links a past action to now", ua:"дія з результатом у теперішньому"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"While I ______ (train), my coach ______ (film) my form.",
+    context:"Two long actions, side by side.",
+    answer:"While I was training, my coach was filming my form.",
+    example:"I was writing the report while the technicians were testing the wiring.",
+    terms:[{w:"form", d:"the way you hold your body during an exercise", ua:"техніка виконання"},
+           {w:"coach", d:"the person who teaches you how to train", ua:"тренер"},
+           {w:"while", d:"at the same time as", ua:"поки, у той час як"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"When did you finished the monthly report?",
+    context:"Did already carries the past.",
+    answer:"When did you finish the monthly report?",
+    theory:"In Past Simple questions, did shows the past and the main verb stays in its base form: did you finish, did he call, did they come.",
+    terms:[{w:"report", d:"a written summary of what was done", ua:"звіт"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"By six o'clock I ______ (finish) the report and sent it to the client.",
+    context:"Finished before a point in the past.",
+    answer:"By six o'clock I had finished the report and sent it to the client.",
+    terms:[{w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"},
+           {w:"report", d:"a written summary of what was done", ua:"звіт"}] },
+
+  { task:"Describe the situation", tense:"pr",
+    prompt:"Your week so far: two service visits done, one moved to Friday.",
+    context:"Say what is done and what is not.",
+    answer:"I have done two service visits this week, and I have moved the third one to Friday.",
+    terms:[{w:"so far", d:"up to this moment", ua:"поки що, до цього часу"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"What you were doing when the fire alarm started?",
+    context:"Question word order.",
+    answer:"What were you doing when the fire alarm started?",
+    theory:"In questions, was or were comes before the subject: What were you doing? Where was he working?",
+    terms:[{w:"fire alarm", d:"the system that warns everyone about a fire", ua:"пожежна сигналізація"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"______ you ______ (call) the supplier yesterday morning?",
+    context:"A question about a finished time.",
+    answer:"Did you call the supplier yesterday morning?",
+    terms:[{w:"supplier", d:"a company that sells you materials or parts", ua:"постачальник"}] },
+
+  { task:"Fix the mistake", tense:"pp",
+    prompt:"I didn't know that you had went to the meeting.",
+    context:"After had, use the third form.",
+    answer:"I didn't know that you had gone to the meeting.",
+    terms:[{w:"meeting", d:"when people come together to talk about work", ua:"нарада, зустріч"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"I ______ (never / miss) a deadline with this client.",
+    context:"Never is already negative.",
+    answer:"I have never missed a deadline with this client.",
+    terms:[{w:"deadline", d:"the last day something must be ready", ua:"кінцевий термін"},
+           {w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"},
+           {w:"never", d:"not at any time — never is used without not", ua:"ніколи"}] },
+
+  { task:"Answer the question", tense:"pc",
+    prompt:"What were you doing when the client called you last time?",
+    context:"Say what was in progress at that moment.",
+    answer:"I was having lunch when he called. / I was writing an email to the supplier.",
+    terms:[{w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Describe the situation", tense:"ps",
+    prompt:"Yesterday: three call-outs, one emergency, no lunch.",
+    context:"Say what happened, in Past Simple.",
+    answer:"Yesterday we had three call-outs and one emergency. I worked through lunch and finished at seven.",
+    terms:[{w:"call-outs", d:"visits to fix urgent problems", ua:"аварійні виклики"},
+           {w:"emergency", d:"a dangerous problem you must fix at once", ua:"аварійна ситуація"}] },
+
+  { task:"Answer the question", tense:"pp",
+    prompt:"Why did you have to work at the weekend?",
+    context:"Give the earlier reason.",
+    answer:"Because we hadn't finished the tests on Friday. / Because the parts hadn't arrived in time.",
+    terms:[{w:"had + third form", d:"the form for the earlier of two past actions", ua:"дія, що сталася раніше"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"He has broke his personal best this month.",
+    context:"Second form or third form?",
+    answer:"He has broken his personal best this month.",
+    theory:"After have or has you need the third form: broken, gone, seen, written — not broke, went, saw, wrote.",
+    terms:[{w:"personal best", d:"the heaviest or fastest result you have ever done", ua:"особистий рекорд"}] },
+
+  { task:"Describe the situation", tense:"pc",
+    prompt:"Monday morning: two technicians testing the wiring, one writing the report, you answering emails.",
+    context:"Everything at the same time. Use while once.",
+    answer:"On Monday morning two technicians were testing the wiring and one was writing the report, while I was answering emails.",
+    terms:[{w:"technicians", d:"the workers who repair and service equipment", ua:"техніки, майстри"},
+           {w:"wiring", d:"all the electrical cables inside a building", ua:"електропроводка"}] },
+
+  { task:"Answer the question", tense:"ps",
+    prompt:"When did you last take a day off?",
+    context:"Give the time — that is what fixes the tense.",
+    answer:"I last took a day off in June, after we finished the hotel contract.",
+    terms:[{w:"day off", d:"a day when you do not work", ua:"вихідний день"}] },
+
+  { task:"Describe the situation", tense:"pp",
+    prompt:"You arrived at the meeting at 10:15. It started at 10:00.",
+    context:"Say what had happened before you arrived.",
+    answer:"By the time I arrived, the meeting had already started.",
+    terms:[{w:"meeting", d:"when people come together to talk about work", ua:"нарада, зустріч"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"How long have you trained at this gym?",
+    context:"For a length of time, since a starting point.",
+    answer:"I have trained here for three years. / …since I moved to this district.",
+    terms:[{w:"gym", d:"the place where you train with weights and machines", ua:"спортзал"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"We ______ (not / work) in that building when the power went off.",
+    context:"Negative long action.",
+    answer:"We were not working in that building when the power went off. (weren't working)",
+    terms:[{w:"was / were + –ing", d:"the form for an action in progress at a past moment", ua:"тривала дія в минулому"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"I didn't went to the gym on Saturday.",
+    context:"Two past markers in one sentence. Keep one.",
+    answer:"I didn't go to the gym on Saturday.",
+    terms:[{w:"gym", d:"the place where you train with weights and machines", ua:"спортзал"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"The tenant said the heating ______ (stop) working two days before.",
+    context:"He is talking about something even earlier.",
+    answer:"The tenant said the heating had stopped working two days before.",
+    terms:[{w:"tenant", d:"the person who rents and lives in the flat", ua:"орендар"},
+           {w:"heating", d:"the system that keeps the building warm", ua:"опалення"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"She has worked in maintenance for 2019.",
+    context:"For or since?",
+    answer:"She has worked in maintenance since 2019.",
+    theory:"For takes a length of time: for six years, for two hours. Since takes a starting point: since 2019, since Monday, since I joined.",
+    terms:[{w:"maintenance", d:"keeping equipment working and repairing it", ua:"технічне обслуговування"},
+           {w:"for", d:"used with a length of time: for two hours, for five years", ua:"протягом"}] },
+
+  { task:"Answer the question", tense:"pc",
+    prompt:"What were you doing at this time yesterday?",
+    context:"One sentence, was or were plus –ing.",
+    answer:"At this time yesterday I was checking the service plan for next month.",
+    terms:[{w:"was / were + –ing", d:"the form for an action in progress at a past moment", ua:"тривала дія в минулому"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"The parts ______ (arrive) late, so we ______ (start) at ten.",
+    context:"Two finished actions.",
+    answer:"The parts arrived late, so we started at ten.",
+    terms:[{w:"Past Simple", d:"the form for a finished action at a finished time", ua:"простий минулий час"}] },
+
+  { task:"Fix the mistake", tense:"pp",
+    prompt:"We finished the job before the deadline had come.",
+    context:"Which action really happened first?",
+    answer:"We had finished the job before the deadline came.",
+    theory:"Past Perfect marks the first action, Past Simple the second. Put had with the one that happened earlier.",
+    terms:[{w:"deadline", d:"the last day something must be ready", ua:"кінцевий термін"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"Have you ever had a project that went over budget?",
+    context:"Yes or no in a full sentence, then one detail.",
+    answer:"Yes, I have. One heating contract went over budget because the prices changed in the middle of the job.",
+    terms:[{w:"over budget", d:"costing more money than planned", ua:"перевищення бюджету"},
+           {w:"ever", d:"at any time in your life — used in questions", ua:"коли-небудь"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"The heating worked badly all week, so the tenants was calling every day.",
+    context:"Check the verb after a plural subject.",
+    answer:"The heating worked badly all week, so the tenants were calling every day.",
+    theory:"Use was with I, he, she, it. Use were with you, we, they and any plural noun: the tenants were calling, the technicians were working.",
+    terms:[{w:"tenants", d:"the people who rent and live in the flats", ua:"орендарі"},
+           {w:"heating", d:"the system that keeps the building warm", ua:"опалення"}] },
+
+  { task:"Answer the question", tense:"ps",
+    prompt:"What was your first job in this industry?",
+    context:"All finished. Say what you did and for how long.",
+    answer:"My first job was as a service technician. I did that for three years before I moved into management.",
+    terms:[{w:"industry", d:"the whole business area you work in", ua:"галузь"}] },
+
+  { task:"Describe the situation", tense:"pp",
+    prompt:"You opened the boiler room at nine. Someone left a tool there the night before.",
+    context:"One sentence with both actions.",
+    answer:"When I opened the boiler room at nine, someone had left a tool inside.",
+    terms:[{w:"boiler room", d:"the room with the boiler and the heating equipment", ua:"котельня"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"The heating ______ (just / stop) working in flat 12.",
+    context:"It happened a moment ago and it matters now.",
+    answer:"The heating has just stopped working in flat 12.",
+    terms:[{w:"flat", d:"a home inside a bigger building", ua:"квартира"},
+           {w:"heating", d:"the system that keeps the building warm", ua:"опалення"},
+           {w:"just", d:"a very short time ago", ua:"щойно"}] },
+
+  { task:"Describe the situation", tense:"pc",
+    prompt:"Yesterday, gym at seven: you doing squats, your coach counting, the music loud.",
+    context:"Three things happening at once.",
+    answer:"At seven I was doing squats, my coach was counting and the music was playing loudly.",
+    terms:[{w:"squats", d:"the exercise where you bend your knees with weight on your back", ua:"присідання"},
+           {w:"coach", d:"the person who teaches you how to train", ua:"тренер"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"I ______ (send) the invoice on Monday and the client ______ (pay) on Wednesday.",
+    context:"Two finished events, in order.",
+    answer:"I sent the invoice on Monday and the client paid on Wednesday.",
+    terms:[{w:"invoice", d:"the paper that asks a client to pay for work done", ua:"рахунок-фактура"},
+           {w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Answer the question", tense:"pp",
+    prompt:"Why was the delivery refused?",
+    context:"Something was missing before it arrived.",
+    answer:"Because the driver hadn't brought the documents. / Because nobody had signed the order.",
+    terms:[{w:"delivery", d:"parts or materials brought to you", ua:"доставка"},
+           {w:"refused", d:"said no to it", ua:"відмовили"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"I have been in this company since five years.",
+    context:"Length of time or starting point?",
+    answer:"I have been in this company for five years.",
+    terms:[{w:"since", d:"used with a starting point: since Monday, since 2019", ua:"з, від (певного моменту)"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"The electrician ______ (fix) the socket while I ______ (talk) to the tenant.",
+    context:"Both actions were running together.",
+    answer:"The electrician was fixing the socket while I was talking to the tenant.",
+    terms:[{w:"socket", d:"the point in the wall where you plug something in", ua:"розетка"},
+           {w:"tenant", d:"the person who rents and lives in the flat", ua:"орендар"},
+           {w:"while", d:"at the same time as", ua:"поки, у той час як"}] },
+
+  { task:"Describe the situation", tense:"ps",
+    prompt:"Monday morning: two technicians ill, one van broken, you rearranged the whole day.",
+    context:"Three or four short sentences.",
+    answer:"On Monday morning two technicians were ill and one van broke down, so I rearranged the whole day and moved two jobs to Wednesday.",
+    terms:[{w:"technicians", d:"the workers who repair and service equipment", ua:"техніки, майстри"},
+           {w:"van", d:"the small work vehicle for tools and parts", ua:"службовий фургон"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"He was tired at work because he ______ (train) hard the evening before.",
+    context:"The training came first.",
+    answer:"He was tired at work because he had trained hard the evening before.",
+    terms:[{w:"had + third form", d:"the form for the earlier of two past actions", ua:"дія, що сталася раніше"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"How many jobs have you closed this month?",
+    context:"This month is not finished.",
+    answer:"I have closed eleven jobs this month, and three of them were emergencies.",
+    terms:[{w:"have / has + third form", d:"the form that links a past action to now", ua:"дія з результатом у теперішньому"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"While the team was install the new radiators, I was checking the invoice.",
+    context:"One verb is missing its ending.",
+    answer:"While the team was installing the new radiators, I was checking the invoice.",
+    terms:[{w:"radiators", d:"the metal panels on the wall that heat a room", ua:"радіатори, батареї"},
+           {w:"invoice", d:"the paper that asks a client to pay for work done", ua:"рахунок-фактура"},
+           {w:"while", d:"at the same time as", ua:"поки, у той час як"}] },
+
+  { task:"Answer the question", tense:"ps",
+    prompt:"How many people did you have in your team last year?",
+    context:"One or two sentences, finished time.",
+    answer:"Last year I had nine people in my team — six technicians and three engineers.",
+    terms:[{w:"Past Simple", d:"the form for a finished action at a finished time", ua:"простий минулий час"}] },
+
+  { task:"Fix the mistake", tense:"pp",
+    prompt:"By the time the engineer came, we finished the repair.",
+    context:"Mark the earlier action.",
+    answer:"By the time the engineer came, we had finished the repair.",
+    terms:[{w:"engineer", d:"a specialist who designs and checks technical systems", ua:"інженер"},
+           {w:"repair", d:"work done to fix something broken", ua:"ремонт"},
+           {w:"by the time", d:"not later than the moment when", ua:"до того часу, як"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"The technicians ______ (not / start) the second building yet.",
+    context:"Negative, still expected.",
+    answer:"The technicians have not started the second building yet. (haven't started)",
+    terms:[{w:"technicians", d:"the workers who repair and service equipment", ua:"техніки, майстри"},
+           {w:"yet", d:"up to now — goes at the end of negatives and questions", ua:"досі, ще (не)"}] },
+
+  { task:"Answer the question", tense:"pc",
+    prompt:"What were you and your team doing when the emergency call came in?",
+    context:"Two long actions.",
+    answer:"We were finishing a service visit in the north of the city when the call came in.",
+    terms:[{w:"emergency", d:"a dangerous problem you must fix at once", ua:"аварійна ситуація"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"The team work late on Thursday to fix the heating.",
+    context:"The time is past. The verb is not.",
+    answer:"The team worked late on Thursday to fix the heating.",
+    terms:[{w:"heating", d:"the system that keeps the building warm", ua:"опалення"}] },
+
+  { task:"Describe the situation", tense:"pp",
+    prompt:"Gym: you planned to deadlift, but another man took the bar before you.",
+    context:"One sentence. What had happened before you started?",
+    answer:"When I came to the rack, another guy had already taken the bar.",
+    terms:[{w:"deadlift", d:"the exercise where you lift a heavy bar from the floor", ua:"станова тяга"},
+           {w:"bar", d:"the long metal bar you put weights on", ua:"гриф, штанга"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"He has went to the supplier to check the parts.",
+    context:"Second form or third form?",
+    answer:"He has gone to the supplier to check the parts.",
+    terms:[{w:"supplier", d:"a company that sells you materials or parts", ua:"постачальник"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"I ______ (drive) to the client when the office called about the leak.",
+    context:"Long action, then a short one.",
+    answer:"I was driving to the client when the office called about the leak.",
+    terms:[{w:"leak", d:"when water escapes from a pipe", ua:"протікання, витік"},
+           {w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"We have changed the pump two weeks ago.",
+    context:"There is a past time in the sentence.",
+    answer:"We changed the pump two weeks ago.",
+    terms:[{w:"pump", d:"the machine that pushes water through the pipes", ua:"насос"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"The office was cold because someone ______ (turn off) the heating at the weekend.",
+    context:"Which action came first?",
+    answer:"The office was cold because someone had turned off the heating at the weekend.",
+    terms:[{w:"heating", d:"the system that keeps the building warm", ua:"опалення"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"What have you changed in your training this year?",
+    context:"No exact time. The result is what counts.",
+    answer:"I have added two gym days and I have stopped training late at night.",
+    terms:[{w:"have / has + third form", d:"the form that links a past action to now", ua:"дія з результатом у теперішньому"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"I were talking to the supplier when he arrived.",
+    context:"Check was and were.",
+    answer:"I was talking to the supplier when he arrived.",
+    terms:[{w:"supplier", d:"a company that sells you materials or parts", ua:"постачальник"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"The old thermostat ______ (stop) working in January.",
+    context:"One event, one month.",
+    answer:"The old thermostat stopped working in January.",
+    terms:[{w:"thermostat", d:"the small device that controls the temperature", ua:"термостат"}] },
+
+  { task:"Fix the mistake", tense:"pp",
+    prompt:"He told me that he has finished the checklist.",
+    context:"He is reporting something from earlier.",
+    answer:"He told me that he had finished the checklist.",
+    terms:[{w:"checklist", d:"a list of things you must check one by one", ua:"контрольний список"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"I ______ (just / speak) to the client about the price.",
+    context:"A minute ago, and it matters now.",
+    answer:"I have just spoken to the client about the price.",
+    terms:[{w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"},
+           {w:"just", d:"a very short time ago", ua:"щойно"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"The old boiler ______ (make) a strange noise all week.",
+    context:"It continued for days.",
+    answer:"The old boiler was making a strange noise all week.",
+    terms:[{w:"boiler", d:"the machine that heats water for the building", ua:"котел"}] },
+
+  { task:"Answer the question", tense:"ps",
+    prompt:"What did your coach change in your programme last month?",
+    context:"Last month is finished.",
+    answer:"He changed my rest days and added one more session with lighter weights.",
+    terms:[{w:"coach", d:"the person who teaches you how to train", ua:"тренер"},
+           {w:"programme", d:"your plan of exercises", ua:"програма тренувань"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"The client was angry because we ______ (not / call) him back.",
+    context:"The reason happened first.",
+    answer:"The client was angry because we had not called him back. (hadn't called)",
+    terms:[{w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"The team have already finish the electrical tests.",
+    context:"One ending is missing.",
+    answer:"The team have already finished the electrical tests.",
+    terms:[{w:"electrical tests", d:"checks that the electrical system is safe", ua:"перевірка електрики"},
+           {w:"already", d:"sooner than expected — goes before the main verb", ua:"вже"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"At six o'clock yesterday I lifted weights when my coach corrected my back.",
+    context:"Which action was already running?",
+    answer:"At six o'clock yesterday I was lifting weights when my coach corrected my back.",
+    terms:[{w:"weights", d:"the heavy metal discs you lift", ua:"обтяження"},
+           {w:"coach", d:"the person who teaches you how to train", ua:"тренер"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"Nobody ______ (answer) the phone when the tenant called at seven.",
+    context:"A short, finished action.",
+    answer:"Nobody answered the phone when the tenant called at seven.",
+    terms:[{w:"tenant", d:"the person who rents and lives in the flat", ua:"орендар"}] },
+
+  { task:"Fix the mistake", tense:"pp",
+    prompt:"After the team had left, I had locked the office.",
+    context:"Only the first action needs had.",
+    answer:"After the team had left, I locked the office.",
+    terms:[{w:"had + third form", d:"the form for the earlier of two past actions", ua:"дія, що сталася раніше"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"How long have you known your team leader?",
+    context:"For or since.",
+    answer:"I have known him for eight years. / …since we worked together in the service team.",
+    terms:[{w:"team leader", d:"the person who leads a small group of workers", ua:"керівник групи"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"They ______ (not / wear) safety glasses when the manager came in.",
+    context:"Negative long action.",
+    answer:"They were not wearing safety glasses when the manager came in. (weren't wearing)",
+    terms:[{w:"safety glasses", d:"glasses that protect your eyes at work", ua:"захисні окуляри"},
+           {w:"manager", d:"the person in charge of a team or a building", ua:"керівник, менеджер"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"Did the engineer checked the pressure in the system?",
+    context:"After did, use the base form.",
+    answer:"Did the engineer check the pressure in the system?",
+    terms:[{w:"engineer", d:"a specialist who designs and checks technical systems", ua:"інженер"},
+           {w:"pressure", d:"the force of water or gas inside a system", ua:"тиск"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"I couldn't send the report because my laptop ______ (die) that morning.",
+    context:"The laptop problem came first.",
+    answer:"I couldn't send the report because my laptop had died that morning.",
+    terms:[{w:"report", d:"a written summary of what was done", ua:"звіт"},
+           {w:"laptop", d:"a small computer you carry with you", ua:"ноутбук"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"______ you ever ______ (work) with this supplier before?",
+    context:"A question about experience.",
+    answer:"Have you ever worked with this supplier before?",
+    terms:[{w:"supplier", d:"a company that sells you materials or parts", ua:"постачальник"},
+           {w:"ever", d:"at any time in your life — used in questions", ua:"коли-небудь"}] },
+
+  { task:"Fix the mistake", tense:"pc",
+    prompt:"The technician was drive to the hotel when the traffic stopped.",
+    context:"After was, use the –ing form.",
+    answer:"The technician was driving to the hotel when the traffic stopped.",
+    terms:[{w:"technician", d:"a worker who repairs and services equipment", ua:"технік, майстер"},
+           {w:"traffic", d:"all the cars on the road", ua:"дорожній рух, затори"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"The lights in the corridor ______ (go) off at nine last night.",
+    context:"Finished time, one event.",
+    answer:"The lights in the corridor went off at nine last night.",
+    terms:[{w:"corridor", d:"the long narrow space between rooms", ua:"коридор"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"When we arrived, the tenants ______ (already / turn off) the water.",
+    context:"Which came first?",
+    answer:"When we arrived, the tenants had already turned off the water.",
+    terms:[{w:"tenants", d:"the people who rent and live in the flats", ua:"орендарі"},
+           {w:"already", d:"sooner than expected — goes before the main verb", ua:"вже"}] },
+
+  { task:"Fix the mistake", tense:"pr",
+    prompt:"I haven't never worked with a hotel client.",
+    context:"Two negatives in one sentence.",
+    answer:"I have never worked with a hotel client.",
+    theory:"Never is already negative, so do not add not. Say I have never worked, not I haven't never worked.",
+    terms:[{w:"client", d:"the person or company you do the work for", ua:"клієнт, замовник"},
+           {w:"never", d:"not at any time — never is used without not", ua:"ніколи"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"While we ______ (wait) for the parts, the team ______ (clean) the boiler room.",
+    context:"Two long actions together.",
+    answer:"While we were waiting for the parts, the team was cleaning the boiler room.",
+    terms:[{w:"boiler room", d:"the room with the boiler and the heating equipment", ua:"котельня"},
+           {w:"for", d:"used with a length of time: for two hours, for five years", ua:"протягом"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"Last winter we was very busy with heating repairs.",
+    context:"Check the verb after we.",
+    answer:"Last winter we were very busy with heating repairs.",
+    terms:[{w:"repairs", d:"work done to fix something broken", ua:"ремонтні роботи"},
+           {w:"heating", d:"the system that keeps the building warm", ua:"опалення"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"The office was warm because someone ______ (fix) the thermostat.",
+    context:"The repair came before the warm office.",
+    answer:"The office was warm because someone had fixed the thermostat.",
+    terms:[{w:"thermostat", d:"the small device that controls the temperature", ua:"термостат"}] },
+
+  { task:"Answer the question", tense:"pr",
+    prompt:"What have you learned in this job so far?",
+    context:"So far means up to now.",
+    answer:"I have learned to plan for delays and to call the client before he calls me.",
+    terms:[{w:"so far", d:"up to this moment", ua:"поки що, до цього часу"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"The lights ______ (flicker) all evening before we found the broken fuse.",
+    context:"A long problem before a short discovery.",
+    answer:"The lights were flickering all evening before we found the broken fuse.",
+    terms:[{w:"fuse", d:"the small part that cuts the power when something goes wrong", ua:"запобіжник"},
+           {w:"flicker", d:"to go on and off quickly", ua:"мерехтіти"}] },
+
+  { task:"Put the correct form", tense:"ps",
+    prompt:"We ______ (not / find) the leak on the first visit.",
+    context:"Negative, finished visit.",
+    answer:"We did not find the leak on the first visit. (didn't find)",
+    terms:[{w:"leak", d:"when water escapes from a pipe", ua:"протікання, витік"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"We ______ (not / meet) before that meeting, so I introduced myself.",
+    context:"No meeting before that point.",
+    answer:"We had not met before that meeting, so I introduced myself. (hadn't met)",
+    terms:[{w:"meeting", d:"when people come together to talk about work", ua:"нарада, зустріч"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"The tenants ______ (complain) about the heating three times this week.",
+    context:"The week is not over.",
+    answer:"The tenants have complained about the heating three times this week.",
+    terms:[{w:"tenants", d:"the people who rent and live in the flats", ua:"орендарі"},
+           {w:"complain", d:"to say you are not happy about something", ua:"скаржитися"}] },
+
+  { task:"Put the correct form", tense:"pc",
+    prompt:"I ______ (write) the monthly report when the manager asked me for it.",
+    context:"Already in progress when he asked.",
+    answer:"I was writing the monthly report when the manager asked me for it.",
+    terms:[{w:"report", d:"a written summary of what was done", ua:"звіт"},
+           {w:"manager", d:"the person in charge of a team or a building", ua:"керівник, менеджер"},
+           {w:"for", d:"used with a length of time: for two hours, for five years", ua:"протягом"}] },
+
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"I have spoken to the building manager on Monday.",
+    context:"On Monday is a closed time.",
+    answer:"I spoke to the building manager on Monday.",
+    terms:[{w:"building manager", d:"the person responsible for running a building", ua:"управитель будинку"}] },
+
+  { task:"Put the correct form", tense:"pp",
+    prompt:"She didn't come to the training because nobody ______ (tell) her about it.",
+    context:"The missing message came first.",
+    answer:"She didn't come to the training because nobody had told her about it.",
+    terms:[{w:"had + third form", d:"the form for the earlier of two past actions", ua:"дія, що сталася раніше"}] },
+
+  { task:"Put the correct form", tense:"pr",
+    prompt:"We ______ (already / order) the new valves, so they will come on Monday.",
+    context:"Done before now, and it changes the plan.",
+    answer:"We have already ordered the new valves, so they will come on Monday.",
+    terms:[{w:"valves", d:"the parts that open and close the flow in a pipe", ua:"клапани, вентилі"},
+           {w:"order", d:"to ask a supplier to send parts", ua:"замовляти"},
+           {w:"already", d:"sooner than expected — goes before the main verb", ua:"вже"}] }
+];
+
+const VERB_FORM_QUESTIONS = [
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"go → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"go - went - gone",
+    theory:"Regular verbs usually use -ed for V2 and V3. Irregular verbs do not follow one rule, so learn them as three forms.",
+    example:"work - worked - worked · go - went - gone" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"see → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"see - saw - seen",
+    theory:"Regular verbs usually use -ed for V2 and V3. Irregular verbs do not follow one rule, so learn them as three forms.",
+    example:"watch - watched - watched · see - saw - seen" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"take → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"take - took - taken",
+    theory:"Regular verbs usually use -ed for V2 and V3. Irregular verbs do not follow one rule, so learn them as three forms.",
+    example:"take a break - took a break - taken a break" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"write → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"write - wrote - written",
+    theory:"Regular verbs usually use -ed for V2 and V3. Irregular verbs do not follow one rule, so learn them as three forms.",
+    example:"write the report - wrote the report - written the report" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"make → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"make - made - made",
+    theory:"Some irregular verbs have the same V2 and V3: make - made - made, buy - bought - bought.",
+    example:"make a plan - made a plan - made a plan" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"break → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"break - broke - broken",
+    theory:"Some irregular verbs change twice: break - broke - broken, speak - spoke - spoken.",
+    example:"break the rule - broke the rule - broken the rule" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"bring → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"bring - brought - brought",
+    theory:"Some irregular verbs have the same V2 and V3: bring - brought - brought, think - thought - thought.",
+    example:"bring the keys - brought the keys - brought the keys" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"buy → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"buy - bought - bought",
+    theory:"Some irregular verbs have the same V2 and V3: buy - bought - bought, teach - taught - taught.",
+    example:"buy a ticket - bought a ticket - bought a ticket" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"leave → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"leave - left - left",
+    theory:"Some irregular verbs have the same V2 and V3: leave - left - left, meet - met - met.",
+    example:"leave work - left work - left work" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"study → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"study - studied - studied",
+    theory:"For regular verbs ending consonant + y, change y to i and add -ed: study - studied - studied.",
+    example:"try - tried - tried · study - studied - studied" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"come → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"come - came - come",
+    theory:"Some irregular verbs have the same V1 and V3: come - came - come, become - became - become.",
+    example:"come home - came home - come home" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"get → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"get - got - got/gotten",
+    theory:"British English usually uses got as V3. American English often uses gotten.",
+    example:"get better - got better - got/gotten better" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"give → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"give - gave - given",
+    theory:"Some irregular verbs change twice: give - gave - given, see - saw - seen.",
+    example:"give advice - gave advice - given advice" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"have → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"have - had - had",
+    theory:"Some irregular verbs have the same V2 and V3: have - had - had, make - made - made.",
+    example:"have a meeting - had a meeting - had a meeting" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"do → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"do - did - done",
+    theory:"Some very common verbs change twice: do - did - done, go - went - gone.",
+    example:"do the work - did the work - done the work" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"say → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"say - said - said",
+    theory:"Some irregular verbs have the same V2 and V3: say - said - said, tell - told - told.",
+    example:"say the answer - said the answer - said the answer" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"know → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"know - knew - known",
+    theory:"Some irregular verbs change twice: know - knew - known, throw - threw - thrown.",
+    example:"know the rule - knew the rule - known the rule" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"think → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"think - thought - thought",
+    theory:"Some irregular verbs have the same V2 and V3: think - thought - thought, bring - brought - brought.",
+    example:"think about it - thought about it - thought about it" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"find → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"find - found - found",
+    theory:"Some irregular verbs have the same V2 and V3: find - found - found, leave - left - left.",
+    example:"find the key - found the key - found the key" },
+  { task:"Choose V2 and V3", tense:"vf",
+    prompt:"tell → V2: ______ · V3: ______",
+    context:"Complete the second and third forms.",
+    answer:"tell - told - told",
+    theory:"Some irregular verbs have the same V2 and V3: tell - told - told, sell - sold - sold.",
+    example:"tell the client - told the client - told the client" }
+];
+
+/* Dedicated Present Perfect deck: 20 forms + 10 V3 verbs + 10 corrections + 10 builds. */
+const ppForm = (prompt, answer, context) => ({
+  task:"Put the correct form", tense:"pr", prompt, answer, context
+});
+const ppV3 = (verb, third, example) => ({
+  task:"Write the third form", tense:"pr",
+  prompt:`${verb} → V3: ______`,
+  context:"Write the past participle used after have or has.",
+  answer:`${verb} → ${third}. Present Perfect: ${example}`,
+  theory:"Present Perfect uses have/has + V3. Regular verbs usually end in -ed; irregular third forms must be learned.",
+  example:"finish → finished: I have finished. · see → seen: She has seen it."
+});
+const ppFix = (prompt, answer, context) => ({
+  task:"Fix the mistake", tense:"pr", prompt, answer, context
+});
+const ppBuild = (prompt, answer, context) => ({
+  task:"Build the sentence", tense:"pr", prompt, answer, context
+});
+
+const PRESENT_PERFECT_QUESTIONS = [
+  ppForm("I ______ (go) to the new office twice this week.",
+    "I have gone to the new office twice this week.",
+    "This week is still continuing. Use have + V3 of go."),
+  ppForm("She ______ (already / write) the monthly report.",
+    "She has already written the monthly report.",
+    "Already goes between has and the third form."),
+  ppForm("The team ______ (do) all the urgent repairs.",
+    "The team has done all the urgent repairs.",
+    "Team is singular here: has + done."),
+  ppForm("Our engineers ______ (take) the old pump away.",
+    "Our engineers have taken the old pump away.",
+    "The result matters now: the pump is no longer here."),
+  ppForm("The client ______ (just / send) the signed contract.",
+    "The client has just sent the signed contract.",
+    "Just goes after has and before V3."),
+  ppForm("We ______ (see) this problem several times before.",
+    "We have seen this problem several times before.",
+    "Use have + seen for experience before now."),
+  ppForm("The manager ______ (choose) a new supplier.",
+    "The manager has chosen a new supplier.",
+    "The present result is a completed choice."),
+  ppForm("The supplier ______ (bring) the replacement parts.",
+    "The supplier has brought the replacement parts.",
+    "Bring is irregular: bring - brought - brought."),
+  ppForm("He ______ (break) the safety rule twice this month.",
+    "He has broken the safety rule twice this month.",
+    "This month is unfinished. Break - broke - broken."),
+  ppForm("They ______ (begin) work on the second building.",
+    "They have begun work on the second building.",
+    "Begin - began - begun; use have + begun."),
+  ppForm("I ______ (know) Elena since university.",
+    "I have known Elena since university.",
+    "Since gives the starting point of a situation that is still true."),
+  ppForm("She ______ (make) three appointments today.",
+    "She has made three appointments today.",
+    "Today is not finished. Make - made - made."),
+  ppForm("The company ______ (grow) quickly over the last five years.",
+    "The company has grown quickly over the last five years.",
+    "The period reaches the present. Grow - grew - grown."),
+  ppForm("The workers ______ (build) a temporary wall.",
+    "The workers have built a temporary wall.",
+    "The completed wall is the present result."),
+  ppForm("You ______ (forget) to attach the invoice again.",
+    "You have forgotten to attach the invoice again.",
+    "Forget - forgot - forgotten."),
+  ppForm("The invoice ______ (not / arrive) yet.",
+    "The invoice has not arrived yet.",
+    "Use has not + V3. Yet normally goes at the end."),
+  ppForm("The customer ______ (not / pay) the final bill yet.",
+    "The customer has not paid the final bill yet.",
+    "Pay is regular in sound but changes spelling: paid."),
+  ppForm("______ you ever ______ (drive) a van abroad?",
+    "Have you ever driven a van abroad?",
+    "Question order: Have + subject + ever + V3?"),
+  ppForm("How long ______ they ______ (live) in Dublin?",
+    "How long have they lived in Dublin?",
+    "Ask about a period continuing until now."),
+  ppForm("Maria ______ (just / leave) the meeting.",
+    "Maria has just left the meeting.",
+    "A very recent action with a result now."),
+
+  ppV3("go", "gone", "They have gone home."),
+  ppV3("write", "written", "She has written the email."),
+  ppV3("take", "taken", "We have taken the measurements."),
+  ppV3("see", "seen", "I have seen the new plan."),
+  ppV3("do", "done", "He has done the inspection."),
+  ppV3("break", "broken", "The pipe has broken."),
+  ppV3("choose", "chosen", "They have chosen a date."),
+  ppV3("begin", "begun", "The meeting has begun."),
+  ppV3("speak", "spoken", "I have spoken to the manager."),
+  ppV3("forget", "forgotten", "She has forgotten the code."),
+
+  ppFix("She *have finished* the quotation.",
+    "She has finished the quotation.",
+    "Use has with she, he, and it."),
+  ppFix("I *has never tried* this software.",
+    "I have never tried this software.",
+    "Use have with I, you, we, and they."),
+  ppFix("We have *saw* the updated drawings.",
+    "We have seen the updated drawings.",
+    "After have, use V3: see - saw - seen."),
+  ppFix("He has *went* to the warehouse.",
+    "He has gone to the warehouse.",
+    "After has, use V3: go - went - gone."),
+  ppFix("They haven't *ate* lunch yet.",
+    "They haven't eaten lunch yet.",
+    "After have not, use V3: eat - ate - eaten."),
+  ppFix("*Did you ever visited* Ireland?",
+    "Have you ever visited Ireland?",
+    "Ask about life experience with Have + subject + ever + V3."),
+  { task:"Fix the mistake", tense:"ps",
+    prompt:"I *have met* him yesterday.",
+    context:"Yesterday is a finished past time, so Present Perfect is not possible.",
+    answer:"I met him yesterday." },
+  ppFix("She hasn't called me *already*.",
+    "She hasn't called me yet.",
+    "Use yet at the end of negatives and questions."),
+  ppFix("The engineer has *finish* the inspection.",
+    "The engineer has finished the inspection.",
+    "Use the third form after has."),
+  ppFix("How long *do you lived* here?",
+    "How long have you lived here?",
+    "For a situation continuing until now, use have + V3."),
+
+  ppBuild("she / already / send / the invoice",
+    "She has already sent the invoice.",
+    "Build an affirmative sentence. Put already after has."),
+  ppBuild("we / not receive / the keys / yet",
+    "We have not received the keys yet.",
+    "Build a negative sentence ending in yet."),
+  ppBuild("ever / you / be / to Cork?",
+    "Have you ever been to Cork?",
+    "Build a question about life experience."),
+  ppBuild("how long / he / work / here?",
+    "How long has he worked here?",
+    "Use has because the subject is he."),
+  ppBuild("they / just / finish / the service",
+    "They have just finished the service.",
+    "Put just between have and V3."),
+  ppBuild("I / never / try / sushi",
+    "I have never tried sushi.",
+    "Use never before the third form."),
+  ppBuild("the price / increase / since January",
+    "The price has increased since January.",
+    "The price is singular, and since introduces the starting point."),
+  ppBuild("our engineer / not arrive / yet",
+    "Our engineer has not arrived yet.",
+    "Use has not + V3 + yet."),
+  ppBuild("you / ever / lose / your passport?",
+    "Have you ever lost your passport?",
+    "Lose - lost - lost. Use question word order."),
+  ppBuild("it / rain / a lot / this week",
+    "It has rained a lot this week.",
+    "This week is unfinished, so connect the past rain to now.")
+];
+
+/* Default explanations — used when a question has no theory or example of its own. */
+const THEORY = {
+  ps:"Past Simple is for a finished action at a finished time. If the sentence says when — yesterday, last week, in 2019, two hours ago — this is the tense you need.",
+  pc:"Past Continuous (was/were + verb–ing) is the long action in progress at a past moment. A short action that interrupts it goes in Past Simple.",
+  pr:"Present Perfect (have/has + third form) links the past to now. Use it when the result matters today and you do not say when it happened.",
+  pp:"Past Perfect (had + third form) marks the earlier of two past actions. The later action stays in Past Simple."
+};
+const EXAMPLE = {
+  ps:"We started the job in March. · I called the supplier two hours ago.",
+  pc:"I was driving home when it started to snow. · She was stretching when her phone rang.",
+  pr:"I have finished the report, so you can read it. · He has just left the office.",
+  pp:"The inspector had gone before we arrived. · I had eaten, so I skipped lunch."
+};
+
+const TENSES = {
+  ps:{name:"Past Simple",      c:"var(--ps)"},
+  pc:{name:"Past Continuous",  c:"var(--pc)"},
+  pp:{name:"Past Perfect",     c:"var(--pp)"},
+  pr:{name:"Present Perfect",  c:"var(--pr)"},
+  vf:{name:"Verb Forms",       c:"#8A5A83"}
+};
+
+
+/* Each task type gets its own colour, icon and tinted sentence panel. */
+const TASKMETA = {
+  "Fix the mistake":       { c:"#D2544C", tint:"#FCEFEE",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/></svg>' },
+  "Put the correct form":  { c:"#3C6E9F", tint:"#EBF2F9",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="M8 12h8"/></svg>' },
+  "Answer the question":   { c:"#2E8B77", tint:"#EAF5F1",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a3 3 0 0 1-3 3H8l-4 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3z"/></svg>' },
+  "Describe the situation":{ c:"#8A5A83", tint:"#F5EDF4",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 16l4.5-4.5 4 4L15 12l6 5.5"/><circle cx="9" cy="9" r="1.4"/></svg>' },
+  "Choose V2 and V3":      { c:"#8A5A83", tint:"#F5EDF4",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M4 12h12"/><path d="M4 17h8"/><path d="M17 14l3 3-3 3"/></svg>' },
+  "Write the third form":  { c:"#E5574F", tint:"#FBF0EE",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10"/><path d="M4 12h7"/><path d="M4 17h5"/><path d="M15 15l2 2 4-5"/></svg>' },
+  "Build the sentence":    { c:"#2E8B77", tint:"#EAF5F1",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="6" rx="2"/><rect x="14" y="4" width="7" height="6" rx="2"/><rect x="8.5" y="14" width="7" height="6" rx="2"/><path d="M6.5 10v2h5.5v2M17.5 10v2H12"/></svg>' },
+  "Speaking · part 2":     { c:"#C98A2B", tint:"#FBF3E5",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3.5"/></svg>' },
+  "Speaking · past stories":{ c:"#C98A2B", tint:"#FBF3E5",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3.5"/></svg>' },
+  "Reading · story":       { c:"#3C6E9F", tint:"#EBF2F9",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/><path d="M8 7h8"/></svg>' }
+};
+const taskHead = (label, counter) => {
+  const m = TASKMETA[label] || { c:"var(--ink)", tint:"#EFF1F6", i:"" };
+  return `<div class="cardhead">
+      <span class="badge">${m.i}${label}</span>
+      <span class="qno">${counter}</span>
+    </div>`;
+};
+
+/* Formats the test sentence:
+   ______  → a proper blank line
+   (verb)  → a small blue cue chip
+   *word*  → bold coral, for pointing at the word under test        */
+function styleSentence(text){
+  return text
+    .replace(/_{2,}/g, '<span class="blank"></span>')
+    .replace(/\(([^)]+)\)/g, '<span class="cue">$1</span>')
+    .replace(/\*([^*]+)\*/g, '<b>$1</b>');
+}
+
+function escapeHtml(text){
+  return text.replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[ch]));
+}
+
+/* ---------------- state ---------------- */
+const stage = document.getElementById('stage');
+let idx = 0;
+const results = [];           // {q, correct}
+let drillDeck = 'present-perfect';
+let drillQuestions = [...PRESENT_PERFECT_QUESTIONS];
+let topCard = null;
+let locked = false;
+
+function activeDrillBank(){
+  if (drillDeck === 'present-perfect') return PRESENT_PERFECT_QUESTIONS;
+  if (drillDeck === 'verbs') return VERB_FORM_QUESTIONS;
+  return QUESTIONS;
+}
+
+function syncDrillSide(){
+  document.querySelectorAll('#drillSide button[data-deck]').forEach(button =>
+    button.classList.toggle('on', button.dataset.deck === drillDeck));
+}
+
+function shuffledQuestions(){
+  const next = [...activeDrillBank()];
+  for (let i = next.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
+}
+
+function restartDrill(shuffle = false){
+  locked = false;
+  idx = 0;
+  results.length = 0;
+  drillQuestions = shuffle ? shuffledQuestions() : [...activeDrillBank()];
+  syncDrillSide();
+  render();
+}
+
+function render(){
+  stage.classList.remove('speaking','reading');
+  stage.innerHTML = '';
+  if (idx >= drillQuestions.length){ showResult(); return; }
+
+  // two placeholder cards behind, for depth
+  for (let d = Math.min(2, drillQuestions.length - idx - 1); d >= 1; d--){
+    const el = document.createElement('div');
+    el.className = 'card behind';
+    el.style.transform = `translateY(${d*10}px) scale(${1 - d*0.035})`;
+    el.style.opacity = String(1 - d*0.28);
+    stage.appendChild(el);
+  }
+
+  const q = drillQuestions[idx];
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="stamp r">got it</div>
+    <div class="stamp l">missed</div>
+    ${taskHead(q.task, String(idx+1).padStart(2,'0') + ' / ' + String(drillQuestions.length).padStart(2,'0'))}
+    <div class="scroll"><div class="inner">
+      <div class="sentence"><p class="prompt">${styleSentence(q.prompt)}</p></div>
+      <div id="panels"></div>
+    </div></div>
+    <div class="tools">
+      <button class="btn" id="bTheory">Theory<span class="k">1</span></button>
+      <button class="btn" id="bExample">Example<span class="k">2</span></button>
+      ${q.terms ? `<button class="btn" id="bWords">Words<span class="k">3</span></button>` : ''}
+      <button class="btn primary" id="bAnswer">Show answer<span class="k">space</span></button>
+    </div>
+  `;
+  const tm = TASKMETA[q.task];
+  if (tm){ card.style.setProperty('--accent', tm.c); card.style.setProperty('--tint', tm.tint); }
+  stage.appendChild(card);
+  topCard = card;
+
+  const panels = card.querySelector('#panels');
+  const scroll = card.querySelector('.scroll');
+  const add = (cls, title, html) => {
+    const p = document.createElement('div');
+    p.className = 'panel ' + cls;
+    p.innerHTML = `<h4>${title}</h4>${html}`;
+    panels.appendChild(p);
+    requestAnimationFrame(()=> scroll.scrollTo({top:scroll.scrollHeight, behavior:'smooth'}));
+  };
+
+  card.querySelector('#bTheory').onclick = e => {
+    add('theory','How it works', q.theory || THEORY[q.tense]); e.currentTarget.disabled = true;
+  };
+  card.querySelector('#bExample').onclick = e => {
+    add('example','Like this', q.example || EXAMPLE[q.tense]); e.currentTarget.disabled = true;
+  };
+  card.querySelector('#bWords')?.addEventListener('click', e => {
+    add('words','Words in this question',
+      '<dl>' + q.terms.map(t =>
+        `<dt>${t.w}</dt><dd>${t.d}<span class="ua">${t.ua}</span></dd>`).join('') + '</dl>');
+    e.currentTarget.disabled = true;
+  });
+  card.querySelector('#bAnswer').onclick = e => {
+    const t = TENSES[q.tense];
+    add('answer','Correct answer',
+      `<span class="sol">${styleSentence(q.answer)}</span><span class="tense-tag" style="background:${t.c}">${t.name}</span>`);
+    e.currentTarget.style.display = 'none';
+    const v = document.createElement('div');
+    v.className = 'verdict';
+    v.innerHTML = `<button class="btn no" id="vNo">Missed it</button><button class="btn yes" id="vYes">I got it</button>`;
+    card.querySelector('.tools').after(v);
+    v.querySelector('#vYes').onclick = () => fly(1);
+    v.querySelector('#vNo').onclick  = () => fly(-1);
+  };
+
+  drag(card);
+  updateHud();
+}
+
+/* ---------------- swipe ---------------- */
+function drag(card){
+  let sx=0, sy=0, dx=0, dy=0, active=false;
+  const rStamp = card.querySelector('.stamp.r');
+  const lStamp = card.querySelector('.stamp.l');
+
+  card.addEventListener('pointerdown', e => {
+    if (e.target.closest('button') || locked) return;
+    active = true; sx = e.clientX; sy = e.clientY;
+    card.setPointerCapture(e.pointerId);
+    card.style.transition = 'none';
+  });
+  card.addEventListener('pointermove', e => {
+    if (!active) return;
+    dx = e.clientX - sx; dy = e.clientY - sy;
+    card.style.transform = `translate(${dx}px, ${dy*0.35}px) rotate(${dx*0.045}deg)`;
+    rStamp.style.opacity = Math.max(0, Math.min(1, dx/110));
+    lStamp.style.opacity = Math.max(0, Math.min(1, -dx/110));
+  });
+  const end = () => {
+    if (!active) return;
+    active = false;
+    card.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)';
+    if (Math.abs(dx) > 110){ fly(dx > 0 ? 1 : -1); }
+    else {
+      card.style.transform = '';
+      rStamp.style.opacity = 0; lStamp.style.opacity = 0;
+    }
+    dx = 0;
+  };
+  card.addEventListener('pointerup', end);
+  card.addEventListener('pointercancel', end);
+}
+
+function fly(dir){                       // dir: 1 = right/correct, -1 = left/missed
+  if (locked || !topCard) return;
+  locked = true;
+  const card = topCard;
+  card.querySelector(dir > 0 ? '.stamp.r' : '.stamp.l').style.opacity = 1;
+  card.style.transition = 'transform .42s cubic-bezier(.35,.1,.35,1), opacity .42s ease';
+  card.style.transform = `translate(${dir * (window.innerWidth + 260)}px, ${dir*40}px) rotate(${dir*22}deg)`;
+  card.style.opacity = '0';
+  results.push({ q: drillQuestions[idx], correct: dir > 0 });
+  setTimeout(() => { idx++; locked = false; render(); }, 330);
+}
+
+/* ---------------- hud ---------------- */
+function updateHud(){
+  document.getElementById('count').textContent = `${Math.min(idx+1, drillQuestions.length)} / ${drillQuestions.length}`;
+  document.getElementById('rail').style.width  = (idx / drillQuestions.length * 100) + '%';
+  document.getElementById('tYes').textContent  = results.filter(r=>r.correct).length;
+  document.getElementById('tNo').textContent   = results.filter(r=>!r.correct).length;
+}
+
+document.getElementById('shuffle').onclick = () => restartDrill(true);
+document.querySelectorAll('#drillSide button[data-deck]').forEach(button => {
+  const banks = {
+    'present-perfect': PRESENT_PERFECT_QUESTIONS,
+    'tenses': QUESTIONS,
+    'verbs': VERB_FORM_QUESTIONS
+  };
+  button.querySelector('b').textContent = banks[button.dataset.deck].length;
+  button.onclick = () => {
+    if (drillDeck === button.dataset.deck) return;
+    drillDeck = button.dataset.deck;
+    restartDrill();
+  };
+});
+
+/* ---------------- keyboard ---------------- */
+document.addEventListener('keydown', e => {
+  if (mode === 'speak'){
+    if (e.key === ' '){ e.preventDefault(); T.running ? stopTimer() : startTimer(); }
+    if (e.key === 'n' || e.key === 'N') document.getElementById('sNext')?.click();
+    return;
+  }
+  if (mode === 'read'){
+    if (e.key === 'n' || e.key === 'N') document.getElementById('readNext')?.click();
+    if (rStep === 2 && e.key === ' '){ e.preventDefault(); T.running ? stopTimer() : startTimer(); }
+    return;
+  }
+  if (idx >= drillQuestions.length || !topCard) return;
+  if (e.key === 'ArrowRight') fly(1);
+  if (e.key === 'ArrowLeft')  fly(-1);
+  if (e.key === '1') topCard.querySelector('#bTheory')?.click();
+  if (e.key === '2') topCard.querySelector('#bExample')?.click();
+  if (e.key === '3') topCard.querySelector('#bWords')?.click();
+  if (e.key === ' '){ e.preventDefault(); topCard.querySelector('#bAnswer')?.click(); }
+});
+
+/* ---------------- results ---------------- */
+function showResult(){
+  updateHud();
+  document.getElementById('rail').style.width = '100%';
+  const right = results.filter(r=>r.correct).length;
+  const byTense = {};
+  results.forEach(r => {
+    const t = r.q.tense;
+    byTense[t] = byTense[t] || {right:0, total:0};
+    byTense[t].total++; if (r.correct) byTense[t].right++;
+  });
+  const missed = results.filter(r=>!r.correct);
+
+  const box = document.createElement('div');
+  box.className = 'result';
+  box.innerHTML = `
+    <div class="task">Your result</div>
+    <div class="score" style="margin-top:10px">${right}<small> / ${results.length}</small></div>
+    <div class="bars">
+      ${Object.keys(byTense).map(t => {
+        const b = byTense[t], pct = Math.round(b.right/b.total*100);
+        return `<div class="bar-row">
+          <span>${TENSES[t].name}</span><span style="color:var(--ink-soft)">${b.right}/${b.total}</span>
+          <span class="bar-track"><i style="width:${pct}%;background:${TENSES[t].c}"></i></span>
+        </div>`;
+      }).join('')}
+    </div>
+    ${missed.length ? `<div class="missed"><strong style="color:var(--ink)">Worth another look:</strong>
+      <ul>${missed.map(m=>`<li>${styleSentence(m.q.prompt)} <em style="color:${TENSES[m.q.tense].c}">— ${TENSES[m.q.tense].name}</em></li>`).join('')}</ul></div>`
+      : `<div class="missed">Clean sweep. Go again with the next set.</div>`}
+    <div class="tools" style="margin-top:auto">
+      <button class="btn primary" id="again">Start again</button>
+    </div>
+  `;
+  stage.innerHTML = '';
+  stage.appendChild(box);
+  box.querySelector('#again').onclick = () => restartDrill();
+}
+
+/* ==================================================================
+   SPEAKING MODE — IELTS Part 2 style long turn
+   Cue card + prep/speak timer + marker words you can put on screen.
+   Add topics to SPEAK_CARDS; add words to MARKERS.
+===================================================================*/
+const SPEAK_CARDS = [
+  { title:"Describe a time when you solved a difficult problem at work.",
+    say:["what the problem was","when it happened and who was involved","what you did to solve it"],
+    explain:"and explain how you felt when it was finished." },
+  { title:"Describe a person who taught you something important.",
+    say:["who this person is","how you met them","what they taught you"],
+    explain:"and explain why it was important for you." },
+  { title:"Describe a time when you helped someone at work.",
+    say:["who you helped","what the situation was","what you did"],
+    explain:"and explain why the person needed your help." },
+  { title:"Describe a job you have done that you enjoyed.",
+    say:["what the job was","when you did it","what your tasks were"],
+    explain:"and explain why you enjoyed it." },
+  { title:"Describe a time when something went wrong and you fixed it.",
+    say:["what went wrong","when and where it happened","how you fixed it"],
+    explain:"and explain what you learned from it." },
+  { title:"Describe a skill you have learned in the last few years.",
+    say:["what the skill is","how you learned it","how long you have been using it"],
+    explain:"and explain how it has helped you." },
+  { title:"Describe a memorable trip you have taken.",
+    say:["where you went","who you went with","what you did there"],
+    explain:"and explain why you still remember it." },
+  { title:"Describe a time when you were very busy.",
+    say:["when it was","what you were doing","why there was so much work"],
+    explain:"and explain how you managed it." },
+  { title:"Describe a change you have made in your life recently.",
+    say:["what you changed","when you started","why you decided to change it"],
+    explain:"and explain how your life is different now." },
+  { title:"Describe a decision you made that turned out well.",
+    say:["what the decision was","when you made it","what other options you had"],
+    explain:"and explain why it was a good decision." },
+  { title:"Describe an occasion when you were late for something.",
+    say:["where you were going","why you were late","what was happening at that time"],
+    explain:"and explain what happened in the end." },
+  { title:"Describe a piece of equipment or technology you use a lot.",
+    say:["what it is","how long you have used it","what you use it for"],
+    explain:"and explain how it makes your work easier." },
+  { title:"Describe a team you have worked in.",
+    say:["who was in the team","what you were working on","what your role was"],
+    explain:"and explain what made the team work well or badly." },
+  { title:"Describe a time you had to talk to a difficult person.",
+    say:["who the person was","what the situation was","what you said"],
+    explain:"and explain how the conversation ended." },
+  { title:"Describe a sport or exercise you do regularly.",
+    say:["what it is","how long you have done it","how often you do it"],
+    explain:"and explain why you keep doing it." },
+  { title:"Describe a goal you have achieved.",
+    say:["what the goal was","when you set it","what you did to reach it"],
+    explain:"and explain how you felt when you achieved it." },
+  { title:"Describe a time when the weather changed your plans.",
+    say:["what you had planned","what the weather was doing","what you did instead"],
+    explain:"and explain how you felt about it." },
+  { title:"Describe a day that did not go as planned.",
+    say:["when this day was","what you had planned to do","what actually happened"],
+    explain:"and explain why the day went that way." },
+  { title:"Describe something you have bought recently that you are happy with.",
+    say:["what you bought","when and where you bought it","why you chose it"],
+    explain:"and explain why you are happy with it." },
+  { title:"Describe a place you have visited more than once.",
+    say:["where it is","when you first went there","how many times you have been"],
+    explain:"and explain why you keep going back." }
+];
+
+const PAST_SPEAK_CARDS = [
+  { title:"Tell the story of a time when a normal workday suddenly became difficult.",
+    say:["where you were and what you were doing","what had happened before the problem started","what happened next"],
+    explain:"and explain how the situation ended." },
+  { title:"Tell the story of a time when you fixed a mistake someone had made.",
+    say:["what the mistake was","when you noticed it","what you were doing when you found it"],
+    explain:"and explain what you did after that." },
+  { title:"Tell the story of a time when you arrived somewhere and plans had already changed.",
+    say:["where you arrived","what had changed before you got there","what people were doing at that moment"],
+    explain:"and explain what happened in the end." },
+  { title:"Tell the story of a time when you were helping someone and something unexpected happened.",
+    say:["who you were helping","what you were doing","what suddenly happened"],
+    explain:"and explain how you reacted." },
+  { title:"Tell the story of a time when you had to solve a problem under time pressure.",
+    say:["what the problem was","what you had done before the deadline","what was happening around you"],
+    explain:"and explain whether you solved it on time." },
+  { title:"Tell the story of a time when a trip or journey did not go as planned.",
+    say:["where you were going","what had happened before the delay","what you were doing while you waited"],
+    explain:"and explain how the journey finished." },
+  { title:"Tell the story of a time when you learned something from a bad experience.",
+    say:["what happened","what you had expected before it happened","what you did after it happened"],
+    explain:"and explain what you learned." },
+  { title:"Tell the story of a time when you met someone who changed your opinion.",
+    say:["where you met this person","what you were doing when you met","what you had thought before"],
+    explain:"and explain how your opinion changed." },
+  { title:"Tell the story of a time when you lost something important.",
+    say:["what you lost","where you had put it before","what you were doing when you noticed"],
+    explain:"and explain how the story ended." },
+  { title:"Tell the story of a time when you made a decision and later understood it was right.",
+    say:["what decision you made","what had happened before you decided","what happened after the decision"],
+    explain:"and explain why it was the right choice." },
+  { title:"Tell the story of a time when the weather changed your plans.",
+    say:["what you had planned to do","what the weather was doing","what you did instead"],
+    explain:"and explain how you felt afterwards." },
+  { title:"Tell the story of a time when you had been preparing for something important.",
+    say:["what you had been preparing for","how long you had been preparing","what happened on the day"],
+    explain:"and explain whether the preparation helped." }
+];
+
+const READING_CARDS = [
+  { title:"The morning the old cafe changed",
+    text:[
+      "Three years ago, Lena used to manage a small cafe near the station. On most mornings she opened the doors before seven, checked the ovens, and wrote the first orders on a paper pad. One rainy Thursday, she was unlocking the front door when she noticed that the lights were already on inside. At first, she thought she had forgotten to switch them off the night before, but then she heard music coming from the kitchen.",
+      "When Lena went in, her assistant Marco was standing by the counter with flour on his shirt and a nervous smile on his face. He had arrived an hour earlier because a tour group had called late the previous evening. They had booked breakfast for thirty people, but Marco had not written the message down. While Lena was reading the missed call notes, two buses stopped outside the cafe.",
+      "For the next hour, Lena and Marco were moving faster than they had ever moved before. She made coffee, he baked extra bread, and they served every table before nine. Later, Lena said the morning taught her more than any training course had taught her, because she had been making decisions while customers were waiting and the rain was still hitting the windows. Since that morning, Lena has kept an online booking form, and Marco has never trusted paper notes again. They still laugh about it, because what had started as a mistake became the busiest breakfast the cafe had ever had."
+    ],
+    writePrompt:"Write a few sentences about the main things you remember. Focus on the order of actions and use the correct tenses.",
+    speakPrompt:"Speak for 2 minutes describing the story you read. Retell what happened, what had happened before, and what has changed since then." },
+  { title:"The delivery that disappeared",
+    text:[
+      "Before Tomas became a site manager, he used to drive a delivery van for a building company. Every Friday he took tools, paint, and spare parts to different apartments around the city. One Friday in November, he was unloading boxes outside a new office block when his phone started ringing. His boss sounded worried because a customer had called to say that the most important package had not arrived.",
+      "Tomas checked the back of the van twice, but the package was not there. He remembered that he had stopped at a petrol station earlier, and he wondered if he had left it beside the counter. While he was driving back, rain was falling heavily and traffic was moving very slowly. He called the station, but nobody had seen the box.",
+      "When Tomas arrived, a young cashier was putting empty cups into a bag. She said an older man had picked up the package by mistake because it looked like his own parcel. Tomas found the phone number on the receipt, called the man, and collected the box twenty minutes later. Since that day, Tomas has labelled every delivery in large letters, and he has taught new drivers to check the van before they leave each stop. He has never lost another package, but he still remembers how nervous he was while he was searching for that one."
+    ],
+    writePrompt:"Write a few sentences about the main things you remember. Focus on where the package was, what Tomas had done before, and what happened after.",
+    speakPrompt:"Speak for 2 minutes describing the delivery story. Retell the sequence of actions and say what Tomas has changed since then." },
+  { title:"The evening at the community hall",
+    text:[
+      "Marta used to volunteer at a small community hall near her old flat. She helped with language classes, charity dinners, and weekend concerts. One evening, she was arranging chairs for a music event when the lights went out. At first everyone laughed, but the room became quiet when they realized the musicians had already arrived and the audience was waiting outside.",
+      "Marta called the caretaker, but he had gone home early because he had been working there since six in the morning. While one volunteer was looking for candles, Marta remembered that the kitchen had a small emergency lamp above the back door. She found it, but it was almost empty. By that time, the first guests had started knocking on the glass doors.",
+      "Instead of cancelling the event, Marta moved everyone into the courtyard. The musicians played acoustic songs, the guests held phone lights, and the rain stayed away until the last song finished. While the final song was playing, Marta was checking the door every few minutes because she still expected the caretaker to return. People said it was the most memorable concert the hall had ever had. Since then, Marta has organized outdoor backup plans for every event, and the hall has bought better emergency lights. She has also told the story many times because it shows how a mistake can become a better memory than the original plan."
+    ],
+    writePrompt:"Write a few sentences about the main things you remember. Focus on what was happening, what had already happened, and how Marta solved the problem.",
+    speakPrompt:"Speak for 2 minutes describing the community hall story. Retell the event in order and explain what has changed since that evening." },
+  { title:"The client who came too early",
+    text:[
+      "When Arsen worked in customer service, he used to prepare meeting rooms before important visits. He checked the screen, printed the documents, and put water on the table. One Tuesday morning, he was making coffee in the kitchen when the receptionist called him. The client had arrived forty minutes early, and the manager had not come to the office yet.",
+      "Arsen felt nervous because he had never led a client meeting before. The manager had sent him a short agenda the night before, but Arsen had only read half of it. While the client was waiting near the window, Arsen opened the file on his laptop and quickly checked the main points. He invited the client into the room, explained that the manager was on the way, and started with simple questions about the project.",
+      "After ten minutes, the client relaxed and began explaining the problem in detail. While Arsen was taking notes, he noticed that the client had brought photos and numbers that nobody had seen before. By the time the manager arrived, Arsen had already collected the most useful information. The meeting went well, and the client later wrote a positive email about him. Since that day, Arsen has prepared more carefully for every visit, even when he is not leading the meeting. He has also become more confident because he learned that he could stay calm while something unexpected was happening."
+    ],
+    writePrompt:"Write a few sentences about the main things you remember. Focus on what Arsen used to do, what had happened before the manager arrived, and what happened next.",
+    speakPrompt:"Speak for 2 minutes describing the early client story. Retell the actions in order and say what Arsen has learned since then." },
+  { title:"The match in the heavy rain",
+    text:[
+      "When Danylo was at university, he used to play football every Saturday with the same group of friends. They usually met in the park, chose teams quickly, and played until it got dark. One afternoon, they were warming up when black clouds moved over the field. Some players wanted to go home, but Danylo said they had already cancelled two matches that month.",
+      "Ten minutes after the match started, rain was pouring down and the grass was becoming slippery. Danylo was running towards the goal when he saw his friend Petro fall near the sideline. Petro had twisted his ankle because he had stepped into a hole that nobody had noticed before. While the others were helping him sit down, Danylo called a taxi and used his jacket to keep Petro warm.",
+      "They stopped the match and took Petro home. While they were waiting for news from him, the players talked about how careless they had been before the match started. Later, they discovered that the park workers had been repairing the field during the week but had not covered the hole properly. Since that day, the group has checked the field before every game, and they have moved many matches to a safer sports centre. Danylo has not forgotten that afternoon because it taught him that a game can wait, but a friend's safety cannot."
+    ],
+    writePrompt:"Write a few sentences about the main things you remember. Focus on the match, the accident, what had caused it, and what the group has changed.",
+    speakPrompt:"Speak for 2 minutes describing the football story. Retell what happened and use the correct tenses for the sequence of actions." },
+  { title:"The train that stopped between stations",
+    text:[
+      "Nadia used to take the first train into the city whenever she had an important meeting. On the morning of a job interview, she left home earlier than usual and reached the platform before sunrise. She had checked the timetable twice the night before, and she was carrying printed copies of her CV in a blue folder. Everything seemed calm until the train suddenly stopped in a tunnel.",
+      "At first, the passengers waited quietly, but after fifteen minutes people began checking their phones. The driver explained that another train had broken down ahead of them. While Nadia was listening to the announcement, she noticed that her phone battery was almost empty. She had forgotten to charge it because she had been practising interview answers until midnight. She quickly sent a message to the company and explained that she might be late.",
+      "The train started moving again forty minutes later. By the time Nadia arrived, the first interview had already finished, but the manager had read her message and arranged another time that afternoon. Nadia spent the extra hours in a library, prepared more carefully, and gave a confident interview. She got the job the following week. Since then, she has always charged her phone before an important journey, and she has kept a portable charger in her bag."
+    ],
+    writePrompt:"Write a few sentences about Nadia's journey. Focus on what she had done before leaving, what happened on the train, and how the problem ended.",
+    speakPrompt:"Speak for 2 minutes retelling the train story. Explain why Nadia was delayed, what she did while she was waiting, and what she has changed since then." },
+  { title:"The leak above the library",
+    text:[
+      "Owen used to work evening shifts at a small public library. Most nights were quiet, so he returned books to the shelves and helped students use the computers. One winter evening, he was closing the upstairs reading room when he heard water dripping behind a bookcase. It had been raining all day, but the roof had never leaked before.",
+      "Owen moved the bookcase and discovered a dark patch spreading across the ceiling. A pipe in the flat above had burst while the owner was away. Water was already running down the wall towards a shelf of local history books. While Owen was calling the emergency number, two students carried the books to a dry table. The cleaner found several buckets, but the water was falling faster than they could collect it.",
+      "A plumber arrived twenty minutes later and turned off the building's water supply. By then, the group had moved nearly three hundred books, and only six had become wet. The library closed for two days while workers repaired the ceiling. Since the accident, the council has installed a water alarm upstairs, and the staff have created an emergency plan. Owen has also shown every new employee where the main water valve is."
+    ],
+    writePrompt:"Write a few sentences about the library emergency. Focus on what Owen was doing, what had caused the leak, and how the books were protected.",
+    speakPrompt:"Speak for 2 minutes describing the leak. Retell the actions in order and explain what the library has done since the accident." },
+  { title:"The bicycle before the charity ride",
+    text:[
+      "Eva had been training for a charity bicycle ride for three months. She usually cycled along the coast before work and had already completed several long practice journeys. On the evening before the event, she was cleaning her bicycle when she noticed a thin crack beside the back wheel. She had not seen it during her last ride, and every repair shop had already closed.",
+      "Eva called her neighbour Ben, who used to repair bicycles when he was a student. While he was examining the frame, Eva searched online for the event rules. Ben explained that the bicycle was not safe enough for a fifty-kilometre route. He offered her his old touring bike, but it had been standing in a garage for nearly a year and both tyres were flat.",
+      "They worked together until late in the evening. Ben replaced the inner tubes, Eva adjusted the seat, and they tested the brakes under the streetlights. The next morning, she completed the ride without a problem and raised more money than she had expected. Since then, Eva has checked her bicycle after every long journey. She has also taken a basic repair course, so she no longer depends completely on a repair shop."
+    ],
+    writePrompt:"Write a few sentences about Eva's bicycle problem. Focus on her preparation, what Ben discovered, and how they made another bicycle ready.",
+    speakPrompt:"Speak for 2 minutes retelling the charity ride story. Explain what had happened before the event and what Eva has learned since then." },
+  { title:"The dog that vanished during the storm",
+    text:[
+      "Ravi used to look after his neighbour's dog whenever she visited her family. The dog, Milo, was friendly but frightened of thunder. One Saturday evening, Ravi was cooking dinner when a storm began suddenly. He had closed the garden gate earlier, but a strong gust of wind pushed it open while he was answering a phone call.",
+      "When Ravi went outside, Milo had disappeared. Rain was falling heavily, and the streets were almost empty. Ravi put on a coat and began searching near the park. While he was calling the dog's name, a shopkeeper told him that she had seen a wet brown dog running towards the bus station. Ravi followed the road, but the station was closed and Milo was not there.",
+      "After nearly an hour, Ravi heard scratching inside an empty bus shelter. Milo had hidden behind a broken advertising panel because the thunder had scared him. Ravi carried him home, dried him with towels, and fixed the gate before the neighbour returned. Since that night, the neighbour has attached a tracker to Milo's collar, and Ravi has checked the lock every time he has looked after him."
+    ],
+    writePrompt:"Write a few sentences about Milo. Focus on how he escaped, what Ravi was doing during the search, and where the dog had hidden.",
+    speakPrompt:"Speak for 2 minutes describing the search for Milo. Retell the story in order and say what Ravi and the neighbour have changed." },
+  { title:"The keys inside the holiday apartment",
+    text:[
+      "Sofia and her brother used to rent a small apartment by the sea every summer. Last August, they arrived after a long drive and collected the keys from a lockbox beside the door. They had unpacked most of their bags when Sofia went outside to bring in the final suitcase. As the door closed behind her, she realized that the keys were still on the kitchen table.",
+      "Her brother was taking a shower and could not hear her knocking. Sofia had left her phone inside as well, so she walked to a nearby cafe and asked to make a call. While she was explaining the problem to the owner, her brother finally noticed that she had gone. He tried to open the door, but the handle had locked automatically and the spare key was in the same lockbox they had already closed.",
+      "The apartment manager arrived half an hour later with a master key. By that time, Sofia had been waiting in the cafe with the suitcase, and her brother had been calling to her through an open window. They laughed when the door finally opened, although neither of them had found the situation funny at first. Since that holiday, Sofia has kept the key in a zipped pocket, and they have memorized the manager's phone number."
+    ],
+    writePrompt:"Write a few sentences about the locked apartment. Focus on where the keys were, what Sofia did, and what had happened by the time the manager arrived.",
+    speakPrompt:"Speak for 2 minutes retelling the apartment story. Explain how the door locked and what Sofia and her brother have done differently since then." },
+  { title:"The busiest morning at the market",
+    text:[
+      "Mei used to help her aunt at a weekend market stall that sold homemade soup and bread. They normally prepared enough food for about fifty customers. One Sunday, they were arranging the first bowls when a local radio presenter mentioned the stall during a live programme. Neither of them had known that he had visited the market the previous week.",
+      "Within twenty minutes, a long queue had formed. Mei was serving soup while her aunt was cutting bread and answering questions. They had already sold half their food before the market officially opened. When they ran out of clean bowls, a neighbouring seller lent them paper cups. Another trader brought extra spoons because he had heard customers asking for them.",
+      "By midday, every pot was empty. Mei and her aunt had served more than one hundred people, and several customers had asked whether they could order soup online. The following month, they created a simple website and began taking advance orders. Since the radio programme, the stall has become one of the market's busiest businesses, but they have never again prepared for only fifty customers."
+    ],
+    writePrompt:"Write a few sentences about the market stall. Focus on what caused the crowd, what was happening during the rush, and what changed afterwards.",
+    speakPrompt:"Speak for 2 minutes describing the market story. Retell what had happened before the queue formed and explain how the business has developed." },
+  { title:"The path that disappeared in the fog",
+    text:[
+      "Calum used to go hiking in the mountains with his cousin every spring. They always checked the forecast, carried a paper map, and told someone where they were going. During one trip, the morning had been bright and clear, but thick fog came down while they were crossing a high ridge. Within minutes, the path in front of them had disappeared.",
+      "Calum wanted to continue because they had already walked most of the route, but his cousin noticed that the wind was becoming stronger. While they were discussing what to do, they heard voices below them. Another pair of hikers had left the marked path and were trying to climb back up. Calum checked the map and realized that all four hikers had passed the safe turning point fifteen minutes earlier.",
+      "They turned around together and followed their compass towards a stone shelter they had seen on the way up. By the time they reached it, the fog had become so dense that they could hardly see the door. They waited there until the weather improved and returned safely before dark. Since that day, Calum has carried a GPS device as well as a map, and he has never continued along a ridge when visibility has become poor."
+    ],
+    writePrompt:"Write a few sentences about the hikers. Focus on how the weather changed, what mistake they had made, and why they returned to the shelter.",
+    speakPrompt:"Speak for 2 minutes retelling the mountain story. Describe what was happening in the fog and what Calum has changed since that trip." },
+  { title:"The unexpected workshop inspection",
+    text:[
+      "Jonas used to manage a workshop that repaired heating systems. Every month, he checked the tools, updated the safety records, and made sure the emergency exits were clear. One Monday, he was showing a new employee how to test a pump when two safety inspectors arrived without an appointment. Jonas felt surprised because the company had expected them later in the year.",
+      "The inspectors examined the shelves and asked to see the training records. Jonas had completed most of the paperwork on Friday, but one certificate was missing. While he was searching through an old filing cabinet, the new employee remembered seeing the certificate beside the printer. Someone had moved it there after making a copy and had forgotten to return it.",
+      "The inspectors found the document and continued their visit. They praised the tidy work areas but asked the company to label several chemical containers more clearly. By the end of the day, Jonas had ordered new labels and had moved all training records into a digital folder. The workshop has passed every inspection since then, and the staff have stopped keeping important certificates in different places."
+    ],
+    writePrompt:"Write a few sentences about the inspection. Focus on what Jonas used to check, why a certificate was missing, and what the workshop changed.",
+    speakPrompt:"Speak for 2 minutes describing the workshop inspection. Retell what happened and explain what the staff have done since that day." },
+  { title:"The costume that arrived at the last minute",
+    text:[
+      "Aisha used to help with costumes for a school theatre group. Before each performance, she repaired buttons, prepared shoes, and wrote every actor's name inside their clothes. On the afternoon of the school play, she was checking the final costumes when she discovered that the main actor's long red coat was missing. The group had ordered it weeks earlier, but the delivery company had sent it to the wrong school.",
+      "While the drama teacher was calling the delivery office, Aisha searched the costume cupboard for another coat. She found an old black one that had belonged to a different production. It was too large and the colour was wrong, but she had already found some red fabric backstage. Two parents helped her shorten the sleeves while she covered the front with the fabric.",
+      "Ten minutes before the performance, a delivery driver finally arrived with the original coat. However, the actor had already put on Aisha's version and said it was more comfortable. He wore it on stage, and nobody in the audience realized that it had been made that afternoon. Since then, the theatre group has ordered important costumes much earlier, and Aisha has kept the red coat as an example of quick teamwork."
+    ],
+    writePrompt:"Write a few sentences about the missing costume. Focus on what had happened to the original coat and what Aisha was doing before the performance.",
+    speakPrompt:"Speak for 2 minutes retelling the costume story. Explain how the group solved the problem and what it has changed since then." },
+  { title:"The reunion after the delayed flight",
+    text:[
+      "Daniel had not seen his childhood friend Luis for almost ten years. They had grown up on the same street, but Luis had moved abroad after university. When Luis finally planned a visit, Daniel offered to meet him at the airport. He was waiting beside the arrivals board when the flight number suddenly changed from delayed to cancelled.",
+      "Daniel called Luis, who explained that the plane had returned to its departure gate because of a technical problem. Passengers were standing in a long queue while the airline was arranging another flight. Daniel went home, but he kept checking the airport website through the night. At six the next morning, he saw that a replacement flight had already taken off.",
+      "When Daniel returned to the airport, Luis was coming through the doors with the same green backpack he had used at university. They recognized each other immediately and spent the day walking around their old neighbourhood. Several shops had closed, and a new park had replaced their school playground, but their friendship felt familiar. Since that visit, they have spoken online every month and have met twice more."
+    ],
+    writePrompt:"Write a few sentences about Daniel and Luis. Focus on why the first flight was cancelled, what Daniel did overnight, and what has happened since the visit.",
+    speakPrompt:"Speak for 2 minutes describing the reunion story. Retell the travel problem, the meeting, and how the friends have stayed in contact." },
+  { title:"The alarm in the city museum",
+    text:[
+      "Elena used to work as an evening guide at a city museum. After the final visitors left, she checked each gallery and switched off the display lights. One Friday, she was locking the history room when a loud alarm began ringing downstairs. The security guard had gone to inspect another building, so Elena was alone.",
+      "She followed the sound to the entrance hall and noticed that a glass case was open. At first, she feared that someone had taken an old silver clock, but the clock was still inside. A cleaner had moved the case while polishing the floor and had accidentally pressed its emergency switch. While Elena was calling security, the cleaner returned with fresh water and explained what had happened.",
+      "The guard arrived a few minutes later and reset the alarm. Nobody had damaged the clock, but the museum manager reviewed the security video the next morning. Since that incident, cleaners have received special instructions about the display cases, and the museum has placed clearer labels beside every emergency switch. Elena has never heard the alarm again."
+    ],
+    writePrompt:"Write a few sentences about the museum alarm. Focus on what Elena was doing, what had caused the alarm, and what changed afterwards.",
+    speakPrompt:"Speak for 2 minutes retelling the museum story. Explain why Elena was worried, who had opened the case, and what the museum has done since then." },
+  { title:"The bakery without electricity",
+    text:[
+      "Patrick had been running a small bakery for five years when a winter storm hit the town. He had prepared dough for two hundred loaves because a local festival was starting that morning. At four o'clock, while the first loaves were baking, the electricity suddenly went off and every oven stopped.",
+      "Patrick checked the street and saw that the neighbouring shops were dark too. He had already mixed the remaining dough, and it would be ruined if it stayed warm for too long. While his assistant was covering the trays, Patrick called a hotel across town. The hotel chef had worked with him before and offered the use of two large ovens.",
+      "They loaded the trays into a van and drove carefully through the snow. By seven o'clock, the hotel kitchen was full of fresh bread, and the festival opened on time. Patrick gave some loaves to the hotel staff to thank them. Since that storm, the bakery has bought a backup generator and has made an emergency agreement with the hotel."
+    ],
+    writePrompt:"Write a few sentences about the bakery. Focus on what Patrick had prepared, why the ovens stopped, and how the hotel helped.",
+    speakPrompt:"Speak for 2 minutes describing the power cut. Retell the events in order and explain what Patrick has arranged since the storm." },
+  { title:"The suitcase on the wrong ferry",
+    text:[
+      "Mila and her mother used to visit a small island every autumn. Last year, they arrived at the harbour just as workers were loading luggage onto two ferries. They had bought tickets for the northern island, but Mila placed their blue suitcase beside a trolley marked South because the sign had turned in the wind.",
+      "While they were finding their seats, Mila saw the other ferry leaving and noticed a blue suitcase on its back deck. Their clothes, hotel details, and medicine were inside it. A crew member radioed the southern ferry, but it had already crossed half the bay. The captain explained that both boats would meet at a harbour on the mainland that afternoon.",
+      "Mila and her mother continued to the island with only their small bags. The ferry company returned the suitcase that evening, and the hotel receptionist brought it to their room. Since that journey, Mila has attached a bright orange strap to the case and has always asked a crew member before leaving luggage on a trolley."
+    ],
+    writePrompt:"Write a few sentences about the suitcase. Focus on how it reached the wrong ferry, what the crew did, and when it was returned.",
+    speakPrompt:"Speak for 2 minutes retelling the ferry story. Explain what had gone wrong and what Mila has changed since that journey." },
+  { title:"The night the garden flooded",
+    text:[
+      "A group of neighbours had been building a community garden behind their flats since spring. They had planted vegetables, repaired an old shed, and collected rainwater in two large tanks. One July evening, Amir was watering the tomatoes when he noticed dark clouds above the buildings. The forecast had predicted light rain, but a violent storm arrived within minutes.",
+      "Water was flowing under the garden gate while the neighbours were trying to move tools into the shed. One drain had become blocked because leaves had collected there during the previous week. Amir found a long rake, and two neighbours held umbrellas over him while he cleared the drain. By then, water had already reached the lowest vegetable beds.",
+      "The drain finally opened, and most of the water disappeared before midnight. They lost some lettuce, but the tomatoes and beans survived. The following weekend, the group raised the lowest beds and covered the drain with a metal screen. Since then, the garden has survived several heavy storms without flooding."
+    ],
+    writePrompt:"Write a few sentences about the flooded garden. Focus on what had blocked the drain, what everyone was doing, and how they prevented another flood.",
+    speakPrompt:"Speak for 2 minutes describing the garden story. Retell the emergency and explain what the neighbours have changed." },
+  { title:"The photographs that seemed lost",
+    text:[
+      "Nora used to photograph family celebrations at weekends. At one wedding, she took more than eight hundred pictures and checked them several times during the day. When she returned home, she was copying the files to her computer when the memory card suddenly stopped working. The computer could no longer see any photographs.",
+      "Nora felt sick because the couple had trusted her with their most important day. She had created a small backup inside the camera, but it contained only the final part of the evening. While she was searching for advice online, she remembered that another photographer had once recommended a data recovery specialist. She called him the next morning and delivered the card to his office.",
+      "Two days later, the specialist recovered almost every file. Nora sent the finished photographs to the couple and explained why delivery had taken longer. Since then, she has used two memory cards at the same time and has copied her work onto two separate drives after every event. She has not lost another photograph."
+    ],
+    writePrompt:"Write a few sentences about Nora's photographs. Focus on when the card failed, what backup she had made, and how the files were recovered.",
+    speakPrompt:"Speak for 2 minutes retelling the photography story. Explain how Nora felt and what system she has used since the incident." },
+  { title:"Two guests and one hotel room",
+    text:[
+      "Leon used to work at the reception desk of a family hotel. During a busy holiday weekend, he was checking in a guest when another traveller arrived with a reservation for the same room. A new employee had entered one booking under a shortened surname, so the computer had not shown that the room was already taken.",
+      "Both guests had travelled for hours and were becoming tired. Leon checked every room, but the hotel had filled up while he was speaking to them. He had already called three nearby hotels when he remembered that the owner's apartment upstairs was empty. While the cleaner prepared it, Leon offered the guests dinner and explained the mistake.",
+      "One guest chose the apartment, and the other stayed in the original room. The owner reduced both bills, and the guests later left kind reviews because Leon had remained calm. Since then, the hotel has required staff to enter full names and confirmation numbers, and it has not made another double booking."
+    ],
+    writePrompt:"Write a few sentences about the double booking. Focus on how it happened, what Leon tried, and where the two guests finally stayed.",
+    speakPrompt:"Speak for 2 minutes describing the hotel problem. Retell Leon's solution and explain what the hotel has changed." },
+  { title:"The bridge on the cycling route",
+    text:[
+      "Four friends had been planning a two-day cycling trip for months. They had chosen a quiet route through the countryside and downloaded a map before leaving. On the second morning, they were following a river when they reached an old wooden bridge. Part of it had collapsed during a storm the previous night.",
+      "Their digital map showed no other crossing for twenty kilometres. While the group was discussing whether to turn back, a farmer stopped beside them. He explained that workers had built a temporary footbridge farther upstream, but recent rain had made the path muddy. The friends pushed their bicycles along the river and helped one another across the difficult ground.",
+      "They reached the temporary bridge after an hour and continued their journey safely. Because of the delay, they arrived at their hostel after dark, but the owner had kept dinner warm for them. Since that trip, the group has checked local road notices as well as maps, and they have carried stronger bicycle lights."
+    ],
+    writePrompt:"Write a few sentences about the cycling trip. Focus on what had damaged the bridge, who gave directions, and how the delay affected the journey.",
+    speakPrompt:"Speak for 2 minutes retelling the bridge story. Explain what the friends were doing and what they have changed since the trip." },
+  { title:"The presentation that went silent",
+    text:[
+      "Irena had been preparing an online presentation for an international client all week. She had tested her slides, microphone, and camera the evening before. On Friday morning, she was explaining the final chart when her internet connection suddenly disappeared. Her screen froze while twelve people were listening.",
+      "Irena tried to reconnect, but the router showed a red light. Workers outside had accidentally cut a cable while repairing the pavement. Her colleague Sam was still in the meeting, so Irena called him and asked him to continue. While Sam was presenting the next section, she sent him her notes by phone and travelled to a nearby shared office.",
+      "Irena joined the meeting again twenty minutes later and answered the client's questions. The client appreciated how the team had handled the interruption and approved the project. Since then, Irena has shared speaking notes with a colleague before every important meeting and has kept a mobile internet connection ready as a backup."
+    ],
+    writePrompt:"Write a few sentences about Irena's presentation. Focus on what she had tested, why the connection failed, and how Sam helped.",
+    speakPrompt:"Speak for 2 minutes retelling the online meeting story. Explain the team's response and what Irena has done differently since then." },
+  { title:"The birthday cake at the wrong door",
+    text:[
+      "Hugo had promised to collect a birthday cake for his niece on Saturday morning. The baker had finished it early and had written the family's address on the box. While Hugo was driving to the party, his sister called and asked him to buy candles, so he stopped at a small shop near her street.",
+      "When Hugo returned to the car, the cake was gone. He remembered that he had left the boot open while carrying the candles. A delivery driver had seen the address on the box and had assumed that it was one of his parcels. He had taken it to the correct street but had left it outside the house next door because nobody answered at the party address.",
+      "Hugo found the cake beside the neighbour's door ten minutes before the guests arrived. The box was still closed and the decorations were perfect. His niece never knew how close the cake had come to disappearing. Since then, Hugo has closed the boot immediately and has placed collection items on the back seat instead."
+    ],
+    writePrompt:"Write a few sentences about the birthday cake. Focus on why Hugo stopped, who moved the cake, and where he eventually found it.",
+    speakPrompt:"Speak for 2 minutes describing the cake story. Retell the misunderstanding and explain what Hugo has changed since then." },
+  { title:"The boat beside the empty beach",
+    text:[
+      "Sara used to walk along a quiet beach before work. One autumn morning, she was passing the rocks when she noticed a small fishing boat moving in circles near the shore. Its engine was running, but nobody appeared to be steering it. A fisherman had fallen into the shallow water while he was pulling in a heavy net.",
+      "Sara called the coastguard and shouted to the fisherman. He had already reached a rock, but waves were making it difficult for him to climb out. While Sara was describing their location, another walker found a life ring beside the harbour wall. They threw it towards the fisherman and helped him stay above the water until a rescue boat arrived.",
+      "The coastguard brought the fisherman safely to shore and stopped his empty boat. He was cold but had not been seriously injured. A week later, he returned to thank Sara and the other walker. Since the rescue, local fishing crews have worn safety lines near the shore, and Sara has completed a basic first-aid course."
+    ],
+    writePrompt:"Write a few sentences about the beach rescue. Focus on what Sara noticed, what had happened to the fisherman, and how people helped him.",
+    speakPrompt:"Speak for 2 minutes retelling the rescue story. Describe the actions in order and explain what has changed since that morning." }
+];
+
+/* The timeline beside each reading maps time to the subject and main action. */
+const READING_TIMELINES = [
+  [
+    {time:"Before", subject:"Lena", action:"Managed the cafe and followed her normal opening routine."},
+    {time:"Earlier", subject:"Marco", action:"Received a booking for thirty people but did not write it down."},
+    {time:"That morning", subject:"Lena + Marco", action:"Saw the buses arrive and prepared breakfast at high speed."},
+    {time:"By 9:00", subject:"The team", action:"Served every table successfully."},
+    {time:"Since then", subject:"Lena + Marco", action:"Have used online bookings instead of paper notes."}
+  ],
+  [
+    {time:"Before", subject:"Tomas", action:"Worked as a delivery driver and carried supplies around the city."},
+    {time:"Earlier", subject:"An older man", action:"Picked up the important package by mistake."},
+    {time:"Friday", subject:"Tomas", action:"Discovered the package was missing and drove back through heavy rain."},
+    {time:"Next", subject:"Tomas", action:"Used the receipt to contact the man and collect the box."},
+    {time:"Since then", subject:"Tomas", action:"Has labelled deliveries and checked his van at every stop."}
+  ],
+  [
+    {time:"Before", subject:"The caretaker", action:"Had worked since early morning and went home."},
+    {time:"That evening", subject:"Marta", action:"Was arranging chairs when the hall lights failed."},
+    {time:"While waiting", subject:"Marta + volunteers", action:"Found one lamp as guests began knocking."},
+    {time:"Next", subject:"Marta", action:"Moved the concert outside and the musicians played acoustically."},
+    {time:"Since then", subject:"The hall", action:"Has created backup plans and bought emergency lights."}
+  ],
+  [
+    {time:"Before", subject:"Arsen", action:"Prepared meeting rooms but had never led a client meeting."},
+    {time:"Earlier", subject:"The manager", action:"Sent an agenda that Arsen had only partly read."},
+    {time:"Tuesday", subject:"The client", action:"Arrived forty minutes early while the manager was away."},
+    {time:"During", subject:"Arsen", action:"Asked questions and collected useful project information."},
+    {time:"Since then", subject:"Arsen", action:"Has prepared carefully and become more confident."}
+  ],
+  [
+    {time:"Before", subject:"Park workers", action:"Had repaired the field but left a hole uncovered."},
+    {time:"Saturday", subject:"The players", action:"Started their match as heavy rain began."},
+    {time:"During", subject:"Petro", action:"Stepped into the hole and twisted his ankle."},
+    {time:"Next", subject:"Danylo + friends", action:"Stopped the game, helped Petro, and took him home."},
+    {time:"Since then", subject:"The group", action:"Has checked the field and used a safer sports centre."}
+  ],
+  [
+    {time:"Night before", subject:"Nadia", action:"Checked the timetable and practised interview answers."},
+    {time:"Next morning", subject:"The train", action:"Stopped in a tunnel because another train had broken down."},
+    {time:"While waiting", subject:"Nadia", action:"Sent the company a message before her battery died."},
+    {time:"That afternoon", subject:"Nadia", action:"Attended a rearranged interview and performed confidently."},
+    {time:"Since then", subject:"Nadia", action:"Has charged her phone and carried a portable charger."}
+  ],
+  [
+    {time:"That day", subject:"A pipe", action:"Burst in the flat above after a day of rain."},
+    {time:"That evening", subject:"Owen", action:"Heard dripping while he was closing the reading room."},
+    {time:"During", subject:"Owen + students", action:"Called for help and moved books away from the water."},
+    {time:"20 min later", subject:"The plumber", action:"Turned off the water after nearly three hundred books were moved."},
+    {time:"Since then", subject:"The library", action:"Has installed an alarm and created an emergency plan."}
+  ],
+  [
+    {time:"For 3 months", subject:"Eva", action:"Had been training for the charity bicycle ride."},
+    {time:"Night before", subject:"Eva", action:"Found a dangerous crack while cleaning her bicycle."},
+    {time:"That evening", subject:"Ben + Eva", action:"Repaired Ben's old touring bike under the streetlights."},
+    {time:"Next morning", subject:"Eva", action:"Completed the ride and raised more money than expected."},
+    {time:"Since then", subject:"Eva", action:"Has checked her bike and taken a repair course."}
+  ],
+  [
+    {time:"Before", subject:"Ravi", action:"Closed the garden gate before cooking dinner."},
+    {time:"During storm", subject:"The wind + Milo", action:"The gate opened and the frightened dog escaped."},
+    {time:"While searching", subject:"Ravi", action:"Followed a shopkeeper's clue towards the bus station."},
+    {time:"An hour later", subject:"Ravi", action:"Found Milo hiding inside a bus shelter."},
+    {time:"Since then", subject:"Ravi + neighbour", action:"Have used a tracker and checked the gate lock."}
+  ],
+  [
+    {time:"On arrival", subject:"Sofia + brother", action:"Collected the keys and unpacked the apartment."},
+    {time:"A moment later", subject:"Sofia", action:"Went outside as the door locked with the keys inside."},
+    {time:"While locked out", subject:"Sofia + brother", action:"Sought help from opposite sides of the closed door."},
+    {time:"30 min later", subject:"The manager", action:"Arrived with a master key and opened the apartment."},
+    {time:"Since then", subject:"Sofia + brother", action:"Have secured the key and memorized the manager's number."}
+  ],
+  [
+    {time:"Previously", subject:"A radio presenter", action:"Had visited the market stall without telling Mei or her aunt."},
+    {time:"Sunday", subject:"The presenter", action:"Mentioned the stall during a live radio programme."},
+    {time:"During rush", subject:"Mei + aunt", action:"Served a fast-growing queue with help from other traders."},
+    {time:"By midday", subject:"The stall", action:"Had sold every pot of soup to more than one hundred people."},
+    {time:"Since then", subject:"The business", action:"Has taken online orders and prepared larger quantities."}
+  ],
+  [
+    {time:"Morning", subject:"Calum + cousin", action:"Started their hike in bright, clear weather."},
+    {time:"On the ridge", subject:"The fog", action:"Covered the path as the wind became stronger."},
+    {time:"Next", subject:"Four hikers", action:"Realized they had passed the safe turning point."},
+    {time:"Before dark", subject:"The group", action:"Used a compass, waited in a shelter, and returned safely."},
+    {time:"Since then", subject:"Calum", action:"Has carried GPS and turned back in poor visibility."}
+  ],
+  [
+    {time:"Friday", subject:"Jonas", action:"Completed most of the workshop safety paperwork."},
+    {time:"Monday", subject:"Inspectors", action:"Arrived unexpectedly while Jonas was training an employee."},
+    {time:"During", subject:"Jonas + employee", action:"Searched for a certificate that had been left by the printer."},
+    {time:"By day's end", subject:"Jonas", action:"Ordered labels and moved training records into one digital folder."},
+    {time:"Since then", subject:"The workshop", action:"Has passed every inspection and stored records consistently."}
+  ],
+  [
+    {time:"Weeks before", subject:"The theatre group", action:"Ordered the main actor's red coat."},
+    {time:"Play day", subject:"Aisha", action:"Discovered that the coat had gone to the wrong school."},
+    {time:"Backstage", subject:"Aisha + parents", action:"Altered an old coat and covered it with red fabric."},
+    {time:"10 min before", subject:"Driver + actor", action:"The original arrived, but the actor chose Aisha's coat."},
+    {time:"Since then", subject:"The group", action:"Has ordered costumes earlier and kept the handmade coat."}
+  ],
+  [
+    {time:"10 years", subject:"Daniel + Luis", action:"Had lived apart after growing up on the same street."},
+    {time:"Arrival day", subject:"The airline", action:"Cancelled Luis's flight after a technical problem."},
+    {time:"Overnight", subject:"Daniel", action:"Went home but kept checking the flight information."},
+    {time:"Next morning", subject:"Daniel + Luis", action:"Reunited at the airport and visited their old neighbourhood."},
+    {time:"Since then", subject:"The friends", action:"Have spoken monthly and met two more times."}
+  ],
+  [
+    {time:"Friday evening", subject:"Elena", action:"Was locking the history room when the alarm began."},
+    {time:"Just before", subject:"The cleaner", action:"Moved a display case and pressed its emergency switch."},
+    {time:"During alarm", subject:"Elena", action:"Checked the silver clock and called security."},
+    {time:"Minutes later", subject:"The guard", action:"Arrived and reset the alarm."},
+    {time:"Since then", subject:"The museum", action:"Has trained cleaners and labelled every emergency switch."}
+  ],
+  [
+    {time:"Before storm", subject:"Patrick", action:"Had prepared dough for two hundred festival loaves."},
+    {time:"At 4:00", subject:"The power", action:"Failed while the first loaves were baking."},
+    {time:"During outage", subject:"Patrick + assistant", action:"Protected the dough and contacted a nearby hotel."},
+    {time:"By 7:00", subject:"The hotel team", action:"Had baked the bread in the hotel's ovens."},
+    {time:"Since then", subject:"The bakery", action:"Has bought a generator and arranged emergency oven access."}
+  ],
+  [
+    {time:"At harbour", subject:"Mila", action:"Put the suitcase beside the wrong luggage trolley."},
+    {time:"Minutes later", subject:"The southern ferry", action:"Left with the blue suitcase on its deck."},
+    {time:"During trip", subject:"The crew", action:"Contacted the other boat and planned a transfer."},
+    {time:"That evening", subject:"The ferry company", action:"Returned the suitcase to Mila's hotel."},
+    {time:"Since then", subject:"Mila", action:"Has used an orange strap and checked with the crew."}
+  ],
+  [
+    {time:"Previous week", subject:"Leaves", action:"Had collected over the garden drain."},
+    {time:"July evening", subject:"The storm", action:"Sent water under the gate and into the vegetable beds."},
+    {time:"During flood", subject:"Amir + neighbours", action:"Moved tools and cleared the blocked drain."},
+    {time:"That weekend", subject:"The group", action:"Raised the beds and covered the drain."},
+    {time:"Since then", subject:"The garden", action:"Has survived heavy storms without flooding."}
+  ],
+  [
+    {time:"Wedding day", subject:"Nora", action:"Took and checked more than eight hundred photographs."},
+    {time:"That evening", subject:"The memory card", action:"Failed while Nora was copying files."},
+    {time:"Next morning", subject:"Nora", action:"Took the card to a recovery specialist."},
+    {time:"Two days later", subject:"The specialist", action:"Recovered almost every wedding photograph."},
+    {time:"Since then", subject:"Nora", action:"Has recorded and stored every job in two places."}
+  ],
+  [
+    {time:"Earlier", subject:"A new employee", action:"Entered one reservation under a shortened surname."},
+    {time:"Holiday weekend", subject:"Two guests", action:"Arrived with bookings for the same room."},
+    {time:"While solving", subject:"Leon", action:"Called nearby hotels and offered the guests dinner."},
+    {time:"That night", subject:"Leon", action:"Placed one guest upstairs and one in the original room."},
+    {time:"Since then", subject:"The hotel", action:"Has recorded full names and confirmation numbers."}
+  ],
+  [
+    {time:"Night before", subject:"A storm", action:"Damaged the old bridge on the planned cycle route."},
+    {time:"Next morning", subject:"Four friends", action:"Reached the collapsed bridge beside the river."},
+    {time:"Afterwards", subject:"A farmer", action:"Directed them to a temporary crossing upstream."},
+    {time:"After dark", subject:"The cyclists", action:"Reached their hostel after crossing muddy ground."},
+    {time:"Since then", subject:"The group", action:"Has checked road notices and carried stronger lights."}
+  ],
+  [
+    {time:"Night before", subject:"Irena", action:"Tested her slides, camera, and microphone."},
+    {time:"Friday", subject:"Road workers", action:"Cut a cable while Irena was presenting online."},
+    {time:"During outage", subject:"Sam", action:"Continued the presentation using Irena's phone notes."},
+    {time:"20 min later", subject:"Irena", action:"Rejoined from another office and answered questions."},
+    {time:"Since then", subject:"Irena", action:"Has shared notes and kept mobile internet ready."}
+  ],
+  [
+    {time:"Saturday", subject:"Hugo", action:"Collected a birthday cake and stopped to buy candles."},
+    {time:"At the shop", subject:"A delivery driver", action:"Mistook the cake for a parcel in Hugo's open boot."},
+    {time:"Next", subject:"The driver", action:"Took it to the right street but the wrong door."},
+    {time:"10 min before", subject:"Hugo", action:"Found the undamaged cake beside the neighbour's house."},
+    {time:"Since then", subject:"Hugo", action:"Has closed the boot and kept collections on the back seat."}
+  ],
+  [
+    {time:"Autumn morning", subject:"The fisherman", action:"Fell overboard while pulling in a heavy net."},
+    {time:"On the beach", subject:"Sara", action:"Saw the empty circling boat and called the coastguard."},
+    {time:"While waiting", subject:"Sara + walker", action:"Threw a life ring and kept the fisherman afloat."},
+    {time:"Next", subject:"The coastguard", action:"Rescued the fisherman and stopped his boat."},
+    {time:"Since then", subject:"Crews + Sara", action:"Have used safety lines, and Sara has learned first aid."}
+  ]
+];
+
+const MARKERS = [
+  { tense:"Past Simple", c:"var(--ps)", words:["yesterday","last week","last month","last year","two days ago","in 2019","then","after that","at first","finally"] },
+  { tense:"Past Continuous", c:"var(--pc)", words:["while","when","at eight o'clock","all morning","at that time","the whole day"] },
+  { tense:"Present Perfect", c:"var(--pr)", words:["already","yet","just","ever","never","for","since","so far","recently","this week"] },
+  { tense:"Present Perfect Continuous", c:"var(--pr)", words:["for two years","since 2020","lately","all day","all week","how long"] },
+  { tense:"Past Perfect", c:"var(--pp)", words:["before that","by the time","by then","earlier","previously","until then"] }
+];
+
+const TENSE_HINTS = [
+  { tense:"Past Continuous", c:"var(--pc)", tint:"#EDF6F3",
+    structure:"S + was/were + V-ing",
+    example:"I was working when he called.",
+    keys:["while","when","at that time","at 8:00"] },
+  { tense:"Present Perfect", c:"var(--pr)", tint:"#FBF0EE",
+    structure:"S + have/has + V3",
+    example:"I have finished the report.",
+    keys:["already","yet","just","ever","never"] },
+  { tense:"Present Perfect Continuous", c:"var(--pr)", tint:"#FBF0EE",
+    structure:"S + have/has been + V-ing",
+    example:"I have been working all morning.",
+    keys:["for","since","lately","all day"] },
+  { tense:"Past Perfect", c:"var(--pp)", tint:"#FBF4E7",
+    structure:"S + had + V3",
+    example:"I had finished before she arrived.",
+    keys:["before","after","by the time"] },
+  { tense:"Verb Forms", c:"#8A5A83", tint:"#F5EDF4",
+    structure:"regular V2/V3: V + -ed",
+    example:"work - worked - worked",
+    keys:["add -ed","add -d","y -> ied","double + ed","irregular: learn"] }
+];
+
+function paintGlobalHints(){
+  const hints = document.getElementById('globalHints');
+  if (!hints) return;
+  hints.innerHTML = TENSE_HINTS.map(h => `
+    <details class="tense-hint" style="--hint-c:${h.c};--hint-tint:${h.tint}">
+      <summary>${h.tense}</summary>
+      <div class="hint-body">
+        <code>${h.structure}</code>
+        <div class="hint-example">${h.example}</div>
+        <div class="hint-keys">${h.keys.map(k => `<span class="hint-key">${k}</span>`).join('')}</div>
+      </div>
+    </details>`).join('');
+}
+
+const PREP = 60, SPEAK = 120;
+let sIdx = 0;
+let pastSIdx = 0;
+let speakDeck = 'general';
+let board = [];                                   // {w, used}
+let rIdx = 0;
+let rStep = 0;
+const readingNotes = [];
+const T = { phase:'prep', left:PREP, running:false, id:null };
+
+function activeSpeakCards(){
+  return speakDeck === 'past' ? PAST_SPEAK_CARDS : SPEAK_CARDS;
+}
+
+function activeSpeakIndex(){
+  return speakDeck === 'past' ? pastSIdx : sIdx;
+}
+
+function setActiveSpeakIndex(next){
+  if (speakDeck === 'past') pastSIdx = next;
+  else sIdx = next;
+}
+
+function beep(){
+  try{
+    const a = new (window.AudioContext||window.webkitAudioContext)();
+    const o = a.createOscillator(), g = a.createGain();
+    o.connect(g); g.connect(a.destination);
+    o.frequency.value = 660; g.gain.value = .08;
+    o.start(); setTimeout(()=>{o.stop(); a.close();}, 240);
+  }catch(e){}
+}
+const mmss = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+
+function tick(){
+  T.left--;
+  if (T.left <= 0){
+    T.left = 0; stopTimer(); beep();
+    if (T.phase === 'prep'){ T.phase = 'speak'; T.left = SPEAK; }
+  }
+  paintClock();
+}
+function startTimer(){ if(T.running) return; T.running = true; T.id = setInterval(tick, 1000); paintClock(); }
+function stopTimer(){ T.running = false; clearInterval(T.id); T.id = null; paintClock(); }
+function setPhase(p){ stopTimer(); T.phase = p; T.left = p === 'prep' ? PREP : SPEAK; paintClock(); }
+
+function paintClock(){
+  const c = document.getElementById('clock'); if (!c) return;
+  c.textContent = mmss(T.left);
+  c.classList.toggle('low', T.left <= 10);
+  document.getElementById('startBtn').textContent = T.running ? 'Pause' : 'Start';
+  const full = T.phase === 'prep' ? PREP : SPEAK;
+  const bar = document.getElementById('tfill');
+  bar.style.width = (T.left / full * 100) + '%';
+  bar.className = T.phase === 'speak' ? 'speak' : '';
+  document.querySelectorAll('.phases button').forEach(b =>
+    b.classList.toggle('on', b.dataset.p === T.phase));
+}
+
+function renderSpeak(){
+  stopTimer();
+  stage.classList.remove('reading');
+  stage.classList.add('speaking');
+  stage.innerHTML = '';
+  const cards = activeSpeakCards();
+  const cardIndex = activeSpeakIndex();
+  const q = cards[cardIndex];
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    ${taskHead(speakDeck === 'past' ? "Speaking · past stories" : "Speaking · part 2", String(cardIndex+1).padStart(2,'0') + ' / ' + String(cards.length).padStart(2,'0'))}
+    <div class="speak-decks">
+      <button data-deck="general" class="${speakDeck === 'general' ? 'on' : ''}">Part 2</button>
+      <button data-deck="past" class="${speakDeck === 'past' ? 'on' : ''}">Past stories</button>
+    </div>
+    <div class="scroll"><div class="inner">
+      <p class="cue">${q.title}</p>
+      <ul class="saylist">
+        <li class="lead">You should say:</li>
+        ${q.say.map(x=>`<li>${x}</li>`).join('')}
+        <li class="lead" style="margin-top:8px">${q.explain}</li>
+      </ul>
+      <div class="board" id="board"></div>
+      <div class="tray" id="tray"></div>
+    </div></div>
+    <div class="tools" style="margin-top:14px">
+      <button class="btn" id="sShuffle">Give me 5 words</button>
+      <button class="btn" id="sClear">Clear</button>
+      <button class="btn" id="sNext">Next topic<span class="k">n</span></button>
+    </div>
+    <div class="timer">
+      <div class="phases">
+        <button data-p="prep">Prepare · 1:00</button>
+        <button data-p="speak">Speak · 2:00</button>
+      </div>
+      <div class="clockrow">
+        <span class="clock" id="clock">1:00</span>
+        <button class="btn primary" id="startBtn">Start<span class="k">space</span></button>
+        <button class="btn" id="resetBtn">Reset</button>
+      </div>
+      <div class="tbar"><i id="tfill"></i></div>
+    </div>
+  `;
+  const sm = TASKMETA["Speaking · part 2"];
+  card.style.setProperty('--accent', sm.c); card.style.setProperty('--tint', sm.tint);
+  stage.appendChild(card);
+
+  paintBoard(); paintTray();
+  card.querySelectorAll('.speak-decks button').forEach(b => b.onclick = () => {
+    if (speakDeck === b.dataset.deck) return;
+    speakDeck = b.dataset.deck;
+    board = [];
+    renderSpeak();
+  });
+  card.querySelector('#sShuffle').onclick = () => {
+    const pool = MARKERS.flatMap(g => g.words).filter(w => !board.some(b => b.w === w));
+    for (let i = 0; i < 5 && pool.length; i++)
+      board.push({ w: pool.splice(Math.floor(Math.random()*pool.length), 1)[0], used:false });
+    paintBoard(); paintTray();
+  };
+  card.querySelector('#sClear').onclick = () => { board = []; paintBoard(); paintTray(); };
+  card.querySelector('#sNext').onclick = () => {
+    setActiveSpeakIndex((activeSpeakIndex()+1) % activeSpeakCards().length);
+    renderSpeak();
+  };
+  card.querySelectorAll('.phases button').forEach(b => b.onclick = () => setPhase(b.dataset.p));
+  card.querySelector('#startBtn').onclick = () => T.running ? stopTimer() : startTimer();
+  card.querySelector('#resetBtn').onclick = () => setPhase(T.phase);
+  setPhase('prep');
+}
+
+function paintBoard(){
+  const el = document.getElementById('board'); if (!el) return;
+  el.innerHTML = board.length
+    ? board.map((b,i)=>`<button class="chip ${b.used?'used':''}" data-i="${i}">${b.w}<span class="x" data-x="${i}">×</span></button>`).join('')
+    : '<span class="empty">Tap words below to put them on the screen. Tap again when you have used one.</span>';
+  el.querySelectorAll('.chip').forEach(c => c.onclick = e => {
+    const x = e.target.dataset.x;
+    if (x !== undefined) board.splice(+x, 1);
+    else board[+c.dataset.i].used = !board[+c.dataset.i].used;
+    paintBoard(); paintTray();
+  });
+}
+function paintTray(){
+  const el = document.getElementById('tray'); if (!el) return;
+  el.innerHTML = MARKERS.map(g => `
+    <h5 style="color:${g.c}">${g.tense}</h5>
+    <div class="row">${g.words.map(w =>
+      `<button class="chip ${board.some(b=>b.w===w)?'taken':''}" data-w="${w}">${w}</button>`).join('')}</div>`).join('');
+  el.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    board.push({ w:c.dataset.w, used:false }); paintBoard(); paintTray();
+  });
+}
+
+/* ---------------- reading mode ---------------- */
+function renderStoryTimeline(events){
+  return `
+    <aside class="story-timeline" aria-label="Story action timeline">
+      <div class="timeline-heading">
+        <h4>Who did what?</h4>
+        <span>Time ↓</span>
+      </div>
+      <div class="timeline-list" role="list">
+        ${events.map(e => `
+          <div class="timeline-item" role="listitem">
+            <span class="timeline-time">${e.time}</span>
+            <span class="timeline-mark" aria-hidden="true"><i class="timeline-dot"></i></span>
+            <span class="timeline-event">
+              <strong class="timeline-subject">${e.subject}</strong>
+              <span class="timeline-action">${e.action}</span>
+            </span>
+          </div>`).join('')}
+      </div>
+    </aside>`;
+}
+
+function enableReadingSwipe(card, saveNote){
+  let startX = 0, startY = 0, dx = 0, active = false, horizontal = false;
+
+  card.classList.add('reading-swipe-card');
+  card.addEventListener('pointerdown', e => {
+    if (e.target.closest('button, textarea, input, select, a')) return;
+    active = true; horizontal = false; dx = 0;
+    startX = e.clientX; startY = e.clientY;
+    card.setPointerCapture(e.pointerId);
+  });
+  card.addEventListener('pointermove', e => {
+    if (!active) return;
+    const moveX = e.clientX - startX;
+    const moveY = e.clientY - startY;
+    if (!horizontal && Math.abs(moveX) > 10 && Math.abs(moveX) > Math.abs(moveY) * 1.25){
+      horizontal = true;
+      card.classList.add('swiping');
+      card.style.transition = 'none';
+    }
+    if (!horizontal) return;
+    dx = moveX;
+    card.style.transform = `translateX(${dx * .38}px) rotate(${dx * .008}deg)`;
+    card.style.opacity = String(Math.max(.72, 1 - Math.abs(dx) / 700));
+  });
+  const finish = () => {
+    if (!active) return;
+    active = false;
+    card.classList.remove('swiping');
+    card.style.transition = 'transform .2s ease, opacity .2s ease';
+    if (horizontal && Math.abs(dx) >= 70){
+      saveNote();
+      const direction = dx < 0 ? 1 : -1;
+      card.style.transform = `translateX(${dx < 0 ? -180 : 180}px)`;
+      card.style.opacity = '0';
+      setTimeout(() => {
+        rIdx = (rIdx + direction + READING_CARDS.length) % READING_CARDS.length;
+        rStep = 0;
+        renderReading();
+      }, 150);
+    } else {
+      card.style.transform = '';
+      card.style.opacity = '1';
+    }
+    horizontal = false; dx = 0;
+  };
+  card.addEventListener('pointerup', finish);
+  card.addEventListener('pointercancel', finish);
+}
+
+function renderReading(){
+  stopTimer();
+  stage.classList.remove('speaking');
+  stage.classList.add('reading');
+  stage.innerHTML = '';
+
+  const q = READING_CARDS[rIdx];
+  const saved = readingNotes[rIdx] || '';
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  const steps = ['Read','Write','Speak'];
+  const stepTabs = `<div class="read-steps">${steps.map((s,i) =>
+    `<button type="button" data-step="${i}" class="${i === rStep ? 'on' : ''}">${s}</button>`).join('')}</div>`;
+
+  let body = '';
+  if (rStep === 0){
+    body = `
+      <div class="reading-layout">
+        <section class="reading-copy">
+          <h3 class="reading-title">${q.title}</h3>
+          <div class="reading-text">${q.text.map(p => `<p>${p}</p>`).join('')}</div>
+        </section>
+        ${renderStoryTimeline(READING_TIMELINES[rIdx])}
+      </div>
+    `;
+  } else if (rStep === 1){
+    body = `
+      <h3 class="reading-title">What do you remember?</h3>
+      <p class="reading-prompt">${q.writePrompt}</p>
+      <textarea class="write-box" id="readNotes" spellcheck="true" placeholder="Write the main actions in order...">${escapeHtml(saved)}</textarea>
+    `;
+  } else {
+    body = `
+      <h3 class="reading-title">Speak about the story</h3>
+      <p class="reading-prompt">${q.speakPrompt}</p>
+      ${saved.trim() ? `<div class="reading-notes">${escapeHtml(saved.trim())}</div>` : ''}
+    `;
+  }
+
+  card.innerHTML = `
+    ${taskHead("Reading · story", String(rIdx+1).padStart(2,'0') + ' / ' + String(READING_CARDS.length).padStart(2,'0'))}
+    ${stepTabs}
+    <div class="swipe-story-hint">← Swipe between stories →</div>
+    <div class="scroll"><div class="inner">${body}</div></div>
+    <div class="tools" style="margin-top:14px">
+      <button class="btn" id="readBack" ${rStep === 0 ? 'disabled' : ''}>Back</button>
+      <button class="btn primary" id="readNext">${rStep === 2 ? 'Next story' : rStep === 1 ? 'Speak' : 'Write'}<span class="k">n</span></button>
+    </div>
+    ${rStep === 2 ? `
+      <div class="reading-timer">
+        <div class="clockrow">
+          <span class="clock" id="clock">2:00</span>
+          <button class="btn primary" id="startBtn">Start<span class="k">space</span></button>
+          <button class="btn" id="resetBtn">Reset</button>
+        </div>
+        <div class="tbar"><i id="tfill"></i></div>
+      </div>` : ''}
+  `;
+
+  const rm = TASKMETA["Reading · story"];
+  card.style.setProperty('--accent', rm.c); card.style.setProperty('--tint', rm.tint);
+  stage.appendChild(card);
+
+  card.querySelector('#readNotes')?.addEventListener('input', e => {
+    readingNotes[rIdx] = e.currentTarget.value;
+  });
+  const saveReadingNote = () => {
+    if (rStep === 1) readingNotes[rIdx] = card.querySelector('#readNotes')?.value || '';
+  };
+  enableReadingSwipe(card, saveReadingNote);
+  card.querySelectorAll('.read-steps button').forEach(b => b.onclick = () => {
+    saveReadingNote();
+    rStep = Number(b.dataset.step);
+    renderReading();
+  });
+  card.querySelector('#readBack').onclick = () => {
+    if (rStep > 0){ saveReadingNote(); rStep--; renderReading(); }
+  };
+  card.querySelector('#readNext').onclick = () => {
+    saveReadingNote();
+    if (rStep === 2){
+      rIdx = (rIdx + 1) % READING_CARDS.length;
+      rStep = 0;
+    } else {
+      rStep++;
+    }
+    renderReading();
+  };
+
+  if (rStep === 2){
+    T.phase = 'speak';
+    T.left = SPEAK;
+    paintClock();
+    card.querySelector('#startBtn').onclick = () => T.running ? stopTimer() : startTimer();
+    card.querySelector('#resetBtn').onclick = () => { stopTimer(); T.phase = 'speak'; T.left = SPEAK; paintClock(); };
+  }
+}
+
+/* ---------------- mode switching ---------------- */
+let mode = 'drill';
+document.querySelectorAll('.modes button[data-m]').forEach(b => b.onclick = () => {
+  const nextMode = b.dataset.m;
+  if (nextMode !== mode && nextMode === 'speak') board = [];
+  mode = nextMode;
+  document.querySelectorAll('.modes button[data-m]').forEach(x => x.classList.toggle('on', x === b));
+  document.getElementById('hud').style.display = mode === 'drill' ? 'flex' : 'none';
+  document.getElementById('drillSide').hidden = mode !== 'drill';
+  document.body.classList.toggle('drill-mode', mode === 'drill');
+  if (mode === 'drill') render();
+  else if (mode === 'read') renderReading();
+  else renderSpeak();
+});
+
+paintGlobalHints();
+document.getElementById('hintsToggle').onclick = e => {
+  const panel = document.getElementById('globalHints');
+  const open = panel.hidden;
+  panel.hidden = !open;
+  document.body.classList.toggle('hints-open', open);
+  e.currentTarget.classList.toggle('on', open);
+  e.currentTarget.setAttribute('aria-expanded', String(open));
+};
+
+render();
+</script>
+</body>
+</html>
