@@ -6,14 +6,24 @@ https://coolplaton321-pixel.github.io/english-grammar-swipe-tutor/
 ## Navigation
 
 - `#practice`: existing grammar drills, speaking, reading and hints.
-- `#students`: Taras, Marina and Anton. Marina and Anton are placeholders only.
-- `#students/taras`: Taras’s C1 grammar knowledge board.
+- `#students`: Taras, Marina and Anton.
+- `#students/taras`, `#students/marina`, `#students/anton`: individual grammar knowledge boards.
 
 Taras has 49 topics in four columns: Tenses & time (15), Conditionals & unreal time (10), Advanced structures (12), and Modals & precision (12). Tenses are the leftmost column on desktop and the first column on smaller screens.
 
-Each topic includes a purpose, structure, original example, teaching focus and grammar reference. Ratings are grey (Not assessed), red (Needs support), yellow (Developing) and green (Confident), matching the maths tutoring board. Topics start unassessed.
+Each topic includes a purpose, structure, original example, teaching focus and grammar reference. Ratings are grey (Not assessed), red (Needs support), yellow (Developing) and green (Confident), matching the maths tutoring board. Taras preserves existing device colours, otherwise starts unassessed. Marina and Anton receive random sample starting colours once; their boards are labelled as samples, not genuine assessments. All colours can be edited.
 
-Ratings persist in this browser’s local storage under `english-grammar-tutor:taras:c1:knowledge:v1`. They do not sync between devices. No student assessments are stored in the repository or sent to a server. Stable topic IDs in `students.js` preserve ratings when titles change. Rating controls support arrow keys, Home and End; native dialogs support Escape and return focus to the topic opener.
+Stable topic IDs in `students.js` preserve ratings when titles change. Rating controls support arrow keys, Home and End; native dialogs support Escape and return focus to the topic opener.
+
+## Colour sync
+
+Choose **Teacher sign in** and use the existing maths tutoring teacher account. Both apps share the existing Supabase project and browser auth session; English ratings are kept in their own `public.english_student_topic_ratings` table. Maths data is not changed. Only the public publishable key is in the client. Row-level security allows non-anonymous authenticated users to read and write only their own ratings.
+
+Existing device colours are imported for missing topics on the first account used on that browser. Existing cloud colours always take precedence. Other accounts receive fresh starting profiles, not another account’s guest colours. Guest/device caches and account-specific caches remain separate. The old Taras storage key is retained for compatibility. Signed-in changes queue durably on the device and retry on reconnect, every 30 seconds, or with **Retry sync**. Initial cloud loading disables edits to prevent accidental overwrites. A refresh checks for other-device changes every 30 seconds and on focus. Sign-out is blocked while changes are waiting to sync.
+
+The applied schema is documented in `database/schema.sql`. It uses a composite primary key `(owner_id, student_id, topic_id)`, constrained colour values, explicit authenticated grants, and separate SELECT/INSERT/UPDATE RLS policies. Anonymous access has no grants. Grey resets are upserts rather than deletes. No real student ratings are committed to the repository.
+
+Project security check: the existing project has leaked-password protection disabled. See [Supabase password protection](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection); this unrelated account setting was not changed.
 
 ## Curriculum references
 
@@ -28,4 +38,4 @@ Research checked on 6 October 2026. Examples and teaching notes are original.
 
 ## Run locally
 
-Serve the repository with a static web server (for example `python3 -m http.server 8765`) and open `http://127.0.0.1:8765/`. No build or dependencies are required. Keep `index.html`, `students.css` and `students.js` together.
+Serve the repository with a static web server (for example `python3 -m http.server 8765`) and open `http://127.0.0.1:8765/`. The checked-in `vendor/supabase.js` makes deployment fully static. To regenerate the pinned vendor asset, run `npm ci --ignore-scripts` then `npm run build`. Run client sync tests with `npm test`.

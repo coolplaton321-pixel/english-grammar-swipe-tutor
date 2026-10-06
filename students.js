@@ -65,22 +65,42 @@
     ]}
   ];
   const LEVELS = [['grey','Not assessed'],['red','Needs support'],['yellow','Developing'],['green','Confident']];
-  const STORAGE_KEY = 'english-grammar-tutor:taras:c1:knowledge:v1';
+  const STUDENTS = [{id:'taras',name:'Taras'},{id:'marina',name:'Marina'},{id:'anton',name:'Anton'}];
   const topicIds = new Set(STRANDS.flatMap(strand => strand.topics.map(topic => topic[0])));
   const $ = id => document.getElementById(id);
   let ratings = {};
   let storageAvailable = true;
   let selectedId = null;
   let opener = null;
+  let activeStudent = STUDENTS[0];
+  let ownerId = null;
+  const profiles = new Map();
 
-  function readRatings() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return {};
-      return Object.fromEntries(Object.entries(saved).filter(([id,level]) => topicIds.has(id) && LEVELS.some(([value]) => value === level)));
-    } catch (_) { return {}; }
+  function storageKey(student,owner = ownerId) {
+    return owner ? `english-grammar-tutor:${owner}:${student.id}:c1:knowledge:v1` : `english-grammar-tutor:${student.id}:c1:knowledge:v1`;
   }
-  ratings = readRatings();
+  function cleanRatings(saved) {
+    if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return {};
+    return Object.fromEntries(Object.entries(saved).filter(([id,level]) => topicIds.has(id) && LEVELS.some(([value]) => value === level)));
+  }
+  function freshProfile(studentId) {
+    if (studentId === 'taras') return {};
+    return Object.fromEntries([...topicIds].map((id,index) => [id,LEVELS[index < 4 ? index : Math.floor(Math.random()*4)][0]]));
+  }
+  function readRatings(student = activeStudent,owner = ownerId) {
+    try {
+      const raw = localStorage.getItem(storageKey(student,owner));
+      if (raw !== null) return cleanRatings(JSON.parse(raw));
+    } catch (_) { return {}; }
+    const initial = owner ? {} : freshProfile(student.id);
+    try {localStorage.setItem(storageKey(student,owner),JSON.stringify(initial));} catch (_) {}
+    return initial;
+  }
+  function loadProfiles() {
+    STUDENTS.forEach(student => profiles.set(student.id,readRatings(student)));
+    ratings = profiles.get(activeStudent.id);
+  }
+  loadProfiles();
   const ratingFor = id => ratings[id] || 'grey';
   const labelFor = level => LEVELS.find(([value]) => value === level)[1];
 
@@ -103,19 +123,21 @@
       const checked = button.dataset.rating === ratingFor(selectedId);
       button.setAttribute('aria-checked', String(checked));
       button.tabIndex = checked ? 0 : -1;
+      button.disabled = Boolean(window.englishCloud?.loading);
     });
   }
   function setRating(level) {
-    if (!selectedId) return;
+    if (!selectedId || window.englishCloud?.loading) return;
     ratings[selectedId] = level;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(ratings));
+      localStorage.setItem(storageKey(activeStudent), JSON.stringify(ratings));
       storageAvailable = true;
     } catch (_) { storageAvailable = false; }
     syncOptions();
     updateBoard();
-    $('ratingMessage').textContent = storageAvailable
-      ? `${labelFor(level)} · saved on this browser and device.`
+    if (window.englishCloud?.ownerId) window.englishCloud.save(activeStudent.id,selectedId,level);
+    else $('ratingMessage').textContent = storageAvailable
+      ? `${labelFor(level)} · saved on this device. Sign in to sync.`
       : `${labelFor(level)} · browser storage is unavailable; this change lasts for this session.`;
   }
 
@@ -166,7 +188,7 @@
         $('dialogExample').textContent = example;
         $('dialogFocus').textContent = focus;
         $('dialogReference').href = reference;
-        $('ratingMessage').textContent = `${labelFor(ratingFor(id))} · choose a colour to update this topic.`;
+        $('ratingMessage').textContent = window.englishCloud?.message() || `${labelFor(ratingFor(id))} · choose a colour to update this topic.`;
         syncOptions();
         $('topicDialog').showModal();
       };
@@ -197,13 +219,24 @@
   });
   function showView(moveFocus = false) {
     const studentsActive = location.hash === '#students' || location.hash.startsWith('#students/');
-    const tarasActive = location.hash === '#students/taras';
+    const student = STUDENTS.find(profile => location.hash === `#students/${profile.id}`);
+    const boardActive = Boolean(student);
     if ($('topicDialog').open) $('topicDialog').close();
     $('practiceView').hidden = studentsActive;
     $('studentsView').hidden = !studentsActive;
-    $('studentDirectory').hidden = tarasActive;
-    $('studentBoard').hidden = !tarasActive;
-    $('studentsView').setAttribute('aria-labelledby',tarasActive ? 'studentName' : 'studentsTitle');
+    $('studentDirectory').hidden = boardActive;
+    $('studentBoard').hidden = !boardActive;
+    if (student) {
+      activeStudent = student;
+      ratings = profiles.get(student.id);
+      $('studentName').textContent = student.name;
+      $('sampleTag').hidden = student.id === 'taras';
+      $('progressSummary').setAttribute('aria-label',`${student.name}’s progress`);
+      $('knowledgeHeading').textContent = `${student.name}’s knowledge level`;
+      $('ratingOptions').setAttribute('aria-label',`${student.name}’s knowledge level`);
+      updateBoard();
+    }
+    $('studentsView').setAttribute('aria-labelledby',boardActive ? 'studentName' : 'studentsTitle');
     document.body.classList.toggle('drill-mode', !studentsActive && mode === 'drill');
     document.body.classList.toggle('hints-open', !studentsActive && !$('globalHints').hidden);
     if (studentsActive) stopTimer();
@@ -211,24 +244,47 @@
       if (active) $(id).setAttribute('aria-current','page');
       else $(id).removeAttribute('aria-current');
     });
-    document.title = tarasActive ? 'Taras · C1 grammar board — English tutoring' : studentsActive ? 'Students — English tutoring' : 'Practice — English tutoring';
+    document.title = boardActive ? `${student.name} · Grammar board — English tutoring` : studentsActive ? 'Students — English tutoring' : 'Practice — English tutoring';
     closeMenu();
     if (moveFocus) {
       window.scrollTo(0,0);
-      if (studentsActive) $(tarasActive ? 'studentName' : 'studentsTitle').focus({preventScroll:true});
+      if (studentsActive) $(boardActive ? 'studentName' : 'studentsTitle').focus({preventScroll:true});
       else $('menuToggle').focus({preventScroll:true});
     }
   }
   window.addEventListener('hashchange', () => showView(true));
   window.addEventListener('storage', event => {
-    if (event.key !== STORAGE_KEY && event.key !== null) return;
-    ratings = readRatings();
+    if (event.key !== null && !STUDENTS.some(student => event.key === storageKey(student))) return;
+    loadProfiles();
     updateBoard();
     if ($('topicDialog').open) {
       syncOptions();
       $('ratingMessage').textContent = 'Knowledge colours updated from another tab.';
     }
   });
+  window.englishBoard = {
+    students:STUDENTS,topicIds:[...topicIds],levels:LEVELS,
+    freshProfile,
+    snapshotGuest:() => Object.fromEntries(STUDENTS.map(student => [student.id,readRatings(student,null)])),
+    setOwner(owner) {
+      if ($('topicDialog').open) $('topicDialog').close();
+      ownerId = owner;
+      loadProfiles();
+      updateBoard();
+      syncOptions();
+    },
+    install(values) {
+      STUDENTS.forEach(student => {
+        const cleaned = cleanRatings(values[student.id]);
+        profiles.set(student.id,cleaned);
+        try {localStorage.setItem(storageKey(student),JSON.stringify(cleaned));} catch (_) {}
+      });
+      ratings = profiles.get(activeStudent.id);
+      updateBoard();
+      syncOptions();
+    },
+    syncOptions
+  };
   updateBoard();
   showView();
 })();

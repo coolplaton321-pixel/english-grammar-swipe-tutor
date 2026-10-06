@@ -536,25 +536,28 @@
 </section>
 
 <section class="students-view" id="studentsView" aria-labelledby="studentsTitle" hidden>
+  <div class="cloud-panel" aria-label="Colour sync">
+    <span id="cloudStatus" role="status">Colours saved on this device. Sign in to sync.</span>
+    <div class="cloud-actions"><button type="button" id="cloudRetry" hidden>Retry sync</button><button type="button" id="accountButton">Teacher sign in</button></div>
+  </div>
   <div id="studentDirectory">
     <p class="page-eyebrow">English tutoring</p>
     <h1 id="studentsTitle" tabindex="-1">Students</h1>
     <p class="page-intro">What each student knows, and what comes next.</p>
     <div class="student-list">
       <a class="student-card" href="#students/taras"><span class="student-avatar" aria-hidden="true">T</span><span><strong>Taras</strong><small>C1 · Grammar knowledge board</small></span><span class="student-arrow" aria-hidden="true">↗</span></a>
-      <div class="student-card student-pending"><span class="student-avatar" aria-hidden="true">M</span><span><strong>Marina</strong><small>Not set up yet</small></span></div>
-      <div class="student-card student-pending"><span class="student-avatar" aria-hidden="true">A</span><span><strong>Anton</strong><small>Not set up yet</small></span></div>
+      <a class="student-card" href="#students/marina"><span class="student-avatar" aria-hidden="true">M</span><span><strong>Marina</strong><small>Grammar board · Sample starting profile</small></span><span class="student-arrow" aria-hidden="true">↗</span></a>
+      <a class="student-card" href="#students/anton"><span class="student-avatar" aria-hidden="true">A</span><span><strong>Anton</strong><small>Grammar board · Sample starting profile</small></span><span class="student-arrow" aria-hidden="true">↗</span></a>
     </div>
   </div>
   <div id="studentBoard" hidden>
-    <a class="back-students" href="#students">← All students</a>
     <div class="student-heading">
-      <div><p class="page-eyebrow">Student knowledge board</p><h1 id="studentName" tabindex="-1">Taras</h1><p class="page-intro">Tenses, conditionals and structures for confident C1 English.</p><span class="exam-tag">C1 · Advanced</span></div>
-      <div class="progress-summary" aria-label="Taras’s progress"><div><strong id="topicTotal">0</strong><span>Topics</span></div><div><strong id="topicAssessed">0</strong><span>Assessed</span></div><div><strong id="topicConfident">0</strong><span>Confident</span></div></div>
+      <div><h1 id="studentName" tabindex="-1">Taras</h1><span class="exam-tag">C1 · Advanced</span><span class="sample-tag" id="sampleTag" hidden>Sample starting profile</span></div>
+      <div class="progress-summary" id="progressSummary" aria-label="Taras’s progress"><div><strong id="topicTotal">0</strong><span>Topics</span></div><div><strong id="topicAssessed">0</strong><span>Assessed</span></div><div><strong id="topicConfident">0</strong><span>Confident</span></div></div>
     </div>
-    <div class="board-guide"><p>Open a topic to see its structure, example and C1 focus, then mark Taras’s knowledge.</p><div class="knowledge-legend" id="knowledgeLegend" aria-label="Knowledge colours"></div></div>
+    <div class="board-guide"><div class="knowledge-legend" id="knowledgeLegend" aria-label="Knowledge colours"></div></div>
     <div class="topic-board" id="topicBoard"></div>
-    <p class="curriculum-note">A teaching checklist for C1 development: earlier-level foundations are included because accurate, flexible use matters at C1. This is not a fixed official CEFR grammar syllabus. Topic selection draws on <a href="https://learnenglish.britishcouncil.org/free-resources/grammar/c1" target="_blank" rel="noopener">British Council C1 grammar</a>, <a href="https://dictionary.cambridge.org/grammar/british-grammar/English" target="_blank" rel="noopener">Cambridge English Grammar Today</a> and <a href="https://www.cambridgeenglish.org/exams-and-tests/qualifications/advanced/format/" target="_blank" rel="noopener">Cambridge C1 Advanced</a>. Colours save on this browser and device.</p>
+    <p class="curriculum-note">A teaching checklist for C1 development: earlier-level foundations are included because accurate, flexible use matters at C1. This is not a fixed official CEFR grammar syllabus. Topic selection draws on <a href="https://learnenglish.britishcouncil.org/free-resources/grammar/c1" target="_blank" rel="noopener">British Council C1 grammar</a>, <a href="https://dictionary.cambridge.org/grammar/british-grammar/English" target="_blank" rel="noopener">Cambridge English Grammar Today</a> and <a href="https://www.cambridgeenglish.org/exams-and-tests/qualifications/advanced/format/" target="_blank" rel="noopener">Cambridge C1 Advanced</a>.</p>
   </div>
 </section>
 
@@ -565,10 +568,23 @@
   <p class="topic-description" id="dialogDescription"></p>
   <dl class="topic-details"><dt>Structure</dt><dd id="dialogStructure"></dd><dt>Example</dt><dd id="dialogExample"></dd><dt>C1 focus</dt><dd id="dialogFocus"></dd></dl>
   <a class="topic-reference" id="dialogReference" target="_blank" rel="noopener">Read the grammar reference ↗</a>
-  <h3>Taras’s knowledge level</h3>
+  <h3 id="knowledgeHeading">Taras’s knowledge level</h3>
   <div class="rating-options" id="ratingOptions" role="radiogroup" aria-label="Taras’s knowledge level"></div>
   <p class="storage-message" id="ratingMessage" role="status"></p>
   <button type="button" class="dialog-done" id="doneTopic">Done</button>
+</dialog>
+
+<dialog class="topic-dialog" id="accountDialog" aria-labelledby="accountTitle">
+  <button type="button" class="dialog-close" id="closeAccount" aria-label="Close account">×</button>
+  <h2 id="accountTitle">Sync your colours</h2>
+  <p class="account-note">Use your maths tutoring teacher account on each device. Your student colours are private to that account. Existing device colours are imported once; cloud colours take priority.</p>
+  <form class="account-form" id="accountForm">
+    <label>Email<input id="accountEmail" type="email" autocomplete="username" required></label>
+    <label>Password<input id="accountPassword" type="password" autocomplete="current-password" minlength="8" required></label>
+    <button class="dialog-done" type="submit" id="signInButton">Sign in</button>
+  </form>
+  <p class="storage-message" id="accountMessage" role="status"></p>
+  <button class="dialog-done" type="button" id="signOutButton" hidden>Sign out</button>
 </dialog>
 
 <footer>Platon Tsuz <b>·</b> English tutor</footer>
@@ -2810,5 +2826,7 @@ document.getElementById('hintsToggle').onclick = e => {
 render();
 </script>
 <script src="students.js"></script>
+<script src="vendor/supabase.js" defer></script>
+<script src="cloud.js" defer></script>
 </body>
 </html>
