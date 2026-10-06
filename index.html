@@ -512,13 +512,13 @@
 <aside class="drill-side" id="drillSide" aria-label="Grammar drill decks">
   <div class="drill-side-title">Grammar decks</div>
   <button type="button" data-deck="present-perfect" class="on">
-    <span>Present Perfect</span><b>50</b>
+    <span>Present Perfect</span><b>100</b>
   </button>
   <button type="button" data-deck="tenses">
     <span>Mixed tenses</span><b>112</b>
   </button>
   <button type="button" data-deck="verbs">
-    <span>Verb forms</span><b>20</b>
+    <span>Verb forms</span><b>50</b>
   </button>
 </aside>
 
@@ -1467,7 +1467,51 @@ const VERB_FORM_QUESTIONS = [
     example:"tell the client - told the client - told the client" }
 ];
 
-/* Dedicated Present Perfect deck: 20 forms + 10 V3 verbs + 10 corrections + 10 builds. */
+/* More irregular verbs, with original examples showing V3 in context. */
+const EXTRA_VERB_FORMS = [
+  ["eat", "ate", "eaten", "We have eaten lunch already."],
+  ["drink", "drank", "drunk", "She has drunk all her water."],
+  ["swim", "swam", "swum", "He has swum twenty lengths today."],
+  ["run", "ran", "run", "We have run the final safety check."],
+  ["ride", "rode", "ridden", "I have ridden a horse before."],
+  ["fly", "flew", "flown", "They have flown to Dublin twice this year."],
+  ["drive", "drove", "driven", "She has driven this van before."],
+  ["speak", "spoke", "spoken", "He has spoken to the receptionist."],
+  ["choose", "chose", "chosen", "We have chosen the blue uniforms."],
+  ["begin", "began", "begun", "The training session has begun."],
+  ["grow", "grew", "grown", "Our team has grown since January."],
+  ["throw", "threw", "thrown", "I have thrown the damaged box away."],
+  ["wear", "wore", "worn", "She has worn these boots for years."],
+  ["tear", "tore", "torn", "Someone has torn the delivery label."],
+  ["draw", "drew", "drawn", "The engineer has drawn a new diagram."],
+  ["fall", "fell", "fallen", "The temperature has fallen again."],
+  ["feel", "felt", "felt", "I have felt more confident since the training."],
+  ["keep", "kept", "kept", "We have kept a copy of every invoice."],
+  ["sleep", "slept", "slept", "He has slept well this week."],
+  ["meet", "met", "met", "She has met the new supervisor."],
+  ["pay", "paid", "paid", "The customer has paid the deposit."],
+  ["send", "sent", "sent", "I have sent the revised schedule."],
+  ["sell", "sold", "sold", "They have sold the old equipment."],
+  ["teach", "taught", "taught", "He has taught English for five years."],
+  ["catch", "caught", "caught", "We have caught several errors in the plan."],
+  ["lose", "lost", "lost", "She has lost the delivery receipt."],
+  ["read", "read", "read", "I have read the safety instructions."],
+  ["cut", "cut", "cut", "The gardener has cut the grass."],
+  ["put", "put", "put", "They have put the tools away."],
+  ["be", "was/were", "been", "We have been to Galway several times."]
+];
+VERB_FORM_QUESTIONS.push(...EXTRA_VERB_FORMS.map(([verb,second,third,example]) => ({
+  task:"Choose V2 and V3", tense:"vf",
+  prompt:`${verb} → V2: ______ · V3: ______`,
+  context:"Complete the second and third forms.",
+  answer:`${verb} - ${second} - ${third}`,
+  theory:verb === 'read'
+    ? "Read keeps the same spelling: V1 sounds like 'reed'; V2 and V3 sound like 'red'. Use V3 after have/has."
+    : `Learn the three forms together: ${verb} - ${second} - ${third}. Perfect tenses use the third form after have/has or had.`,
+  example
+})));
+
+/* Dedicated Present Perfect deck: 40 forms + 30 V3 verbs + 15 corrections + 15 builds. */
 const ppForm = (prompt, answer, context) => ({
   task:"Put the correct form", tense:"pr", prompt, answer, context
 });
@@ -1623,6 +1667,111 @@ const PRESENT_PERFECT_QUESTIONS = [
     "This week is unfinished, so connect the past rain to now.")
 ];
 
+PRESENT_PERFECT_QUESTIONS.push(
+  ppForm("We ______ (not / eat) breakfast yet.",
+    "We have not eaten breakfast yet.",
+    "Use have not + eaten. Yet belongs at the end."),
+  ppForm("She ______ (drink) three glasses of water today.",
+    "She has drunk three glasses of water today.",
+    "Today is unfinished. Drink - drank - drunk."),
+  ppForm("He ______ (swim) ten lengths so far.",
+    "He has swum ten lengths so far.",
+    "So far counts completed actions up to now. Swim - swam - swum."),
+  ppForm("We ______ (run) two safety checks today.",
+    "We have run two safety checks today.",
+    "Run has the same V1 and V3: run - ran - run."),
+  ppForm("______ you ever ______ (ride) a motorcycle?",
+    "Have you ever ridden a motorcycle?",
+    "Ask about experience: Have + subject + ever + ridden?"),
+  ppForm("The pilot ______ (fly) to Dublin several times this year.",
+    "The pilot has flown to Dublin several times this year.",
+    "This year continues until now. Fly - flew - flown."),
+  ppForm("She ______ (not / wear) the new uniform yet.",
+    "She has not worn the new uniform yet.",
+    "Use has not + worn, not wore."),
+  ppForm("Someone ______ (tear) the delivery label, so we cannot read the address.",
+    "Someone has torn the delivery label, so we cannot read the address.",
+    "The damage matters now. Someone takes has; tear - tore - torn."),
+  ppForm("The designer ______ (already / draw) a new diagram.",
+    "The designer has already drawn a new diagram.",
+    "Put already after has. Draw - drew - drawn."),
+  ppForm("The prices ______ (fall) again, so the materials are cheaper now.",
+    "The prices have fallen again, so the materials are cheaper now.",
+    "Prices is plural: have + fallen. The result is a lower price now."),
+  ppForm("I ______ (feel) more confident since the training.",
+    "I have felt more confident since the training.",
+    "Since introduces a starting point. Feel - felt - felt."),
+  ppForm("Our accountant ______ (keep) a copy of every invoice so far.",
+    "Our accountant has kept a copy of every invoice so far.",
+    "Use has + kept for completed record-keeping up to now."),
+  ppForm("I ______ (not / sleep) well since Monday.",
+    "I have not slept well since Monday.",
+    "The period reaches the present. Sleep - slept - slept."),
+  ppForm("She ______ (meet) her sales target this month.",
+    "She has met her sales target this month.",
+    "This month is unfinished. Meet - met - met."),
+  ppForm("They ______ (just / sell) the last ticket.",
+    "They have just sold the last ticket.",
+    "Just marks a very recent sale. Sell - sold - sold."),
+  ppForm("He ______ (teach) English for five years and still works at the school.",
+    "He has taught English for five years and still works at the school.",
+    "For gives a duration continuing until now. Teach - taught - taught."),
+  ppForm("______ you ______ (catch) any mistakes in the report so far?",
+    "Have you caught any mistakes in the report so far?",
+    "Question order: Have + subject + V3. Catch - caught - caught."),
+  ppForm("She ______ (lose) the receipt, so she cannot return the jacket.",
+    "She has lost the receipt, so she cannot return the jacket.",
+    "A past action explains the problem now. Lose - lost - lost."),
+  ppForm("He ______ (already / read) all three sets of instructions.",
+    "He has already read all three sets of instructions.",
+    "V3 read is spelled read but pronounced like 'red'. Put already after has."),
+  ppForm("The technician ______ (put) the ladder away, so the hallway is clear.",
+    "The technician has put the ladder away, so the hallway is clear.",
+    "Put stays the same in all three forms. Use has + put."),
+
+  ...EXTRA_VERB_FORMS.filter(([verb]) => new Set([
+    'eat','drink','swim','run','ride','fly','drive','grow','throw','wear',
+    'tear','draw','fall','feel','keep','sleep','meet','pay','read','be'
+  ]).has(verb)).map(([verb,second,third,example]) => ({
+    ...ppV3(verb,third,example),
+    theory:`${verb} - ${second} - ${third}. Present Perfect uses have/has + ${third}.` +
+      (verb === 'read' ? " The third form is pronounced like 'red'." : ''),
+    example
+  })),
+
+  ppFix("She has *drank* all the water.",
+    "She has drunk all the water.",
+    "Drank is V2; after has, use V3: drunk."),
+  ppFix("We have *drove* this route before.",
+    "We have driven this route before.",
+    "Drive - drove - driven. After have, choose driven."),
+  ppFix("She has worked here *since three years*.",
+    "She has worked here for three years.",
+    "For introduces a duration; since introduces a starting point."),
+  ppFix("He hasn't *rode* a bicycle before.",
+    "He hasn't ridden a bicycle before.",
+    "The negative still needs V3: has not + ridden."),
+  ppFix("They haven't *wrote* the summary yet.",
+    "They haven't written the summary yet.",
+    "Use written, not wrote, after have not."),
+
+  ppBuild("they / not eat / lunch / yet",
+    "They have not eaten lunch yet.",
+    "Build a negative sentence: have not + eaten + yet."),
+  ppBuild("she / teach / here / since 2021",
+    "She has taught here since 2021.",
+    "Use has + taught. Since 2021 gives the starting point."),
+  ppBuild("ever / you / fly / a helicopter?",
+    "Have you ever flown a helicopter?",
+    "Build a question about experience. Fly - flew - flown."),
+  ppBuild("we / keep / all the receipts / so far",
+    "We have kept all the receipts so far.",
+    "So far connects completed actions to the present. Keep - kept - kept."),
+  ppBuild("he / just / read / your message",
+    "He has just read your message.",
+    "Put just between has and V3. Read is pronounced like 'red' here.")
+);
+
 /* Default explanations — used when a question has no theory or example of its own. */
 const THEORY = {
   ps:"Past Simple is for a finished action at a finished time. If the sentence says when — yesterday, last week, in 2019, two hours ago — this is the tense you need.",
@@ -1710,8 +1859,11 @@ function activeDrillBank(){
 }
 
 function syncDrillSide(){
-  document.querySelectorAll('#drillSide button[data-deck]').forEach(button =>
-    button.classList.toggle('on', button.dataset.deck === drillDeck));
+  const banks = {'present-perfect':PRESENT_PERFECT_QUESTIONS,tenses:QUESTIONS,verbs:VERB_FORM_QUESTIONS};
+  document.querySelectorAll('#drillSide button[data-deck]').forEach(button => {
+    button.classList.toggle('on', button.dataset.deck === drillDeck);
+    button.querySelector('b').textContent = banks[button.dataset.deck].length;
+  });
 }
 
 function shuffledQuestions(){

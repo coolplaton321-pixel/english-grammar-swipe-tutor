@@ -9,6 +9,10 @@ https://coolplaton321-pixel.github.io/english-grammar-swipe-tutor/
 - `#students`: Taras, Marina and Anton.
 - `#students/taras`, `#students/marina`, `#students/anton`: individual grammar knowledge boards.
 
+Practice includes 100 Present Perfect drills (40 form exercises, 30 past-participle prompts, 15 corrections and 15 sentence builds), 50 verb-form drills and the unchanged 112 mixed-tense drills. The added verb forms include eat/eaten, drink/drunk, swim/swum, ride/ridden, drive/driven, wear/worn and read/read, with original example sentences and a pronunciation note for read. The sidebar counts are calculated from the actual question banks.
+
+Present Perfect usage was checked against the [British Council reference](https://learnenglish.britishcouncil.org/free-resources/grammar/english-grammar-reference/present-perfect). Exercise sentences are original, not copied from the reference.
+
 Taras has 49 topics in four columns: Tenses & time (15), Conditionals & unreal time (10), Advanced structures (12), and Modals & precision (12). Tenses are the leftmost column on desktop and the first column on smaller screens.
 
 Each topic includes a purpose, structure, original example, teaching focus and grammar reference. Ratings are grey (Not assessed), red (Needs support), yellow (Developing) and green (Confident), matching the maths tutoring board. Taras preserves existing device colours, otherwise starts unassessed. Marina and Anton receive random sample starting colours once; their boards are labelled as samples, not genuine assessments. All colours can be edited.
