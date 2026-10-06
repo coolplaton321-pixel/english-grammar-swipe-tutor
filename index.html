@@ -362,12 +362,9 @@
     border:1px solid var(--line); background:#fff; color:var(--ink-soft);
     padding:5px 8px; font-size:12px; font-weight:700;
   }
-  body.hints-open main{
-    padding-left:calc(min(260px, 24vw) + clamp(54px, 6vw, 84px));
-  }
+  /* Hints float independently; opening them never offsets the centered cards. */
   @media (max-width:900px){
     .stage.speaking{max-width:520px; height:min(700px,78dvh)}
-    body.hints-open main{padding-left:16px}
     body.hints-open::before{
       content:""; position:fixed; inset:64px 0 0; z-index:38;
       background:rgba(34,48,63,.18); backdrop-filter:blur(2px);

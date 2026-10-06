@@ -10,6 +10,13 @@ const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FO
 
 test('all inline practice code parses',()=>{assert.doesNotThrow(()=>new vm.Script(inline));});
 
+test('opening global hints never adds a layout offset to the practice cards',()=>{
+  const css=html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.doesNotMatch(css,/body\.hints-open\s+main\s*\{/);
+  assert.match(css,/main\s*\{[^}]*justify-content:center/);
+  assert.match(css,/\.speak-side-hints\s*\{[^}]*position:fixed/);
+});
+
 test('Present Perfect is doubled; verb forms expand without changing mixed tenses',()=>{
   assert.equal(banks.perfect.length,100);
   assert.equal(banks.verbs.length,50);
