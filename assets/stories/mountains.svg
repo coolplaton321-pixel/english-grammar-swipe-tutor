@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="title desc">
+<title id="title">The lake in Wicklow</title><desc id="desc">A calm lake below layered green mountains, a winding walking trail, and a camera in the foreground.</desc>
+<path fill="#E5EEF1" d="M0 0h960v400H0z"/><circle cx="716" cy="70" r="32" fill="#F5DDA8"/><path d="m0 207 153-128 92 89L405 39l167 155L718 84l242 139v177H0z" fill="#A1B8B2"/><path d="m0 237 203-127 161 124 199-120 152 95 109-71 136 108v154H0z" fill="#7E9E8C"/><path d="m0 269 179-88 166 83 218-92 157 79 240-55v204H0z" fill="#638B79"/>
+<path d="M219 254q248-56 516 6l104 89H100z" fill="#A7CDD1"/><path d="M328 279h162m44 13h145M232 309h201m86 14h179" fill="none" stroke="#E3ECE0" stroke-width="3" opacity=".7"/>
+<path d="M0 251q120 42 230 88t257 61H0zM960 247q-92 48-168 72t-81 81h249z" fill="#90A079"/><path d="M960 299q-179 2-232 49t-165 52h104q102-25 115-46t178-15z" fill="#DFD2B1"/>
+<path fill="#3E6D60" d="m40 224 37-84 37 84H93v42H61v-42zM105 259l32-75 32 75h-20v34h-24v-34zM855 223l30-75 30 75h-18v35h-25v-35zM903 256l26-65 26 65h-16v29h-21v-29z"/><g fill="#6B7F6A"><ellipse cx="201" cy="359" rx="47" ry="16"/><ellipse cx="320" cy="384" rx="37" ry="13"/><ellipse cx="856" cy="377" rx="44" ry="15"/></g>
+<g transform="translate(57 282) rotate(-9 66 45)"><path d="M10 18h35L57 4h38l12 14h27v76H10z" fill="#3E5159"/><rect x="15" y="25" width="114" height="62" rx="7" fill="#586D70"/><circle cx="77" cy="55" r="32" fill="#293F4C"/><circle cx="77" cy="55" r="23" fill="#7BABB9"/><circle cx="77" cy="55" r="15" fill="#416777"/><circle cx="70" cy="48" r="6" fill="#D7EAEB" opacity=".7"/><rect x="22" y="31" width="18" height="9" rx="2" fill="#D7DECE"/></g>
+<path d="m451 400-5-24m8 17 8-16m-62 23-2-24m6 18 8-13M901 397l5-22m-10 18-6-14" stroke="#B5C093" stroke-width="3"/>
+</svg>

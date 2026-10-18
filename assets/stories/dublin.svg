@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="title desc">
+<title id="title">A walk beside the Liffey</title><desc id="desc">Pastel city buildings and a white arched footbridge over blue water.</desc>
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#DFECF8"/><stop offset="1" stop-color="#FFF5E6"/></linearGradient><pattern id="windows" width="32" height="38" patternUnits="userSpaceOnUse"><rect x="11" y="10" width="10" height="17" rx="2" fill="#344F66" opacity=".7"/></pattern></defs>
+<path fill="url(#sky)" d="M0 0h960v400H0z"/><circle cx="784" cy="69" r="34" fill="#F8D99B"/><g fill="#fff" opacity=".6"><ellipse cx="155" cy="60" rx="90" ry="13"/><ellipse cx="569" cy="96" rx="66" ry="10"/></g>
+<g stroke="#697F89" stroke-width="3"><path d="M0 134h106v139H0" fill="#B8C9C7"/><path d="M113 113h112v160H113z" fill="#D8A894"/><path d="M235 153h100v120H235z" fill="#E7CE9E"/><path d="M623 129h103v144H623z" fill="#BA9DA0"/><path d="M736 105h105v168H736z" fill="#A3BEC7"/><path d="M851 141h109v132H851z" fill="#D9B190"/></g>
+<path fill="url(#windows)" d="M0 140h106v116H0zM119 121h100v138H119zM241 158h90v100H241zM629 136h92v122H629zM742 113h93v145H742zM857 148h103v110H857z"/>
+<path d="M0 265h960v135H0z" fill="#98C3D1"/><path d="M0 259h960v17H0z" fill="#DADECF"/><g fill="#648C79"><circle cx="375" cy="215" r="36"/><circle cx="566" cy="213" r="33"/></g><path d="M375 230v35M566 230v35" stroke="#5D685E" stroke-width="8"/>
+<g fill="none" stroke="#FDFCF5"><path d="M223 301Q480 118 737 301" stroke-width="17"/><path d="M223 283Q480 100 737 283" stroke-width="5"/><path d="M253 281v-20m31 2v-25m32 7v-27m33 13v-30m33 18v-32m34 25v-32m33 29v-32m33 31v-32m33 31v-32m34 27v-31m33 21v-29m34 15v-27m34 8v-23m32 0v-20" stroke-width="4"/></g>
+<path d="M30 321h131m-73 21h185m450-10h162M368 373h149m167-8h209M251 337h83" fill="none" stroke="#E8F5EE" stroke-width="3" opacity=".65"/><path d="M0 381q120-20 237 19H0zM960 370q-83-7-161 30h161z" fill="#638E81"/>
+</svg>

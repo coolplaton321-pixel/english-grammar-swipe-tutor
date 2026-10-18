@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="title desc">
+<title id="title">The neighbourhood bookshop</title><desc id="desc">A green bookshop with warm lit windows, books, a pavement sign and a bicycle.</desc>
+<path fill="#E9E4DC" d="M0 0h960v400H0z"/><path fill="#D9BBB0" d="M0 0h180v332H0zM792 0h168v332H792z"/><path fill="#BCB6AC" d="M0 328h960v72H0z"/>
+<path fill="#386D60" d="M180 28h612v303H180z"/><path fill="#28564D" d="M170 26h632v71H170z"/><text x="486" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="28" letter-spacing="6" fill="#FFF0CA">THE CORNER BOOKSHOP</text>
+<path fill="#F7E7BE" stroke="#EEE0BC" stroke-width="7" d="M207 120h205v181H207zM566 120h198v181H566zM439 120h101v207H439z"/><path d="M214 187h192M214 256h192M572 187h186M572 256h186" stroke="#8A7257" stroke-width="8"/>
+<g stroke-width="12"><path stroke="#A96B58" d="M230 137v45m36-39v39m45-42v42m285-43v43m43-48v48M234 205v45m70-42v42m323-42v42m81-39v39"/><path stroke="#567A86" d="M248 132v50m45-37v37m63-47v47m255-45v45m75-42v42M253 208v42m79-39v39m320-47v47m80-41v41"/><path stroke="#CBA253" d="M280 143v39m45-45v45m49-42v42m83-45v45m199-46v46M272 204v46m41-38v38m302-44v44m76-43v43"/></g>
+<path d="M488 125v198" stroke="#386D60" stroke-width="5"/><circle cx="522" cy="246" r="4" fill="#C6A35C"/><path d="M352 325h245v13H352zM337 338h275v11H337z" fill="#D8D1C3"/>
+<path d="m225 297 69 0 16 80h-102z" fill="#31594F" stroke="#E0C99E" stroke-width="5"/><text x="260" y="326" text-anchor="middle" fill="#FFF4D7" font-family="sans-serif" font-size="12">BOOK CLUB</text><text x="260" y="348" text-anchor="middle" fill="#FFF4D7" font-family="sans-serif" font-size="11">ALL WELCOME</text>
+<g fill="none" stroke="#5F6A6D" stroke-width="4"><circle cx="711" cy="354" r="26"/><circle cx="805" cy="354" r="26"/><path d="m711 354 31-41 32 41h-63l39-26h42m-18 26 18-51h-15m-35 10-8-12h-12"/></g><path d="M91 303h46l-6 60h-34z" fill="#A56F59"/><g fill="#69866B"><circle cx="113" cy="271" r="33"/><circle cx="95" cy="285" r="23"/><circle cx="133" cy="287" r="22"/></g>
+</svg>

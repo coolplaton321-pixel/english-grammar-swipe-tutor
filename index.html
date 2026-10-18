@@ -414,6 +414,12 @@
   }
   .reading-text{font-size:15px; line-height:1.72; color:#415061}
   .reading-text p{margin:0 0 13px}
+  .story-picker{display:flex; align-items:center; gap:10px; margin:0 0 12px; font-size:11px; font-weight:700; color:var(--ink-soft)}
+  .story-picker select{min-width:0; flex:1; max-width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font:inherit; font-size:12px}
+  .story-picker select:focus-visible{outline:3px solid var(--ps); outline-offset:2px}
+  .story-picture{margin:0 0 16px}
+  .story-picture img{display:block; width:100%; height:auto; aspect-ratio:12/5; object-fit:cover; border-radius:14px; background:#EBF2F9}
+  .story-picture figcaption{margin-top:6px; font-size:11px; line-height:1.4; color:var(--ink-soft)}
   .story-timeline{
     position:sticky; top:0; border:1px solid #DCE5EF; border-radius:16px;
     background:linear-gradient(180deg,#F8FBFE 0%,#F3F7FB 100%);
@@ -1508,6 +1514,46 @@ VERB_FORM_QUESTIONS.push(...EXTRA_VERB_FORMS.map(([verb,second,third,example]) =
   example
 })));
 
+/* Fifteen regular and fifteen irregular additions; existing decks stay intact. */
+const NEW_VERB_FORMS = [
+  ["work", "worked", "worked", "I have worked in this shop for two years.", "Add -ed to the base form: work - worked - worked."],
+  ["watch", "watched", "watched", "We have watched that film twice.", "Add -ed to the base form: watch - watched - watched."],
+  ["play", "played", "played", "She has played tennis since she was ten.", "After a vowel + y, keep the y and add -ed: play - played - played."],
+  ["clean", "cleaned", "cleaned", "They have cleaned all the windows.", "Add -ed to the base form: clean - cleaned - cleaned."],
+  ["visit", "visited", "visited", "He has visited Cork three times.", "Add -ed without doubling the final consonant: visit - visited - visited."],
+  ["finish", "finished", "finished", "I have finished my reading homework.", "Add -ed to the base form: finish - finished - finished."],
+  ["open", "opened", "opened", "The museum has opened a new gallery.", "Add -ed without doubling the final consonant: open - opened - opened."],
+  ["close", "closed", "closed", "They have closed the road for repairs.", "When the verb ends in -e, add only -d: close - closed - closed."],
+  ["help", "helped", "helped", "She has helped me with my pronunciation.", "Add -ed to the base form: help - helped - helped."],
+  ["love", "loved", "loved", "He has loved music since childhood.", "When the verb ends in -e, add only -d: love - loved - loved."],
+  ["move", "moved", "moved", "We have moved the table into the kitchen.", "When the verb ends in -e, add only -d: move - moved - moved."],
+  ["try", "tried", "tried", "I have tried the new bakery.", "After a consonant + y, change y to i and add -ed: try - tried - tried."],
+  ["plan", "planned", "planned", "They have planned a weekend by the sea.", "Double the final consonant in this short consonant-vowel-consonant verb: plan - planned - planned."],
+  ["stop", "stopped", "stopped", "The rain has stopped at last.", "Double the final consonant in this short consonant-vowel-consonant verb: stop - stopped - stopped."],
+  ["call", "called", "called", "She has called the station about her bag.", "Add -ed to the base form: call - called - called."],
+  ["become", "became", "become", "The town has become more popular.", "V1 and V3 are the same: become - became - become."],
+  ["bite", "bit", "bitten", "The puppy has bitten my shoe.", "Learn all three forms: bite - bit - bitten."],
+  ["blow", "blew", "blown", "The wind has blown the gate shut.", "Notice the -ew / -own change: blow - blew - blown."],
+  ["build", "built", "built", "They have built a bridge over the river.", "V2 and V3 are the same: build - built - built."],
+  ["dig", "dug", "dug", "We have dug a hole for the new tree.", "V2 and V3 are the same: dig - dug - dug."],
+  ["feed", "fed", "fed", "He has fed the cat already.", "V2 and V3 are the same: feed - fed - fed."],
+  ["fight", "fought", "fought", "The neighbours have fought to save the park.", "V2 and V3 are the same: fight - fought - fought."],
+  ["forget", "forgot", "forgotten", "I have forgotten my umbrella again.", "Learn all three forms: forget - forgot - forgotten."],
+  ["freeze", "froze", "frozen", "The lake has frozen overnight.", "Learn all three forms: freeze - froze - frozen."],
+  ["hide", "hid", "hidden", "She has hidden the birthday present.", "Learn all three forms: hide - hid - hidden."],
+  ["hold", "held", "held", "The club has held three meetings this month.", "V2 and V3 are the same: hold - held - held."],
+  ["lend", "lent", "lent", "He has lent me his camera.", "V2 and V3 are the same: lend - lent - lent."],
+  ["shake", "shook", "shaken", "She has shaken the bottle well.", "Learn all three forms: shake - shook - shaken."],
+  ["steal", "stole", "stolen", "Someone has stolen my bicycle.", "Learn all three forms: steal - stole - stolen."],
+  ["understand", "understood", "understood", "We have understood every instruction so far.", "V2 and V3 are the same: understand - understood - understood."]
+];
+VERB_FORM_QUESTIONS.push(...NEW_VERB_FORMS.map(([verb,second,third,example,theory]) => ({
+  task:"Choose V2 and V3", tense:"vf",
+  prompt:`${verb} → V2: ______ · V3: ______`,
+  context:"Complete the second and third forms.",
+  answer:`${verb} - ${second} - ${third}`, theory, example
+})));
+
 /* Dedicated Present Perfect deck: 40 forms + 30 V3 verbs + 15 corrections + 15 builds. */
 const ppForm = (prompt, answer, context) => ({
   task:"Put the correct form", tense:"pr", prompt, answer, context
@@ -2395,7 +2441,52 @@ const READING_CARDS = [
       "The coastguard brought the fisherman safely to shore and stopped his empty boat. He was cold but had not been seriously injured. A week later, he returned to thank Sara and the other walker. Since the rescue, local fishing crews have worn safety lines near the shore, and Sara has completed a basic first-aid course."
     ],
     writePrompt:"Write a few sentences about the beach rescue. Focus on what Sara noticed, what had happened to the fisherman, and how people helped him.",
-    speakPrompt:"Speak for 2 minutes retelling the rescue story. Describe the actions in order and explain what has changed since that morning." }
+    speakPrompt:"Speak for 2 minutes retelling the rescue story. Describe the actions in order and explain what has changed since that morning." },
+  { title:"A first weekend in Dublin",
+    image:{src:"assets/stories/dublin.svg", alt:"Illustration of colourful Dublin buildings and a footbridge over the River Liffey", caption:"Dublin, Ireland - a riverside city illustration"},
+    text:[
+      "Taras has lived in Ireland for six months, but he has never explored Dublin on foot. Last Saturday, he met his friend Emma beside the River Liffey. They crossed a white footbridge and stopped to look at the colourful buildings. Taras took a photograph and sent it to his sister. The weather was cool, but the sun came out just before lunch.",
+      "Emma asked, 'Have you ever visited this part of the city?' 'No, I haven't,' Taras replied. 'I came to Dublin for a meeting in March, but I went straight home afterwards.' 'What have you seen in Ireland so far?' she asked. 'I've visited Cork and Galway, but I haven't seen the west coast properly yet.' They walked into a small cafe. 'I tried the soup here last week,' Emma said. 'It was excellent.' Taras ordered the same soup and a cup of tea.",
+      "After lunch, they visited a bookshop and listened to a musician in the street. Taras bought a postcard for his sister. Since Saturday, he has learned the names of three Dublin bridges and has planned another visit. He has also started a list of places to explore. 'What did you enjoy most?' his sister asked on the phone yesterday. 'The walk by the river,' he said. 'I've finally discovered how much you can see without a car.'"
+    ],
+    writePrompt:"Write 4-6 sentences. Say what Taras did last Saturday, what he did in March, and what has changed since the weekend. Use Past Simple for finished events and Present Perfect for experience or changes up to now.",
+    speakPrompt:"Retell Taras's day, then act out his conversation with Emma. Ask one Have you ever...? question and a Past Simple follow-up such as When did you go?" },
+  { title:"The bookshop on the corner",
+    image:{src:"assets/stories/bookshop.svg", alt:"Illustration of a cosy bookshop in Cork with a green shopfront and books in the window", caption:"Cork, Ireland - an imagined neighbourhood bookshop"},
+    text:[
+      "Marina has always enjoyed reading, but she has never joined a book club. Last Tuesday, she noticed a handwritten sign in a small Cork bookshop: 'New readers welcome.' She went inside, spoke to the owner, and chose a short novel from the front table. The owner, Niamh, invited her to a discussion that evening. Marina felt nervous, but she decided to stay.",
+      "'Have you read this writer before?' Niamh asked. 'Yes, I've read two of her books,' Marina said. 'I finished the second one last month.' 'Did you enjoy it?' 'I loved the ending, but I didn't understand one of the characters.' Niamh smiled. 'You've already found something to discuss.' During the meeting, another reader asked, 'How long have you lived in Cork?' 'I've lived here since February,' Marina replied. 'I moved here for work.'",
+      "The group talked for an hour, and Marina shared her opinion twice. Afterwards, she exchanged phone numbers with another reader. Since that evening, she has finished the new novel and has written three questions for the next meeting. She has also met her new friend for coffee. Yesterday, Niamh sent a message: 'Have you chosen your next book yet?' Marina replied, 'Not yet. I bought a mystery on Saturday, but I haven't started it.'"
+    ],
+    writePrompt:"Describe Marina's first book-club visit and what she has done since then. Include one sentence with since and one finished-time sentence with last Tuesday or yesterday.",
+    speakPrompt:"Retell the story, then role-play a book-club conversation. Ask Have you read...? and follow up with Did you enjoy it? or When did you finish it?" },
+  { title:"A new taste at the Galway market",
+    image:{src:"assets/stories/market.svg", alt:"Illustration of outdoor market stalls in Galway with striped awnings, vegetables and bread", caption:"Galway, Ireland - a weekend market illustration"},
+    text:[
+      "Anton has cooked at home for years, but he has never made a meal with fresh mussels. Last Sunday, he visited a market in Galway with his friend Aoife. They walked past stalls of bread, flowers, and vegetables. At a fish stall, Anton stopped to read a recipe card. Aoife bought some mussels and suggested cooking lunch together.",
+      "'Have you ever tried mussels?' she asked. 'Yes, I have,' Anton said. 'I tried them in a restaurant last summer, but I've never cooked them.' 'Did you like them?' 'I did, especially the sauce.' The seller joined the conversation. 'I've worked at this market for twelve years,' he said. 'These came from the coast this morning.' Anton asked a few questions, and the seller explained how to store and prepare them safely. Then they bought the remaining ingredients and went to Aoife's kitchen.",
+      "They followed the recipe carefully and served lunch at two o'clock. Anton enjoyed the meal and wrote the recipe in his notebook. Since Sunday, he has cooked another seafood dish and has become more confident in the kitchen. 'Have you made the mussels again yet?' Aoife asked yesterday. 'Not yet,' he replied. 'I cooked fish on Wednesday instead. But I've already invited my brother for lunch next weekend.'"
+    ],
+    writePrompt:"Explain what Anton tried last summer, what happened at the market last Sunday, and what he has done since then. Include two short lines of dialogue with different tenses.",
+    speakPrompt:"Retell the market visit. Then ask a partner about a food they have tried and ask Past Simple follow-up questions about where and when they tried it." },
+  { title:"The bag on the coastal train",
+    image:{src:"assets/stories/coast.svg", alt:"Illustration of a coastal train travelling beside blue water and a small seaside station", caption:"The Irish coast - an imagined seaside railway"},
+    text:[
+      "Sofia has used the coastal train many times, and she has always enjoyed the sea views. Yesterday, she took her cousin Daniel to a seaside town. They walked along the harbour, bought sandwiches, and watched the boats. At four o'clock, they returned to the station. On the platform, Daniel reached for his phone and realised that his small blue bag was missing.",
+      "'Have you seen my bag?' he asked Sofia. 'I haven't seen it since lunch,' she said. 'Where did you put it after we ate?' 'I put it on the bench beside the harbour.' They went to the ticket office. 'Has anyone handed in a blue bag?' Daniel asked. The station assistant checked a cupboard. 'Yes. A passenger brought this one in twenty minutes ago. What have you got inside?' 'A phone, a notebook, and a red scarf,' Daniel replied. The assistant opened the bag, checked the contents, and returned it.",
+      "They caught the next train and arrived home before dinner. Daniel thanked Sofia for staying calm. Since the trip, he has attached a name tag to his bag and has saved the station's number. This morning, his mother asked, 'Have you found your phone?' 'Yes, I have,' he said. 'Someone handed my bag in yesterday. I was lucky.' Sofia has already suggested another coastal trip, but this time Daniel wants a bag he can wear across his body."
+    ],
+    writePrompt:"Explain where Daniel left the bag, how he got it back, and what he has changed since the trip. Use yesterday with Past Simple and since the trip with Present Perfect.",
+    speakPrompt:"Retell the lost-bag story, then act out the ticket-office dialogue. Start with Has anyone handed in...? and ask two Past Simple questions about the missing bag." },
+  { title:"The photograph above the lake",
+    image:{src:"assets/stories/mountains.svg", alt:"Illustration of a mountain lake in Wicklow with a walking trail and a camera in the foreground", caption:"Wicklow, Ireland - an imagined lakeside walking route"},
+    text:[
+      "Lena has taken hundreds of photographs on her phone, but she has never used a proper camera. Last weekend, her friend Sam lent her his camera for a walk in Wicklow. They chose a short marked route, checked the weather, and set off after breakfast. At the first viewpoint, Lena took several photographs of a lake, but every picture looked too dark.",
+      "'Have you changed this setting?' Sam asked. 'No, I haven't. I pressed the big button, but I didn't touch anything else,' Lena replied. Sam showed her how to adjust the brightness. 'I learned this on a course last year,' he said. Lena tried again. 'That's much better! Have you ever printed your photographs?' 'Yes, I've printed a few. I gave one to my parents for their anniversary.' They continued along the trail and stopped for lunch beside a stone wall.",
+      "On Sunday evening, Lena chose her favourite photograph and sent it to her family. Since the walk, she has borrowed a photography book and has practised with the camera in her garden. She hasn't bought her own camera yet. Yesterday, Sam asked, 'Which picture did your family like best?' 'The lake,' she said. 'My sister has already asked for a copy.' Lena has learned that one small change can make a big difference, both in a photograph and in a new skill."
+    ],
+    writePrompt:"Write a short summary of Lena's walk and her progress since then. Explain what she did last weekend and what she has or hasn't done yet.",
+    speakPrompt:"Retell the photography story, then discuss a skill you have learned. Ask Have you ever tried...? and follow up with When did you start? and What have you learned so far?" }
 ];
 
 /* The timeline beside each reading maps time to the subject and main action. */
@@ -2576,6 +2667,44 @@ const READING_TIMELINES = [
     {time:"Since then", subject:"Crews + Sara", action:"Have used safety lines, and Sara has learned first aid."}
   ]
 ];
+
+READING_TIMELINES.push(
+  [
+    {time:"In March", subject:"Taras", action:"Visited Dublin for a meeting and went straight home."},
+    {time:"Saturday", subject:"Taras + Emma", action:"Crossed a bridge, took photos, and had lunch."},
+    {time:"After lunch", subject:"The friends", action:"Visited a bookshop and listened to a musician."},
+    {time:"Since then", subject:"Taras", action:"Has learned bridge names and planned another visit."},
+    {time:"Yesterday", subject:"His sister", action:"Asked what he enjoyed most about the day."}
+  ],
+  [
+    {time:"Since February", subject:"Marina", action:"Has lived in Cork after moving there for work."},
+    {time:"Tuesday", subject:"Marina", action:"Saw the sign, bought a novel, and joined a discussion."},
+    {time:"That evening", subject:"The group", action:"Discussed books and welcomed Marina."},
+    {time:"Since then", subject:"Marina", action:"Has finished the novel and met a new friend for coffee."},
+    {time:"Yesterday", subject:"Niamh", action:"Asked whether Marina has chosen her next book yet."}
+  ],
+  [
+    {time:"Last summer", subject:"Anton", action:"Tried mussels at a restaurant and enjoyed the sauce."},
+    {time:"Sunday", subject:"Anton + Aoife", action:"Bought mussels and asked the seller how to prepare them."},
+    {time:"At two", subject:"The friends", action:"Served lunch after following the recipe."},
+    {time:"Since then", subject:"Anton", action:"Has cooked another seafood dish and gained confidence."},
+    {time:"Yesterday", subject:"Aoife", action:"Asked whether Anton has made mussels again yet."}
+  ],
+  [
+    {time:"Yesterday", subject:"Sofia + Daniel", action:"Visited the harbour and ate lunch."},
+    {time:"At four", subject:"Daniel", action:"Noticed his bag was missing and asked for help."},
+    {time:"Earlier", subject:"A passenger", action:"Handed the blue bag in at the station."},
+    {time:"Next", subject:"The assistant", action:"Checked the contents and returned the bag."},
+    {time:"Since the trip", subject:"Daniel", action:"Has added a name tag and saved the station's number."}
+  ],
+  [
+    {time:"Last year", subject:"Sam", action:"Learned camera skills on a course."},
+    {time:"Last weekend", subject:"Lena + Sam", action:"Walked in Wicklow and practised taking photographs."},
+    {time:"Sunday evening", subject:"Lena", action:"Sent her favourite lake photograph to her family."},
+    {time:"Since then", subject:"Lena", action:"Has borrowed a book and practised in the garden."},
+    {time:"Yesterday", subject:"Sam", action:"Asked which photograph her family liked best."}
+  ]
+);
 
 const MARKERS = [
   { tense:"Past Simple", c:"var(--ps)", words:["yesterday","last week","last month","last year","two days ago","in 2019","then","after that","at first","finally"] },
@@ -2778,6 +2907,14 @@ function paintTray(){
 }
 
 /* ---------------- reading mode ---------------- */
+function renderStoryImage(image){
+  if (!image) return '';
+  return `<figure class="story-picture">
+    <img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" width="960" height="400" decoding="async" draggable="false">
+    <figcaption>${escapeHtml(image.caption)}</figcaption>
+  </figure>`;
+}
+
 function renderStoryTimeline(events){
   return `
     <aside class="story-timeline" aria-label="Story action timeline">
@@ -2869,6 +3006,7 @@ function renderReading(){
       <div class="reading-layout">
         <section class="reading-copy">
           <h3 class="reading-title">${q.title}</h3>
+          ${renderStoryImage(q.image)}
           <div class="reading-text">${q.text.map(p => `<p>${p}</p>`).join('')}</div>
         </section>
         ${renderStoryTimeline(READING_TIMELINES[rIdx])}
@@ -2891,6 +3029,9 @@ function renderReading(){
   card.innerHTML = `
     ${taskHead("Reading · story", String(rIdx+1).padStart(2,'0') + ' / ' + String(READING_CARDS.length).padStart(2,'0'))}
     ${stepTabs}
+    <label class="story-picker" for="storySelect">Story
+      <select id="storySelect">${READING_CARDS.map((story,i) => `<option value="${i}" ${i === rIdx ? 'selected' : ''}>${i+1}. ${escapeHtml(story.title)}</option>`).join('')}</select>
+    </label>
     <div class="swipe-story-hint">← Swipe between stories →</div>
     <div class="scroll"><div class="inner">${body}</div></div>
     <div class="tools" style="margin-top:14px">
@@ -2917,6 +3058,12 @@ function renderReading(){
   });
   const saveReadingNote = () => {
     if (rStep === 1) readingNotes[rIdx] = card.querySelector('#readNotes')?.value || '';
+  };
+  card.querySelector('#storySelect').onchange = e => {
+    saveReadingNote();
+    rIdx = Number(e.currentTarget.value);
+    rStep = 0;
+    renderReading();
   };
   enableReadingSwipe(card, saveReadingNote);
   card.querySelectorAll('.read-steps button').forEach(b => b.onclick = () => {

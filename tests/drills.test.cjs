@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const bankSource = inline.slice(inline.indexOf('const QUESTIONS = ['),inline.indexOf('/* Default explanations'));
-const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,extra:EXTRA_VERB_FORMS})`);
+const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,extra:EXTRA_VERB_FORMS,added:NEW_VERB_FORMS})`);
 
 test('all inline practice code parses',()=>{assert.doesNotThrow(()=>new vm.Script(inline));});
 
@@ -19,7 +19,7 @@ test('opening global hints never adds a layout offset to the practice cards',()=
 
 test('Present Perfect is doubled; verb forms expand without changing mixed tenses',()=>{
   assert.equal(banks.perfect.length,100);
-  assert.equal(banks.verbs.length,50);
+  assert.equal(banks.verbs.length,80);
   assert.equal(banks.mixed.length,112);
   const counts={};
   banks.perfect.forEach(question=>{counts[question.task]=(counts[question.task]||0)+1;});
@@ -57,5 +57,30 @@ test('sidebar counts derive from the actual banks',()=>{
   const buttons=['present-perfect','tenses','verbs'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
   const syncSource=inline.slice(inline.indexOf('function syncDrillSide(){'),inline.indexOf('function shuffledQuestions(){'));
   vm.runInNewContext(`${bankSource}\nlet drillDeck='verbs';\n${syncSource}\nsyncDrillSide();`,{document:{querySelectorAll:()=>buttons}});
-  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,112,50]);
+  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,112,80]);
+});
+
+test('thirty new verbs include fifteen regular and fifteen irregular forms',()=>{
+  const expected={
+    work:['worked','worked'],watch:['watched','watched'],play:['played','played'],
+    clean:['cleaned','cleaned'],visit:['visited','visited'],finish:['finished','finished'],
+    open:['opened','opened'],close:['closed','closed'],help:['helped','helped'],
+    love:['loved','loved'],move:['moved','moved'],try:['tried','tried'],
+    plan:['planned','planned'],stop:['stopped','stopped'],call:['called','called'],
+    become:['became','become'],bite:['bit','bitten'],blow:['blew','blown'],
+    build:['built','built'],dig:['dug','dug'],feed:['fed','fed'],fight:['fought','fought'],
+    forget:['forgot','forgotten'],freeze:['froze','frozen'],hide:['hid','hidden'],
+    hold:['held','held'],lend:['lent','lent'],shake:['shook','shaken'],
+    steal:['stole','stolen'],understand:['understood','understood']
+  };
+  assert.equal(banks.added.length,30);
+  const regular=new Set(['work','watch','play','clean','visit','finish','open','close','help','love','move','try','plan','stop','call']);
+  assert.equal(banks.added.filter(([verb])=>regular.has(verb)).length,15);
+  assert.equal(banks.added.filter(([verb])=>!regular.has(verb)).length,15);
+  for(const [verb,second,third,example,theory] of banks.added){
+    assert.deepEqual([second,third],expected[verb]);
+    assert.ok(example.includes(` ${third} `)||example.includes(` ${third}.`),example);
+    assert.ok(theory.trim());
+    assert.equal(banks.verbs.find(q=>q.prompt.startsWith(`${verb} →`)).answer,`${verb} - ${second} - ${third}`);
+  }
 });
