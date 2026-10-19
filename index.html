@@ -408,35 +408,29 @@
   .reading-swipe-card.swiping{cursor:grabbing}
   .swipe-story-hint{margin:-3px 2px 8px; text-align:right; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#96A1AD}
   .reading-title{font-family:var(--display); font-size:clamp(22px,4vw,27px); line-height:1.28; margin:4px 0 14px; font-weight:800; color:#1B2733}
-  .reading-layout{
-    display:grid; grid-template-columns:minmax(0,1.45fr) minmax(240px,.78fr);
-    gap:24px; align-items:start;
-  }
-  .reading-text{font-size:15px; line-height:1.72; color:#415061}
-  .reading-text p{margin:0 0 13px}
+  .reading-layout{display:block; width:100%}
+  .reading-copy{max-width:900px; margin:0 auto}
+  .reading-text{font-size:16px; line-height:1.8; color:#415061}
+  .reading-text p{margin:0 0 17px}
   .story-picker{display:flex; align-items:center; gap:10px; margin:0 0 12px; font-size:11px; font-weight:700; color:var(--ink-soft)}
   .story-picker select{min-width:0; flex:1; max-width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font:inherit; font-size:12px}
   .story-picker select:focus-visible{outline:3px solid var(--ps); outline-offset:2px}
   .story-picture{margin:0 0 16px}
   .story-picture img{display:block; width:100%; height:auto; aspect-ratio:12/5; object-fit:cover; border-radius:14px; background:#EBF2F9}
   .story-picture figcaption{margin-top:6px; font-size:11px; line-height:1.4; color:var(--ink-soft)}
-  .story-timeline{
-    position:sticky; top:0; border:1px solid #DCE5EF; border-radius:16px;
-    background:linear-gradient(180deg,#F8FBFE 0%,#F3F7FB 100%);
-    padding:15px 14px 13px;
-  }
-  .timeline-heading{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:13px}
-  .timeline-heading h4{margin:0; font-size:11px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; color:var(--ps)}
-  .timeline-heading span{font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#94A0AD}
-  .timeline-list{display:flex; flex-direction:column}
-  .timeline-item{display:grid; grid-template-columns:50px 18px minmax(0,1fr); gap:7px; min-height:66px}
-  .timeline-time{padding-top:3px; text-align:right; font-size:9px; line-height:1.25; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:#7A8795}
-  .timeline-mark{position:relative; display:flex; justify-content:center}
-  .timeline-dot{position:relative; z-index:1; width:12px; height:12px; margin-top:3px; border:3px solid var(--ps); border-radius:50%; background:#fff; box-shadow:0 0 0 3px #E2ECF6}
-  .timeline-item:not(:last-child) .timeline-mark::after{content:""; position:absolute; top:15px; bottom:-3px; left:50%; width:2px; transform:translateX(-50%); background:linear-gradient(var(--ps),#C8D8E8)}
-  .timeline-event{padding:0 0 13px}
-  .timeline-subject{display:block; margin-bottom:3px; font-size:12px; line-height:1.25; font-weight:800; color:#213A54}
-  .timeline-action{display:block; font-size:11.5px; line-height:1.42; color:#59697A}
+  .story-expand-row{display:flex; justify-content:flex-end; margin:0 0 10px}
+  .story-expand-btn{display:inline-flex; align-items:center; gap:8px; border:1px solid #CBD9E8; background:#F4F8FC; color:#2E5C89; padding:9px 13px; border-radius:10px; font:inherit; font-size:12px; font-weight:800; cursor:pointer}
+  .story-expand-btn:hover{background:#E8F1FA}
+  .story-expand-btn:focus-visible{outline:3px solid var(--ps); outline-offset:2px}
+  .story-expand-btn span{font-size:17px; line-height:1}
+  body.reading-expanded{overflow:hidden}
+  body.reading-expanded::before{content:""; position:fixed; inset:0; z-index:200; background:rgba(22,34,52,.52); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px)}
+  .stage.reading.expanded{position:fixed; inset:clamp(8px,1.5vw,22px); width:auto; height:auto; max-width:none; z-index:210}
+  .stage.reading.expanded .card{padding:clamp(16px,2vw,30px); border-radius:18px}
+  .stage.reading.expanded .scroll .inner{margin-top:0; margin-bottom:0}
+  .stage.reading.expanded .reading-title{font-size:clamp(24px,2.5vw,34px)}
+  .stage.reading.expanded .reading-text{font-size:clamp(17px,1.5vw,20px); line-height:1.85}
+  .stage.reading.expanded .story-picture img{max-height:270px; aspect-ratio:16/5}
   .write-box{
     width:100%; min-height:210px; resize:vertical; border:1px solid var(--line);
     border-radius:14px; padding:14px 15px; font:inherit; font-size:15px;
@@ -454,8 +448,9 @@
 
   @media (max-width:700px){
     .stage.reading{max-width:520px; height:min(720px,78dvh)}
-    .reading-layout{grid-template-columns:1fr; gap:16px}
-    .story-timeline{position:relative}
+    .stage.reading.expanded{inset:max(6px, env(safe-area-inset-top)) 6px max(6px, env(safe-area-inset-bottom)); max-width:none; height:auto}
+    .stage.reading.expanded .card{border-radius:14px}
+    .stage.reading.expanded .reading-text{font-size:17px}
   }
 
   /* ---------- timer ---------- */
@@ -1928,7 +1923,9 @@ function restartDrill(shuffle = false){
 }
 
 function render(){
-  stage.classList.remove('speaking','reading');
+  stage.classList.remove('speaking','reading','expanded');
+  document.body.classList.remove('reading-expanded');
+  readingExpanded = false;
   stage.innerHTML = '';
   if (idx >= drillQuestions.length){ showResult(); return; }
 
@@ -2489,223 +2486,6 @@ const READING_CARDS = [
     speakPrompt:"Retell the photography story, then discuss a skill you have learned. Ask Have you ever tried...? and follow up with When did you start? and What have you learned so far?" }
 ];
 
-/* The timeline beside each reading maps time to the subject and main action. */
-const READING_TIMELINES = [
-  [
-    {time:"Before", subject:"Lena", action:"Managed the cafe and followed her normal opening routine."},
-    {time:"Earlier", subject:"Marco", action:"Received a booking for thirty people but did not write it down."},
-    {time:"That morning", subject:"Lena + Marco", action:"Saw the buses arrive and prepared breakfast at high speed."},
-    {time:"By 9:00", subject:"The team", action:"Served every table successfully."},
-    {time:"Since then", subject:"Lena + Marco", action:"Have used online bookings instead of paper notes."}
-  ],
-  [
-    {time:"Before", subject:"Tomas", action:"Worked as a delivery driver and carried supplies around the city."},
-    {time:"Earlier", subject:"An older man", action:"Picked up the important package by mistake."},
-    {time:"Friday", subject:"Tomas", action:"Discovered the package was missing and drove back through heavy rain."},
-    {time:"Next", subject:"Tomas", action:"Used the receipt to contact the man and collect the box."},
-    {time:"Since then", subject:"Tomas", action:"Has labelled deliveries and checked his van at every stop."}
-  ],
-  [
-    {time:"Before", subject:"The caretaker", action:"Had worked since early morning and went home."},
-    {time:"That evening", subject:"Marta", action:"Was arranging chairs when the hall lights failed."},
-    {time:"While waiting", subject:"Marta + volunteers", action:"Found one lamp as guests began knocking."},
-    {time:"Next", subject:"Marta", action:"Moved the concert outside and the musicians played acoustically."},
-    {time:"Since then", subject:"The hall", action:"Has created backup plans and bought emergency lights."}
-  ],
-  [
-    {time:"Before", subject:"Arsen", action:"Prepared meeting rooms but had never led a client meeting."},
-    {time:"Earlier", subject:"The manager", action:"Sent an agenda that Arsen had only partly read."},
-    {time:"Tuesday", subject:"The client", action:"Arrived forty minutes early while the manager was away."},
-    {time:"During", subject:"Arsen", action:"Asked questions and collected useful project information."},
-    {time:"Since then", subject:"Arsen", action:"Has prepared carefully and become more confident."}
-  ],
-  [
-    {time:"Before", subject:"Park workers", action:"Had repaired the field but left a hole uncovered."},
-    {time:"Saturday", subject:"The players", action:"Started their match as heavy rain began."},
-    {time:"During", subject:"Petro", action:"Stepped into the hole and twisted his ankle."},
-    {time:"Next", subject:"Danylo + friends", action:"Stopped the game, helped Petro, and took him home."},
-    {time:"Since then", subject:"The group", action:"Has checked the field and used a safer sports centre."}
-  ],
-  [
-    {time:"Night before", subject:"Nadia", action:"Checked the timetable and practised interview answers."},
-    {time:"Next morning", subject:"The train", action:"Stopped in a tunnel because another train had broken down."},
-    {time:"While waiting", subject:"Nadia", action:"Sent the company a message before her battery died."},
-    {time:"That afternoon", subject:"Nadia", action:"Attended a rearranged interview and performed confidently."},
-    {time:"Since then", subject:"Nadia", action:"Has charged her phone and carried a portable charger."}
-  ],
-  [
-    {time:"That day", subject:"A pipe", action:"Burst in the flat above after a day of rain."},
-    {time:"That evening", subject:"Owen", action:"Heard dripping while he was closing the reading room."},
-    {time:"During", subject:"Owen + students", action:"Called for help and moved books away from the water."},
-    {time:"20 min later", subject:"The plumber", action:"Turned off the water after nearly three hundred books were moved."},
-    {time:"Since then", subject:"The library", action:"Has installed an alarm and created an emergency plan."}
-  ],
-  [
-    {time:"For 3 months", subject:"Eva", action:"Had been training for the charity bicycle ride."},
-    {time:"Night before", subject:"Eva", action:"Found a dangerous crack while cleaning her bicycle."},
-    {time:"That evening", subject:"Ben + Eva", action:"Repaired Ben's old touring bike under the streetlights."},
-    {time:"Next morning", subject:"Eva", action:"Completed the ride and raised more money than expected."},
-    {time:"Since then", subject:"Eva", action:"Has checked her bike and taken a repair course."}
-  ],
-  [
-    {time:"Before", subject:"Ravi", action:"Closed the garden gate before cooking dinner."},
-    {time:"During storm", subject:"The wind + Milo", action:"The gate opened and the frightened dog escaped."},
-    {time:"While searching", subject:"Ravi", action:"Followed a shopkeeper's clue towards the bus station."},
-    {time:"An hour later", subject:"Ravi", action:"Found Milo hiding inside a bus shelter."},
-    {time:"Since then", subject:"Ravi + neighbour", action:"Have used a tracker and checked the gate lock."}
-  ],
-  [
-    {time:"On arrival", subject:"Sofia + brother", action:"Collected the keys and unpacked the apartment."},
-    {time:"A moment later", subject:"Sofia", action:"Went outside as the door locked with the keys inside."},
-    {time:"While locked out", subject:"Sofia + brother", action:"Sought help from opposite sides of the closed door."},
-    {time:"30 min later", subject:"The manager", action:"Arrived with a master key and opened the apartment."},
-    {time:"Since then", subject:"Sofia + brother", action:"Have secured the key and memorized the manager's number."}
-  ],
-  [
-    {time:"Previously", subject:"A radio presenter", action:"Had visited the market stall without telling Mei or her aunt."},
-    {time:"Sunday", subject:"The presenter", action:"Mentioned the stall during a live radio programme."},
-    {time:"During rush", subject:"Mei + aunt", action:"Served a fast-growing queue with help from other traders."},
-    {time:"By midday", subject:"The stall", action:"Had sold every pot of soup to more than one hundred people."},
-    {time:"Since then", subject:"The business", action:"Has taken online orders and prepared larger quantities."}
-  ],
-  [
-    {time:"Morning", subject:"Calum + cousin", action:"Started their hike in bright, clear weather."},
-    {time:"On the ridge", subject:"The fog", action:"Covered the path as the wind became stronger."},
-    {time:"Next", subject:"Four hikers", action:"Realized they had passed the safe turning point."},
-    {time:"Before dark", subject:"The group", action:"Used a compass, waited in a shelter, and returned safely."},
-    {time:"Since then", subject:"Calum", action:"Has carried GPS and turned back in poor visibility."}
-  ],
-  [
-    {time:"Friday", subject:"Jonas", action:"Completed most of the workshop safety paperwork."},
-    {time:"Monday", subject:"Inspectors", action:"Arrived unexpectedly while Jonas was training an employee."},
-    {time:"During", subject:"Jonas + employee", action:"Searched for a certificate that had been left by the printer."},
-    {time:"By day's end", subject:"Jonas", action:"Ordered labels and moved training records into one digital folder."},
-    {time:"Since then", subject:"The workshop", action:"Has passed every inspection and stored records consistently."}
-  ],
-  [
-    {time:"Weeks before", subject:"The theatre group", action:"Ordered the main actor's red coat."},
-    {time:"Play day", subject:"Aisha", action:"Discovered that the coat had gone to the wrong school."},
-    {time:"Backstage", subject:"Aisha + parents", action:"Altered an old coat and covered it with red fabric."},
-    {time:"10 min before", subject:"Driver + actor", action:"The original arrived, but the actor chose Aisha's coat."},
-    {time:"Since then", subject:"The group", action:"Has ordered costumes earlier and kept the handmade coat."}
-  ],
-  [
-    {time:"10 years", subject:"Daniel + Luis", action:"Had lived apart after growing up on the same street."},
-    {time:"Arrival day", subject:"The airline", action:"Cancelled Luis's flight after a technical problem."},
-    {time:"Overnight", subject:"Daniel", action:"Went home but kept checking the flight information."},
-    {time:"Next morning", subject:"Daniel + Luis", action:"Reunited at the airport and visited their old neighbourhood."},
-    {time:"Since then", subject:"The friends", action:"Have spoken monthly and met two more times."}
-  ],
-  [
-    {time:"Friday evening", subject:"Elena", action:"Was locking the history room when the alarm began."},
-    {time:"Just before", subject:"The cleaner", action:"Moved a display case and pressed its emergency switch."},
-    {time:"During alarm", subject:"Elena", action:"Checked the silver clock and called security."},
-    {time:"Minutes later", subject:"The guard", action:"Arrived and reset the alarm."},
-    {time:"Since then", subject:"The museum", action:"Has trained cleaners and labelled every emergency switch."}
-  ],
-  [
-    {time:"Before storm", subject:"Patrick", action:"Had prepared dough for two hundred festival loaves."},
-    {time:"At 4:00", subject:"The power", action:"Failed while the first loaves were baking."},
-    {time:"During outage", subject:"Patrick + assistant", action:"Protected the dough and contacted a nearby hotel."},
-    {time:"By 7:00", subject:"The hotel team", action:"Had baked the bread in the hotel's ovens."},
-    {time:"Since then", subject:"The bakery", action:"Has bought a generator and arranged emergency oven access."}
-  ],
-  [
-    {time:"At harbour", subject:"Mila", action:"Put the suitcase beside the wrong luggage trolley."},
-    {time:"Minutes later", subject:"The southern ferry", action:"Left with the blue suitcase on its deck."},
-    {time:"During trip", subject:"The crew", action:"Contacted the other boat and planned a transfer."},
-    {time:"That evening", subject:"The ferry company", action:"Returned the suitcase to Mila's hotel."},
-    {time:"Since then", subject:"Mila", action:"Has used an orange strap and checked with the crew."}
-  ],
-  [
-    {time:"Previous week", subject:"Leaves", action:"Had collected over the garden drain."},
-    {time:"July evening", subject:"The storm", action:"Sent water under the gate and into the vegetable beds."},
-    {time:"During flood", subject:"Amir + neighbours", action:"Moved tools and cleared the blocked drain."},
-    {time:"That weekend", subject:"The group", action:"Raised the beds and covered the drain."},
-    {time:"Since then", subject:"The garden", action:"Has survived heavy storms without flooding."}
-  ],
-  [
-    {time:"Wedding day", subject:"Nora", action:"Took and checked more than eight hundred photographs."},
-    {time:"That evening", subject:"The memory card", action:"Failed while Nora was copying files."},
-    {time:"Next morning", subject:"Nora", action:"Took the card to a recovery specialist."},
-    {time:"Two days later", subject:"The specialist", action:"Recovered almost every wedding photograph."},
-    {time:"Since then", subject:"Nora", action:"Has recorded and stored every job in two places."}
-  ],
-  [
-    {time:"Earlier", subject:"A new employee", action:"Entered one reservation under a shortened surname."},
-    {time:"Holiday weekend", subject:"Two guests", action:"Arrived with bookings for the same room."},
-    {time:"While solving", subject:"Leon", action:"Called nearby hotels and offered the guests dinner."},
-    {time:"That night", subject:"Leon", action:"Placed one guest upstairs and one in the original room."},
-    {time:"Since then", subject:"The hotel", action:"Has recorded full names and confirmation numbers."}
-  ],
-  [
-    {time:"Night before", subject:"A storm", action:"Damaged the old bridge on the planned cycle route."},
-    {time:"Next morning", subject:"Four friends", action:"Reached the collapsed bridge beside the river."},
-    {time:"Afterwards", subject:"A farmer", action:"Directed them to a temporary crossing upstream."},
-    {time:"After dark", subject:"The cyclists", action:"Reached their hostel after crossing muddy ground."},
-    {time:"Since then", subject:"The group", action:"Has checked road notices and carried stronger lights."}
-  ],
-  [
-    {time:"Night before", subject:"Irena", action:"Tested her slides, camera, and microphone."},
-    {time:"Friday", subject:"Road workers", action:"Cut a cable while Irena was presenting online."},
-    {time:"During outage", subject:"Sam", action:"Continued the presentation using Irena's phone notes."},
-    {time:"20 min later", subject:"Irena", action:"Rejoined from another office and answered questions."},
-    {time:"Since then", subject:"Irena", action:"Has shared notes and kept mobile internet ready."}
-  ],
-  [
-    {time:"Saturday", subject:"Hugo", action:"Collected a birthday cake and stopped to buy candles."},
-    {time:"At the shop", subject:"A delivery driver", action:"Mistook the cake for a parcel in Hugo's open boot."},
-    {time:"Next", subject:"The driver", action:"Took it to the right street but the wrong door."},
-    {time:"10 min before", subject:"Hugo", action:"Found the undamaged cake beside the neighbour's house."},
-    {time:"Since then", subject:"Hugo", action:"Has closed the boot and kept collections on the back seat."}
-  ],
-  [
-    {time:"Autumn morning", subject:"The fisherman", action:"Fell overboard while pulling in a heavy net."},
-    {time:"On the beach", subject:"Sara", action:"Saw the empty circling boat and called the coastguard."},
-    {time:"While waiting", subject:"Sara + walker", action:"Threw a life ring and kept the fisherman afloat."},
-    {time:"Next", subject:"The coastguard", action:"Rescued the fisherman and stopped his boat."},
-    {time:"Since then", subject:"Crews + Sara", action:"Have used safety lines, and Sara has learned first aid."}
-  ]
-];
-
-READING_TIMELINES.push(
-  [
-    {time:"In March", subject:"Taras", action:"Visited Dublin for a meeting and went straight home."},
-    {time:"Saturday", subject:"Taras + Emma", action:"Crossed a bridge, took photos, and had lunch."},
-    {time:"After lunch", subject:"The friends", action:"Visited a bookshop and listened to a musician."},
-    {time:"Since then", subject:"Taras", action:"Has learned bridge names and planned another visit."},
-    {time:"Yesterday", subject:"His sister", action:"Asked what he enjoyed most about the day."}
-  ],
-  [
-    {time:"Since February", subject:"Marina", action:"Has lived in Cork after moving there for work."},
-    {time:"Tuesday", subject:"Marina", action:"Saw the sign, bought a novel, and joined a discussion."},
-    {time:"That evening", subject:"The group", action:"Discussed books and welcomed Marina."},
-    {time:"Since then", subject:"Marina", action:"Has finished the novel and met a new friend for coffee."},
-    {time:"Yesterday", subject:"Niamh", action:"Asked whether Marina has chosen her next book yet."}
-  ],
-  [
-    {time:"Last summer", subject:"Anton", action:"Tried mussels at a restaurant and enjoyed the sauce."},
-    {time:"Sunday", subject:"Anton + Aoife", action:"Bought mussels and asked the seller how to prepare them."},
-    {time:"At two", subject:"The friends", action:"Served lunch after following the recipe."},
-    {time:"Since then", subject:"Anton", action:"Has cooked another seafood dish and gained confidence."},
-    {time:"Yesterday", subject:"Aoife", action:"Asked whether Anton has made mussels again yet."}
-  ],
-  [
-    {time:"Yesterday", subject:"Sofia + Daniel", action:"Visited the harbour and ate lunch."},
-    {time:"At four", subject:"Daniel", action:"Noticed his bag was missing and asked for help."},
-    {time:"Earlier", subject:"A passenger", action:"Handed the blue bag in at the station."},
-    {time:"Next", subject:"The assistant", action:"Checked the contents and returned the bag."},
-    {time:"Since the trip", subject:"Daniel", action:"Has added a name tag and saved the station's number."}
-  ],
-  [
-    {time:"Last year", subject:"Sam", action:"Learned camera skills on a course."},
-    {time:"Last weekend", subject:"Lena + Sam", action:"Walked in Wicklow and practised taking photographs."},
-    {time:"Sunday evening", subject:"Lena", action:"Sent her favourite lake photograph to her family."},
-    {time:"Since then", subject:"Lena", action:"Has borrowed a book and practised in the garden."},
-    {time:"Yesterday", subject:"Sam", action:"Asked which photograph her family liked best."}
-  ]
-);
-
 const MARKERS = [
   { tense:"Past Simple", c:"var(--ps)", words:["yesterday","last week","last month","last year","two days ago","in 2019","then","after that","at first","finally"] },
   { tense:"Past Continuous", c:"var(--pc)", words:["while","when","at eight o'clock","all morning","at that time","the whole day"] },
@@ -2758,6 +2538,7 @@ let speakDeck = 'general';
 let board = [];                                   // {w, used}
 let rIdx = 0;
 let rStep = 0;
+let readingExpanded = false;
 const readingNotes = [];
 const T = { phase:'prep', left:PREP, running:false, id:null };
 
@@ -2812,7 +2593,9 @@ function paintClock(){
 
 function renderSpeak(){
   stopTimer();
-  stage.classList.remove('reading');
+  stage.classList.remove('reading','expanded');
+  document.body.classList.remove('reading-expanded');
+  readingExpanded = false;
   stage.classList.add('speaking');
   stage.innerHTML = '';
   const cards = activeSpeakCards();
@@ -2915,27 +2698,6 @@ function renderStoryImage(image){
   </figure>`;
 }
 
-function renderStoryTimeline(events){
-  return `
-    <aside class="story-timeline" aria-label="Story action timeline">
-      <div class="timeline-heading">
-        <h4>Who did what?</h4>
-        <span>Time ↓</span>
-      </div>
-      <div class="timeline-list" role="list">
-        ${events.map(e => `
-          <div class="timeline-item" role="listitem">
-            <span class="timeline-time">${e.time}</span>
-            <span class="timeline-mark" aria-hidden="true"><i class="timeline-dot"></i></span>
-            <span class="timeline-event">
-              <strong class="timeline-subject">${e.subject}</strong>
-              <span class="timeline-action">${e.action}</span>
-            </span>
-          </div>`).join('')}
-      </div>
-    </aside>`;
-}
-
 function enableReadingSwipe(card, saveNote){
   let startX = 0, startY = 0, dx = 0, active = false, horizontal = false;
 
@@ -2985,10 +2747,26 @@ function enableReadingSwipe(card, saveNote){
   card.addEventListener('pointercancel', finish);
 }
 
+function setReadingExpanded(expanded){
+  readingExpanded = expanded;
+  stage.classList.toggle('expanded', expanded);
+  document.body.classList.toggle('reading-expanded', expanded);
+  const button = stage.querySelector('#storyExpand');
+  if (button){
+    button.setAttribute('aria-pressed', String(expanded));
+    button.setAttribute('aria-label', expanded ? 'Exit expanded reading view' : 'Expand reading view');
+    button.innerHTML = expanded
+      ? '<span aria-hidden="true">↙</span> Close full screen'
+      : '<span aria-hidden="true">⛶</span> Expand reading';
+  }
+}
+
 function renderReading(){
   stopTimer();
   stage.classList.remove('speaking');
   stage.classList.add('reading');
+  stage.classList.toggle('expanded', readingExpanded);
+  document.body.classList.toggle('reading-expanded', readingExpanded);
   stage.innerHTML = '';
 
   const q = READING_CARDS[rIdx];
@@ -3009,7 +2787,6 @@ function renderReading(){
           ${renderStoryImage(q.image)}
           <div class="reading-text">${q.text.map(p => `<p>${p}</p>`).join('')}</div>
         </section>
-        ${renderStoryTimeline(READING_TIMELINES[rIdx])}
       </div>
     `;
   } else if (rStep === 1){
@@ -3029,6 +2806,11 @@ function renderReading(){
   card.innerHTML = `
     ${taskHead("Reading · story", String(rIdx+1).padStart(2,'0') + ' / ' + String(READING_CARDS.length).padStart(2,'0'))}
     ${stepTabs}
+    <div class="story-expand-row">
+      <button type="button" id="storyExpand" class="story-expand-btn" aria-pressed="${readingExpanded}" aria-label="${readingExpanded ? 'Exit expanded reading view' : 'Expand reading view'}">
+        <span aria-hidden="true">${readingExpanded ? '↙' : '⛶'}</span> ${readingExpanded ? 'Close full screen' : 'Expand reading'}
+      </button>
+    </div>
     <label class="story-picker" for="storySelect">Story
       <select id="storySelect">${READING_CARDS.map((story,i) => `<option value="${i}" ${i === rIdx ? 'selected' : ''}>${i+1}. ${escapeHtml(story.title)}</option>`).join('')}</select>
     </label>
@@ -3052,6 +2834,7 @@ function renderReading(){
   const rm = TASKMETA["Reading · story"];
   card.style.setProperty('--accent', rm.c); card.style.setProperty('--tint', rm.tint);
   stage.appendChild(card);
+  card.querySelector('#storyExpand').onclick = () => setReadingExpanded(!readingExpanded);
 
   card.querySelector('#readNotes')?.addEventListener('input', e => {
     readingNotes[rIdx] = e.currentTarget.value;
@@ -3099,6 +2882,7 @@ let mode = 'drill';
 document.querySelectorAll('.modes button[data-m]').forEach(b => b.onclick = () => {
   const nextMode = b.dataset.m;
   if (nextMode !== mode && nextMode === 'speak') board = [];
+  if (nextMode !== 'read') setReadingExpanded(false);
   mode = nextMode;
   document.querySelectorAll('.modes button[data-m]').forEach(x => x.classList.toggle('on', x === b));
   document.getElementById('hud').style.display = mode === 'drill' ? 'flex' : 'none';
@@ -3107,6 +2891,13 @@ document.querySelectorAll('.modes button[data-m]').forEach(b => b.onclick = () =
   if (mode === 'drill') render();
   else if (mode === 'read') renderReading();
   else renderSpeak();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && readingExpanded){
+    setReadingExpanded(false);
+    stage.querySelector('#storyExpand')?.focus();
+  }
 });
 
 paintGlobalHints();
