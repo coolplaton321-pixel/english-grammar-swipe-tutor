@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const bankSource = inline.slice(inline.indexOf('const QUESTIONS = ['),inline.indexOf('/* Default explanations'));
-const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,extra:EXTRA_VERB_FORMS,added:NEW_VERB_FORMS})`);
+const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,continuous:PRESENT_PERFECT_CONTINUOUS_QUESTIONS,extra:EXTRA_VERB_FORMS,added:NEW_VERB_FORMS})`);
 
 test('all inline practice code parses',()=>{assert.doesNotThrow(()=>new vm.Script(inline));});
 
@@ -27,7 +27,7 @@ test('Present Perfect is doubled; verb forms expand without changing mixed tense
 });
 
 test('expanded decks have unique, complete prompts and valid task types',()=>{
-  for(const bank of [banks.perfect,banks.verbs]) {
+  for(const bank of [banks.perfect,banks.verbs,banks.continuous]) {
     assert.equal(new Set(bank.map(question=>question.prompt.toLowerCase().trim())).size,bank.length);
     for(const question of bank) {
       for(const field of ['task','tense','prompt','answer','context']) {
@@ -35,7 +35,7 @@ test('expanded decks have unique, complete prompts and valid task types',()=>{
         assert.ok(question[field].trim(),`${field}: ${question.prompt}`);
         assert.doesNotMatch(question[field],/undefined|null/);
       }
-      assert.ok(['pr','ps','vf'].includes(question.tense));
+      assert.ok(['pr','ps','vf','prc'].includes(question.tense));
       assert.ok(['Put the correct form','Write the third form','Fix the mistake','Build the sentence','Choose V2 and V3'].includes(question.task));
     }
   }
@@ -54,10 +54,40 @@ test('new participles and their V2 contrasts are correct',()=>{
 });
 
 test('sidebar counts derive from the actual banks',()=>{
-  const buttons=['present-perfect','tenses','verbs'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
+  const buttons=['present-perfect','present-perfect-continuous','tenses','verbs'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
   const syncSource=inline.slice(inline.indexOf('function syncDrillSide(){'),inline.indexOf('function shuffledQuestions(){'));
   vm.runInNewContext(`${bankSource}\nlet drillDeck='verbs';\n${syncSource}\nsyncDrillSide();`,{document:{querySelectorAll:()=>buttons}});
-  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,112,80]);
+  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,30,112,80]);
+});
+
+test('Present Perfect Continuous has exactly ten form, correction and build exercises',()=>{
+  assert.equal(banks.continuous.length,30);
+  const counts={};
+  for(const q of banks.continuous){
+    counts[q.task]=(counts[q.task]||0)+1;
+    assert.equal(q.tense,'prc');
+    assert.ok(q.theory.includes('have/has + been + verb-ing'));
+    assert.match(q.answer,/\bbeen\s+[a-z]+ing\b/);
+    assert.doesNotMatch(q.answer,/\*/);
+  }
+  assert.deepEqual(counts,{'Put the correct form':10,'Fix the mistake':10,'Build the sentence':10});
+  assert.match(html,/data-deck="present-perfect-continuous"/);
+  assert.equal(banks.continuous[12].answer,'He has been running and is out of breath.');
+  assert.equal(banks.continuous[15].answer,'They have been learning English for three months.');
+  assert.equal(banks.continuous[16].answer,'She has been working here since Monday.');
+  assert.equal(banks.continuous[28].answer,'You have been spending a lot of time online lately.');
+});
+
+test('separate deck selection and shuffle use all thirty PPC questions, with complete metadata',()=>{
+  const active=inline.slice(inline.indexOf('function activeDrillBank(){'),inline.indexOf('function syncDrillSide(){'));
+  const shuffle=inline.slice(inline.indexOf('function shuffledQuestions(){'),inline.indexOf('function restartDrill('));
+  const metadata=inline.slice(inline.indexOf('/* Default explanations'),inline.indexOf('/* Each task type'));
+  const result=vm.runInNewContext(`${bankSource}\n${metadata}\nlet drillDeck='present-perfect-continuous';\n${active}\n${shuffle}\n({selected:activeDrillBank(),shuffled:shuffledQuestions(),theory:THEORY.prc,example:EXAMPLE.prc,tense:TENSES.prc})`);
+  assert.equal(result.selected.length,30);
+  assert.equal(result.shuffled.length,30);
+  assert.deepEqual(Array.from(result.selected,q=>q.prompt).sort(),Array.from(result.shuffled,q=>q.prompt).sort());
+  assert.equal(result.tense.name,'Present Perfect Continuous');
+  assert.ok(result.theory.trim()&&result.example.trim());
 });
 
 test('thirty new verbs include fifteen regular and fifteen irregular forms',()=>{

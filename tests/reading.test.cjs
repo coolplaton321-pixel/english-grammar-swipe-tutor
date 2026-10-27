@@ -9,11 +9,11 @@ const inline=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const source=inline.slice(inline.indexOf('const READING_CARDS = ['),inline.indexOf('const MARKERS = ['));
 const {stories}=vm.runInNewContext(`${source}\n({stories:READING_CARDS})`);
 
-test('all thirty stories have readable content without a visible timeline',()=>{
-  assert.equal(stories.length,30);
+test('all thirty-two stories have readable content without a visible timeline',()=>{
+  assert.equal(stories.length,32);
   assert.equal(stories[0].title,'The morning the old cafe changed');
   assert.equal(stories[24].title,'The boat beside the empty beach');
-  assert.equal(new Set(stories.map(s=>s.title)).size,30);
+  assert.equal(new Set(stories.map(s=>s.title)).size,32);
   assert.doesNotMatch(inline,/renderStoryTimeline|READING_TIMELINES|Who did what\?/i);
   assert.doesNotMatch(html,/class="story-timeline"/);
   for(const [i,story] of stories.entries()){
@@ -21,6 +21,20 @@ test('all thirty stories have readable content without a visible timeline',()=>{
     assert.ok(story.writePrompt.trim());
     assert.ok(story.speakPrompt.trim());
 
+  }
+});
+
+test('two new readings practise continuous activity, dialogue and completed-result contrasts',()=>{
+  assert.deepEqual(Array.from(stories.slice(30),s=>s.title),[
+    'The garden that brought the street together',
+    'The voices behind the neighbourhood podcast'
+  ]);
+  for(const story of stories.slice(30)){
+    const text=story.text.join(' ');
+    assert.ok((text.match(/\b(?:have|has|haven't|hasn't|I've|We've|we've)\s+been\s+[a-z]+ing\b/g)||[]).length>=6);
+    assert.match(text,/\b(?:for|since)\b/);
+    assert.match(story.writePrompt,/Present Perfect Simple|completed result/);
+    assert.match(story.speakPrompt,/How long have you been|how long they have been/);
   }
 });
 

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="title desc">
+<title id="title">The neighbourhood podcast studio</title><desc id="desc">Two microphones, a laptop and headphones on a recording table beside a city window.</desc>
+<path fill="#EDE8DF" d="M0 0h960v400H0z"/><path fill="#D6CBC0" d="M0 328h960v72H0z"/><path d="M600 33h285v225H600z" fill="#BFD5DE" stroke="#F9F6ED" stroke-width="10"/>
+<path d="M610 182h70v66h-70zM689 145h80v103h-80zM778 171h95v77h-95z" fill="#96ACAE"/><path d="M625 197h13v22h-13zM650 197h13v22h-13zM705 162h14v23h-14zM739 162h14v23h-14zM795 186h16v23h-16zM835 186h16v23h-16z" fill="#E5D7AE"/><path d="M742 37v214M605 139h275" stroke="#F9F6ED" stroke-width="8"/>
+<path d="M66 62h125v150H66zM213 62h125v150H213zM360 62h125v150H360z" fill="#859698"/><path d="M81 78v116m23-116v116m23-116v116m23-116v116m23-116v116M228 78v116m23-116v116m23-116v116m23-116v116m23-116v116M375 78v116m23-116v116m23-116v116m23-116v116m23-116v116" stroke="#758689" stroke-width="5"/>
+<path d="M86 292h788v25H86z" fill="#A78361"/><path d="M111 317h18v83h-18zM831 317h18v83h-18z" fill="#846E57"/>
+<path d="M346 210h230v123H346z" fill="#516C7A" stroke="#365363" stroke-width="6"/><path d="M358 222h206v98H358z" fill="#DAE6E5"/><path d="m326 333 267 0 18 16H307z" fill="#7E9299"/><path d="M378 270h18l8-21 12 46 10-51 11 40 10-17h23l12-29 12 56 12-42 10 18h18" fill="none" stroke="#648D87" stroke-width="4"/>
+<g stroke="#4C626B" stroke-width="6" fill="none"><path d="M211 277v-66m-32 66h64M723 277v-66m-32 66h64"/><path d="M189 173v30q22 33 44 0v-30M701 173v30q22 33 44 0v-30"/></g><rect x="198" y="133" width="26" height="69" rx="13" fill="#527A85"/><rect x="710" y="133" width="26" height="69" rx="13" fill="#527A85"/>
+<path d="M271 276v-20q0-33 28-33t28 33v20" fill="none" stroke="#4F636D" stroke-width="8"/><rect x="261" y="252" width="16" height="31" rx="7" fill="#657F89"/><rect x="321" y="252" width="16" height="31" rx="7" fill="#657F89"/><path d="M788 266h31v26h-31z" fill="#C29375"/><path d="M819 270q20 0 12 14h-12" fill="none" stroke="#C29375" stroke-width="5"/>
+</svg>

@@ -381,7 +381,7 @@
   @media (max-width:1000px){
     .drill-side{
       position:relative; inset:auto; width:calc(100% - 32px); margin:12px auto 0;
-      flex-direction:row; justify-content:center; overflow-x:auto; padding:4px; background:#F4F6FA;
+      flex-direction:row; justify-content:flex-start; overflow-x:auto; padding:4px; background:#F4F6FA;
       border:1px solid var(--line); border-radius:15px; scrollbar-width:none;
     }
     .drill-side::-webkit-scrollbar{display:none}
@@ -512,11 +512,14 @@
   <button type="button" data-deck="present-perfect" class="on">
     <span>Present Perfect</span><b>100</b>
   </button>
+  <button type="button" data-deck="present-perfect-continuous">
+    <span>Present Perfect Continuous</span><b>30</b>
+  </button>
   <button type="button" data-deck="tenses">
     <span>Mixed tenses</span><b>112</b>
   </button>
   <button type="button" data-deck="verbs">
-    <span>Verb forms</span><b>50</b>
+    <span>Verb forms</span><b>80</b>
   </button>
 </aside>
 
@@ -1810,14 +1813,125 @@ PRESENT_PERFECT_QUESTIONS.push(
     "Put just between has and V3. Read is pronounced like 'red' here.")
 );
 
+/* Separate Present Perfect Continuous deck: ten exercises of each task type. */
+const ppcQuestion = (task, prompt, answer, context) => ({
+  task, tense:"prc", prompt, answer, context,
+  theory:"Present Perfect Continuous uses have/has + been + verb-ing. " + context
+});
+const ppcForm = (prompt, answer, context) => ppcQuestion("Put the correct form", prompt, answer, context);
+const ppcFix = (prompt, answer, context) => ppcQuestion("Fix the mistake", prompt, answer, context);
+const ppcBuild = (prompt, answer, context) => ppcQuestion("Build the sentence", prompt, answer, context);
+const PRESENT_PERFECT_CONTINUOUS_QUESTIONS = [
+  ppcForm("I ______ (study) English for two hours, and I am still studying.",
+    "I have been studying English for two hours, and I am still studying.",
+    "Use have with I. For two hours describes the duration of the activity."),
+  ppcForm("She ______ (wait) for the bus since eight o'clock and is still at the stop.",
+    "She has been waiting for the bus since eight o'clock and is still at the stop.",
+    "Use has with she. Since introduces the starting point."),
+  ppcForm("They ______ (paint) the kitchen all morning; there is paint on their clothes.",
+    "They have been painting the kitchen all morning; there is paint on their clothes.",
+    "Focus on the recent activity and the visible evidence, rather than whether the kitchen is finished."),
+  ppcForm("He ______ (not / sleep) well lately and feels tired.",
+    "He has not been sleeping well lately and feels tired.",
+    "For a negative, put not after has: has not been sleeping. Hasn't is also correct."),
+  ppcForm("We ______ (not / use) the car this week because we are walking everywhere.",
+    "We have not been using the car this week because we are walking everywhere.",
+    "Use have not been using to describe the recent temporary pattern. Haven't is also correct."),
+  ppcForm("It ______ (rain) for hours, and the streets are wet.",
+    "It has been raining for hours, and the streets are wet.",
+    "Use has with it. The rain may still be falling or may have just stopped."),
+  ppcForm("How long ______ you ______ (learn) English?",
+    "How long have you been learning English?",
+    "Question order: How long + have + you + been + learning?"),
+  ppcForm("______ she ______ (train) for the race recently?",
+    "Has she been training for the race recently?",
+    "For a yes/no question, put has before she. Keep been before the -ing form."),
+  ppcForm("Why ______ you ______ (not / practise) the violin lately?",
+    "Why haven't you been practising the violin lately?",
+    "A negative question can use haven't before you. Why have you not been practising...? is also correct."),
+  ppcForm("The children ______ (play) outside, and their shoes are muddy.",
+    "The children have been playing outside, and their shoes are muddy.",
+    "Use have with a plural subject. Muddy shoes are evidence of recent activity."),
+
+  ppcFix("She *have been working* since nine.",
+    "She has been working since nine.",
+    "She takes has, not have. Keep been + working."),
+  ppcFix("We have *been wait* for an hour.",
+    "We have been waiting for an hour.",
+    "After have been, use the -ing form: waiting."),
+  ppcFix("He has *being running* and is out of breath.",
+    "He has been running and is out of breath.",
+    "Use been after has, not being. The running explains the present result."),
+  ppcFix("I have been *study* all afternoon.",
+    "I have been studying all afternoon.",
+    "Keep the y in study and add -ing: studying."),
+  ppcFix("*Has* you been using my computer?",
+    "Have you been using my computer?",
+    "Use have with you, including in questions."),
+  ppcFix("They have been learning English *since three months*.",
+    "They have been learning English for three months.",
+    "For introduces a period of time. Since introduces a starting point."),
+  ppcFix("She has been working here *for Monday*.",
+    "She has been working here since Monday.",
+    "Monday is a starting point, so use since Monday."),
+  ppcFix("He *hasn't been sleep* well lately.",
+    "He hasn't been sleeping well lately.",
+    "Negative structure: has not + been + sleeping."),
+  ppcFix("How long *you have been living* here?",
+    "How long have you been living here?",
+    "Put have before the subject in this question."),
+  ppcFix("The children *have playing* in the garden.",
+    "The children have been playing in the garden.",
+    "Do not omit been between have and the -ing form."),
+
+  ppcBuild("I / work / on this project / since Monday",
+    "I have been working on this project since Monday.",
+    "Add have been before working. Since Monday gives the starting point."),
+  ppcBuild("she / read / that novel / all week",
+    "She has been reading that novel all week.",
+    "Use has been reading to focus on the activity over the week, without claiming she has finished the book."),
+  ppcBuild("they / not practise / much / lately",
+    "They have not been practising much lately.",
+    "Use have not been practising. They haven't been practising is also correct."),
+  ppcBuild("he / try / to fix his bicycle / for an hour",
+    "He has been trying to fix his bicycle for an hour.",
+    "Use has been trying. Keep the y when adding -ing to try."),
+  ppcBuild("how long / you / wait / here?",
+    "How long have you been waiting here?",
+    "Question order: How long + have + subject + been + verb-ing?"),
+  ppcBuild("it / rain / since breakfast",
+    "It has been raining since breakfast.",
+    "Use has with it. Since breakfast gives the starting point."),
+  ppcBuild("we / not sleep / well / recently",
+    "We have not been sleeping well recently.",
+    "Use have not been sleeping for a repeated recent situation. Haven't is also correct."),
+  ppcBuild("your brother / train / for the race?",
+    "Has your brother been training for the race?",
+    "Your brother is singular, so begin the question with has."),
+  ppcBuild("you / spend / a lot of time online / lately",
+    "You have been spending a lot of time online lately.",
+    "Use have been spending to describe a repeated recent activity."),
+  ppcBuild("the students / prepare / for their exams / for weeks",
+    "The students have been preparing for their exams for weeks.",
+    "Use have with the students. Drop the final e in prepare before adding -ing.")
+];
+const DRILL_BANKS = {
+  'present-perfect': PRESENT_PERFECT_QUESTIONS,
+  'present-perfect-continuous': PRESENT_PERFECT_CONTINUOUS_QUESTIONS,
+  tenses: QUESTIONS,
+  verbs: VERB_FORM_QUESTIONS
+};
+
 /* Default explanations — used when a question has no theory or example of its own. */
 const THEORY = {
+  prc:"Present Perfect Continuous uses have/has + been + verb-ing for an activity continuing up to now or recent activity with a present effect. It can describe repeated activity too. Use for with a duration and since with a starting point.",
   ps:"Past Simple is for a finished action at a finished time. If the sentence says when — yesterday, last week, in 2019, two hours ago — this is the tense you need.",
   pc:"Past Continuous (was/were + verb–ing) is the long action in progress at a past moment. A short action that interrupts it goes in Past Simple.",
   pr:"Present Perfect (have/has + third form) links the past to now. Use it when the result matters today and you do not say when it happened.",
   pp:"Past Perfect (had + third form) marks the earlier of two past actions. The later action stays in Past Simple."
 };
 const EXAMPLE = {
+  prc:"She has been studying for an hour. Has she been studying since nine? She hasn't been sleeping well lately.",
   ps:"We started the job in March. · I called the supplier two hours ago.",
   pc:"I was driving home when it started to snow. · She was stretching when her phone rang.",
   pr:"I have finished the report, so you can read it. · He has just left the office.",
@@ -1825,6 +1939,7 @@ const EXAMPLE = {
 };
 
 const TENSES = {
+  prc:{name:"Present Perfect Continuous", c:"#2E8B77"},
   ps:{name:"Past Simple",      c:"var(--ps)"},
   pc:{name:"Past Continuous",  c:"var(--pc)"},
   pp:{name:"Past Perfect",     c:"var(--pp)"},
@@ -1891,13 +2006,11 @@ let topCard = null;
 let locked = false;
 
 function activeDrillBank(){
-  if (drillDeck === 'present-perfect') return PRESENT_PERFECT_QUESTIONS;
-  if (drillDeck === 'verbs') return VERB_FORM_QUESTIONS;
-  return QUESTIONS;
+  return DRILL_BANKS[drillDeck] || QUESTIONS;
 }
 
 function syncDrillSide(){
-  const banks = {'present-perfect':PRESENT_PERFECT_QUESTIONS,tenses:QUESTIONS,verbs:VERB_FORM_QUESTIONS};
+  const banks = DRILL_BANKS;
   document.querySelectorAll('#drillSide button[data-deck]').forEach(button => {
     button.classList.toggle('on', button.dataset.deck === drillDeck);
     button.querySelector('b').textContent = banks[button.dataset.deck].length;
@@ -2056,11 +2169,7 @@ function updateHud(){
 
 document.getElementById('shuffle').onclick = () => restartDrill(true);
 document.querySelectorAll('#drillSide button[data-deck]').forEach(button => {
-  const banks = {
-    'present-perfect': PRESENT_PERFECT_QUESTIONS,
-    'tenses': QUESTIONS,
-    'verbs': VERB_FORM_QUESTIONS
-  };
+  const banks = DRILL_BANKS;
   button.querySelector('b').textContent = banks[button.dataset.deck].length;
   button.onclick = () => {
     if (drillDeck === button.dataset.deck) return;
@@ -2483,7 +2592,25 @@ const READING_CARDS = [
       "On Sunday evening, Lena chose her favourite photograph and sent it to her family. Since the walk, she has borrowed a photography book and has practised with the camera in her garden. She hasn't bought her own camera yet. Yesterday, Sam asked, 'Which picture did your family like best?' 'The lake,' she said. 'My sister has already asked for a copy.' Lena has learned that one small change can make a big difference, both in a photograph and in a new skill."
     ],
     writePrompt:"Write a short summary of Lena's walk and her progress since then. Explain what she did last weekend and what she has or hasn't done yet.",
-    speakPrompt:"Retell the photography story, then discuss a skill you have learned. Ask Have you ever tried...? and follow up with When did you start? and What have you learned so far?" }
+    speakPrompt:"Retell the photography story, then discuss a skill you have learned. Ask Have you ever tried...? and follow up with When did you start? and What have you learned so far?" },
+  { title:"The garden that brought the street together",
+    image:{src:"assets/stories/garden.svg", alt:"Illustration of a community garden with vegetable beds, a greenhouse and a watering can", caption:"An imagined community garden in Cork"},
+    text:[
+      "For the past six weeks, Maya and her neighbours have been turning an empty corner of their street into a community garden. They have been meeting every Saturday morning and sharing tools. Maya has been learning how to grow vegetables, while her neighbour Leo has been repairing an old greenhouse. Last Saturday, a new volunteer named Anna arrived with a watering can. She looked at the fresh wooden beds and the muddy path, then smiled. The place already felt different from the empty space she remembered.",
+      "'How long have you been working on this garden?' Anna asked. 'We've been working here since the beginning of September,' Maya replied. 'Leo has been building those beds, and I've been planting herbs.' Anna pointed to a tray beside the fence. 'Have you been growing these from seeds?' 'Yes, we have. They need a little more time indoors.' Leo came over with soil on his sleeves. 'I've been digging all morning,' he said, 'so I need a break.' Anna laughed. 'I've brought some sandwiches. What have you been planning for the empty bed?' 'Flowers for bees,' Maya said.",
+      "They ate lunch together and wrote a list of jobs for the next weekend. Since the project began, the group has built four beds and planted two small trees. Recently, more neighbours have been stopping to ask questions. Anna has been visiting after work to water the herbs, and Maya has been keeping a diary of their progress. They haven't been using chemical sprays because they want to protect insects. Yesterday, Anna sent Maya a photograph of the first new leaves. 'I've been checking these every day,' she wrote. 'Now I understand why everyone is so excited.'"
+    ],
+    writePrompt:"Write 4-6 sentences about what the neighbours have been doing. Use for and since for duration, then use Present Perfect Simple to describe what they have completed. Explain why Leo needed a break.",
+    speakPrompt:"Retell the garden project, then role-play Anna and Maya's conversation. Ask How long have you been...? and Have you been...? Explain which activities are continuing and which results are complete." },
+  { title:"The voices behind the neighbourhood podcast",
+    image:{src:"assets/stories/studio.svg", alt:"Illustration of a small recording studio with microphones, headphones and a laptop beside a window", caption:"An imagined neighbourhood podcast studio"},
+    text:[
+      "Nadia and Ben have been making a podcast about their neighbourhood for two months. They record interviews in a small room above a cafe. Nadia has been talking to local shop owners, and Ben has been learning how to edit the recordings. They have already published three episodes, but each new conversation brings a different challenge. Last Friday, they invited a baker named Ruth to describe how her working day begins. Before she arrived, Nadia tested the microphones and put three glasses of water on the table.",
+      "'Have you been recording here for long?' Ruth asked. 'We've been using this room since August,' Ben said. 'It gets noisy downstairs, so we've been recording in the evenings.' Ruth sat down and tried the headphones. 'What have you been working on this week?' she asked. 'An episode about people who start work before sunrise,' Nadia replied. During the interview, a loud buzzing sound interrupted Ruth's answer. Ben checked a cable. 'I've been trying to fix this connection all week,' he said. Ruth waited while he replaced it. This time, her voice sounded clear.",
+      "They finished the interview at seven and thanked Ruth for her patience. Since Friday, Ben has been editing the episode for an hour each evening. He has removed the buzzing sound and saved a clean copy of the interview. Nadia has been choosing a short introduction, but she hasn't finished it yet. 'Why do you look so tired?' her flatmate asked yesterday. 'I've been listening to the same recording all afternoon,' Nadia said. 'I haven't been taking enough breaks.' Today, the two friends have been discussing a better schedule so that their hobby stays enjoyable."
+    ],
+    writePrompt:"Summarise what Nadia and Ben have been doing over the past two months. Include one negative, one duration phrase and one completed result. Explain why Nadia looked tired.",
+    speakPrompt:"Retell the podcast story and act out the studio conversation. Ask a partner what they have been working on lately and how long they have been doing it. Contrast the ongoing editing with the three published episodes." }
 ];
 
 const MARKERS = [
