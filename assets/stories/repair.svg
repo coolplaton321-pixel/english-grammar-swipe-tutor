@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="title desc">
+<title id="title">The community repair cafe</title><desc id="desc">A sewing machine, wooden toy horse, tools and a jacket on a repair-cafe workbench.</desc>
+<path d="M0 0h960v400H0z" fill="#EDE7DD"/><path d="M0 330h960v70H0z" fill="#D6CDBD"/><path d="M50 51h260v178H50z" fill="#BED4D8" stroke="#FAF7EC" stroke-width="10"/><path d="M180 55v170M54 139h251" stroke="#FAF7EC" stroke-width="7"/>
+<path d="M373 54h416v128H373z" fill="#42695D"/><text x="581" y="95" text-anchor="middle" font-family="sans-serif" font-size="26" letter-spacing="3" fill="#F5EAD0">REPAIR CAFE</text><text x="581" y="135" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#F5EAD0">MEND IT. KEEP IT. USE IT.</text>
+<path d="M51 291h858v23H51zM74 314h20v86H74zM865 314h20v86h-20z" fill="#A4805C"/><path d="M126 263h250v23H126zM153 163h57v103h-57zM198 157h134q34 0 34 32v35h-42v-29h-96z" fill="#6B9293"/><path d="M324 210v58" stroke="#445F66" stroke-width="4"/><path d="M290 269h64" stroke="#445F66" stroke-width="3"/><circle cx="210" cy="184" r="14" fill="#DADECA"/>
+<path d="m489 224 22-33 22 17 15-14 18 18-9 26h-52l-8 31h-12zm22 14 3 29h10l3-29m19-2 10 31h10l-6-35" fill="#B18D65"/><circle cx="499" cy="278" r="13" fill="#647875"/><circle cx="555" cy="278" r="13" fill="#647875"/>
+<path d="m682 222 40-18 35 18 29 15-17 31-20-13v34h-57v-34l-17 13-17-31z" fill="#829B7B"/><path d="M725 210v77" stroke="#D9D6B8" stroke-width="4"/><path d="M813 243h51v46h-51z" fill="#BC9674"/><path d="M825 239v-34m14 34v-42m14 42v-28" stroke="#637985" stroke-width="6"/>
+<g fill="none" stroke="#657B80" stroke-width="5"><circle cx="411" cy="262" r="11"/><circle cx="435" cy="267" r="11"/><path d="m418 254 29-37m-5 42-23-42"/></g><path d="M80 352h123M730 367h141" stroke="#C1B8A5" stroke-width="3"/>
+</svg>

@@ -9,11 +9,11 @@ const inline=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const source=inline.slice(inline.indexOf('const READING_CARDS = ['),inline.indexOf('const MARKERS = ['));
 const {stories}=vm.runInNewContext(`${source}\n({stories:READING_CARDS})`);
 
-test('all thirty-two stories have readable content without a visible timeline',()=>{
-  assert.equal(stories.length,32);
+test('all thirty-five stories have readable content without a visible timeline',()=>{
+  assert.equal(stories.length,35);
   assert.equal(stories[0].title,'The morning the old cafe changed');
   assert.equal(stories[24].title,'The boat beside the empty beach');
-  assert.equal(new Set(stories.map(s=>s.title)).size,32);
+  assert.equal(new Set(stories.map(s=>s.title)).size,35);
   assert.doesNotMatch(inline,/renderStoryTimeline|READING_TIMELINES|Who did what\?/i);
   assert.doesNotMatch(html,/class="story-timeline"/);
   for(const [i,story] of stories.entries()){
@@ -24,8 +24,8 @@ test('all thirty-two stories have readable content without a visible timeline',(
   }
 });
 
-test('two new readings practise continuous activity, dialogue and completed-result contrasts',()=>{
-  assert.deepEqual(Array.from(stories.slice(30),s=>s.title),[
+test('PPC readings practise continuous activity, dialogue and completed-result contrasts',()=>{
+  assert.deepEqual(Array.from(stories.slice(30,32),s=>s.title),[
     'The garden that brought the street together',
     'The voices behind the neighbourhood podcast'
   ]);
@@ -35,6 +35,25 @@ test('two new readings practise continuous activity, dialogue and completed-resu
     assert.match(text,/\b(?:for|since)\b/);
     assert.match(story.writePrompt,/Present Perfect Simple|completed result/);
     assert.match(story.speakPrompt,/How long have you been|how long they have been/);
+  }
+});
+
+test('three additional PPC stories cover training, repairs and an exhibition',()=>{
+  const added=stories.slice(32);
+  assert.equal(added.length,3);
+  assert.deepEqual(Array.from(added,s=>s.title),[
+    'The first ten-kilometre race',
+    'A second life at the repair cafe',
+    'The photographs at the old station'
+  ]);
+  for(const story of added){
+    const text=story.text.join(' ');
+    assert.match(text,/\bfor\b/);
+    assert.match(text,/\bsince\b/i);
+    assert.match(text,/haven't been|hasn't been/);
+    assert.match(text,/How long have you been/);
+    assert.match(story.writePrompt,/\bfor\b/);
+    assert.match(story.writePrompt,/\bsince\b/);
   }
 });
 

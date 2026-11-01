@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="title desc">
+<title id="title">The riverside running route</title><desc id="desc">A winding park path beside a river, with trainers and a ten-kilometre race sign.</desc>
+<path d="M0 0h960v400H0z" fill="#E5EFF2"/><circle cx="765" cy="67" r="33" fill="#F4DCA7"/><path d="M0 167q183-68 375-2t322-17 263 27v225H0z" fill="#A0B59A"/><path d="M0 229q230-38 421-10t539-14v195H0z" fill="#A7CDD0"/>
+<path d="M0 220q183-38 345 26t202 154H0zM960 245q-119-9-221 155h221z" fill="#8FAE87"/><path d="M158 400q255-68 205-126t-104-61l-34 2q121 58 77 87T61 400z" fill="#E3D3AC"/>
+<g stroke="#60775D" stroke-width="9"><path d="M75 147v135M473 144v139M874 159v145"/></g><g fill="#648969"><circle cx="75" cy="137" r="45"/><circle cx="473" cy="132" r="43"/><circle cx="874" cy="149" r="49"/></g>
+<path d="M627 163v143" stroke="#7E8174" stroke-width="7"/><path d="M555 151h150v65H555z" fill="#F7F3E6" stroke="#7E8174" stroke-width="4"/><text x="630" y="179" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#4F7168">RIVERSIDE RUN</text><text x="630" y="204" text-anchor="middle" font-family="sans-serif" font-size="21" font-weight="bold" fill="#4F7168">10 KM</text>
+<path d="M530 264h176m-165 15h154m-142-15v42m131-42v42" stroke="#947C5A" stroke-width="6"/><g stroke="#E4F0E9" stroke-width="3"><path d="M414 312h125m65 37h189M609 241h180"/></g>
+<g transform="translate(97 309)"><path d="m0 24 40-24 37 25 47 17q11 12-7 18H7z" fill="#648B9B"/><path d="m40 14 31 23m-20-28 31 23" stroke="#E4EBDA" stroke-width="4"/><path d="M0 54h126v10H3z" fill="#EEE9DA"/><path d="m71 48 40-24 37 25 47 17q11 12-7 18H78z" fill="#AA8773"/><path d="m111 38 31 23m-20-28 31 23" stroke="#F3E7D3" stroke-width="4"/><path d="M72 78h126v10H75z" fill="#EEE9DA"/></g>
+</svg>

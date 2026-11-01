@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" role="img" aria-labelledby="title desc">
+<title id="title">The exhibition at the old station</title><desc id="desc">Framed neighbourhood photographs in an old railway station, with a camera on a bench.</desc>
+<path d="M0 0h960v400H0z" fill="#EEEADF"/><path d="M0 311h960v89H0z" fill="#C9C4B6"/><path d="M0 92h960" stroke="#C9C0AE" stroke-width="11"/>
+<path d="M85 283V129a79 79 0 0 1 158 0v154z" fill="#C3D8DB" stroke="#FAF7EF" stroke-width="9"/><path d="M164 57v225M90 177h148" stroke="#FAF7EF" stroke-width="6"/><path d="M94 236h48v42H94zM148 213h40v65h-40zM193 233h40v45h-40z" fill="#92ADAE"/>
+<path d="M309 139h165v126H309zM513 139h165v126H513zM717 139h165v126H717z" fill="#F9F7EC" stroke="#657A7A" stroke-width="6"/><path d="M323 153h137v98H323zM527 153h137v98H527zM731 153h137v98H731z" fill="#D1DDD4"/>
+<path d="M323 251v-48l40-26 40 26v48zm72 0v-68h39v68" fill="#A28F77"/><path d="m527 251 51-66 43 38 43-24v52z" fill="#8BA18A"/><path d="M731 202h137v49H731z" fill="#A8C6CD"/><path d="M741 220q59-76 118 0" fill="none" stroke="#F6F0DB" stroke-width="7"/>
+<path d="M335 279h111M539 279h111M743 279h111" stroke="#A3A89A" stroke-width="3"/><circle cx="596" cy="53" r="27" fill="#FAF5E7" stroke="#71888B" stroke-width="5"/><path d="M596 36v18l14 10" fill="none" stroke="#71888B" stroke-width="3"/>
+<path d="M339 339h271v15H339zM359 354v46m231-46v46" stroke="#947A5D" stroke-width="8" fill="#B49B7B"/><path d="M430 300h25l10-11h28l10 11h25v38h-98z" fill="#506B78"/><circle cx="479" cy="318" r="19" fill="#304C5E"/><circle cx="479" cy="318" r="12" fill="#9FBCC1"/>
+<path d="M815 346h59l-7 54h-45z" fill="#B48E70"/><g fill="#769379"><ellipse cx="832" cy="321" rx="14" ry="29" transform="rotate(-28 832 321)"/><ellipse cx="854" cy="316" rx="14" ry="32" transform="rotate(22 854 316)"/></g>
+</svg>
