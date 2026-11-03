@@ -521,6 +521,9 @@
   <button type="button" data-deck="verbs">
     <span>Verb forms</span><b>80</b>
   </button>
+  <button type="button" data-deck="new-irr-verbs">
+    <span>New irr verbs</span><b>10</b>
+  </button>
 </aside>
 
 <div class="top" id="hud">
@@ -1552,6 +1555,28 @@ VERB_FORM_QUESTIONS.push(...NEW_VERB_FORMS.map(([verb,second,third,example,theor
   answer:`${verb} - ${second} - ${third}`, theory, example
 })));
 
+/* A separate folder for ten irregular verbs not included in the original verb deck. */
+const NEW_IRREGULAR_VERBS = [
+  ["cost", "cost", "cost", "The repairs have cost more than we expected."],
+  ["hit", "hit", "hit", "The ball has hit the window."],
+  ["hurt", "hurt", "hurt", "She has hurt her ankle."],
+  ["let", "let", "let", "They have let us use their kitchen."],
+  ["ring", "rang", "rung", "The doorbell has rung three times."],
+  ["rise", "rose", "risen", "The price of coffee has risen this year."],
+  ["seek", "sought", "sought", "We have sought advice from an expert."],
+  ["shoot", "shot", "shot", "They have shot a short film by the sea."],
+  ["shut", "shut", "shut", "Someone has shut the garden gate."],
+  ["spend", "spent", "spent", "I have spent all morning at the library."]
+];
+const NEW_IRREGULAR_VERB_QUESTIONS = NEW_IRREGULAR_VERBS.map(([verb,second,third,example]) => ({
+  task:"Choose V2 and V3", tense:"vf",
+  prompt:`${verb} → V2: ______ · V3: ______`,
+  context:"Complete the second and third forms.",
+  answer:`${verb} - ${second} - ${third}`,
+  theory:`Learn the three forms together: ${verb} - ${second} - ${third}. Use V2 for Past Simple and V3 after have/has or had.`,
+  example
+}));
+
 /* Dedicated Present Perfect deck: 40 forms + 30 V3 verbs + 15 corrections + 15 builds. */
 const ppForm = (prompt, answer, context) => ({
   task:"Put the correct form", tense:"pr", prompt, answer, context
@@ -1919,7 +1944,8 @@ const DRILL_BANKS = {
   'present-perfect': PRESENT_PERFECT_QUESTIONS,
   'present-perfect-continuous': PRESENT_PERFECT_CONTINUOUS_QUESTIONS,
   tenses: QUESTIONS,
-  verbs: VERB_FORM_QUESTIONS
+  verbs: VERB_FORM_QUESTIONS,
+  'new-irr-verbs': NEW_IRREGULAR_VERB_QUESTIONS
 };
 
 /* Default explanations — used when a question has no theory or example of its own. */

@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const bankSource = inline.slice(inline.indexOf('const QUESTIONS = ['),inline.indexOf('/* Default explanations'));
-const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,continuous:PRESENT_PERFECT_CONTINUOUS_QUESTIONS,extra:EXTRA_VERB_FORMS,added:NEW_VERB_FORMS})`);
+const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,continuous:PRESENT_PERFECT_CONTINUOUS_QUESTIONS,extra:EXTRA_VERB_FORMS,added:NEW_VERB_FORMS,newIrregular:NEW_IRREGULAR_VERB_QUESTIONS})`);
 
 test('all inline practice code parses',()=>{assert.doesNotThrow(()=>new vm.Script(inline));});
 
@@ -27,7 +27,7 @@ test('Present Perfect is doubled; verb forms expand without changing mixed tense
 });
 
 test('expanded decks have unique, complete prompts and valid task types',()=>{
-  for(const bank of [banks.perfect,banks.verbs,banks.continuous]) {
+  for(const bank of [banks.perfect,banks.verbs,banks.continuous,banks.newIrregular]) {
     assert.equal(new Set(bank.map(question=>question.prompt.toLowerCase().trim())).size,bank.length);
     for(const question of bank) {
       for(const field of ['task','tense','prompt','answer','context']) {
@@ -54,10 +54,27 @@ test('new participles and their V2 contrasts are correct',()=>{
 });
 
 test('sidebar counts derive from the actual banks',()=>{
-  const buttons=['present-perfect','present-perfect-continuous','tenses','verbs'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
+  const buttons=['present-perfect','present-perfect-continuous','tenses','verbs','new-irr-verbs'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
   const syncSource=inline.slice(inline.indexOf('function syncDrillSide(){'),inline.indexOf('function shuffledQuestions(){'));
   vm.runInNewContext(`${bankSource}\nlet drillDeck='verbs';\n${syncSource}\nsyncDrillSide();`,{document:{querySelectorAll:()=>buttons}});
-  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,30,112,80]);
+  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,30,112,80,10]);
+});
+
+test('New irr verbs is a separate ten-card deck with new irregular forms and working shuffle',()=>{
+  const expected={cost:'cost - cost - cost',hit:'hit - hit - hit',hurt:'hurt - hurt - hurt',let:'let - let - let',ring:'ring - rang - rung',rise:'rise - rose - risen',seek:'seek - sought - sought',shoot:'shoot - shot - shot',shut:'shut - shut - shut',spend:'spend - spent - spent'};
+  assert.equal(banks.newIrregular.length,10);
+  for(const q of banks.newIrregular){
+    const verb=q.prompt.split(' →')[0];
+    assert.equal(q.answer,expected[verb]);
+    assert.ok(!banks.verbs.some(old=>old.prompt===q.prompt));
+    assert.ok(q.theory.trim()&&q.example.trim());
+  }
+  const active=inline.slice(inline.indexOf('function activeDrillBank(){'),inline.indexOf('function syncDrillSide(){'));
+  const shuffle=inline.slice(inline.indexOf('function shuffledQuestions(){'),inline.indexOf('function restartDrill('));
+  const result=vm.runInNewContext(`${bankSource}\nlet drillDeck='new-irr-verbs';\n${active}\n${shuffle}\n({selected:activeDrillBank(),shuffled:shuffledQuestions()})`);
+  assert.equal(result.selected.length,10);
+  assert.deepEqual(Array.from(result.shuffled,q=>q.prompt).sort(),Array.from(banks.newIrregular,q=>q.prompt).sort());
+  assert.match(html,/data-deck="new-irr-verbs"[\s\S]*?<span>New irr verbs<\/span><b>10<\/b>/);
 });
 
 test('Present Perfect Continuous has exactly ten form, correction and build exercises',()=>{
