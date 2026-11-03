@@ -522,7 +522,7 @@
     <span>Verb forms</span><b>80</b>
   </button>
   <button type="button" data-deck="new-irr-verbs">
-    <span>New irr verbs</span><b>10</b>
+    <span>New irr verbs</span><b>20</b>
   </button>
 </aside>
 
@@ -1555,7 +1555,7 @@ VERB_FORM_QUESTIONS.push(...NEW_VERB_FORMS.map(([verb,second,third,example,theor
   answer:`${verb} - ${second} - ${third}`, theory, example
 })));
 
-/* A separate folder for ten irregular verbs not included in the original verb deck. */
+/* A separate folder for twenty irregular verbs not included in the original verb deck. */
 const NEW_IRREGULAR_VERBS = [
   ["cost", "cost", "cost", "The repairs have cost more than we expected."],
   ["hit", "hit", "hit", "The ball has hit the window."],
@@ -1566,7 +1566,17 @@ const NEW_IRREGULAR_VERBS = [
   ["seek", "sought", "sought", "We have sought advice from an expert."],
   ["shoot", "shot", "shot", "They have shot a short film by the sea."],
   ["shut", "shut", "shut", "Someone has shut the garden gate."],
-  ["spend", "spent", "spent", "I have spent all morning at the library."]
+  ["spend", "spent", "spent", "I have spent all morning at the library."],
+  ["hear", "heard", "heard", "I have heard that song before."],
+  ["sit", "sat", "sat", "We have sat by the window all afternoon."],
+  ["stand", "stood", "stood", "The old tower has stood here for centuries."],
+  ["win", "won", "won", "Our team has won three matches this month."],
+  ["lead", "led", "led", "She has led several successful projects."],
+  ["hang", "hung", "hung", "They have hung a picture above the sofa."],
+  ["sweep", "swept", "swept", "He has swept the kitchen floor."],
+  ["bend", "bent", "bent", "Someone has bent the key."],
+  ["sink", "sank", "sunk", "The boat has sunk to the bottom of the lake."],
+  ["set", "set", "set", "I have set the alarm for seven o'clock."]
 ];
 const NEW_IRREGULAR_VERB_QUESTIONS = NEW_IRREGULAR_VERBS.map(([verb,second,third,example]) => ({
   task:"Choose V2 and V3", tense:"vf",

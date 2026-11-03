@@ -57,12 +57,12 @@ test('sidebar counts derive from the actual banks',()=>{
   const buttons=['present-perfect','present-perfect-continuous','tenses','verbs','new-irr-verbs'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
   const syncSource=inline.slice(inline.indexOf('function syncDrillSide(){'),inline.indexOf('function shuffledQuestions(){'));
   vm.runInNewContext(`${bankSource}\nlet drillDeck='verbs';\n${syncSource}\nsyncDrillSide();`,{document:{querySelectorAll:()=>buttons}});
-  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,30,112,80,10]);
+  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,30,112,80,20]);
 });
 
-test('New irr verbs is a separate ten-card deck with new irregular forms and working shuffle',()=>{
-  const expected={cost:'cost - cost - cost',hit:'hit - hit - hit',hurt:'hurt - hurt - hurt',let:'let - let - let',ring:'ring - rang - rung',rise:'rise - rose - risen',seek:'seek - sought - sought',shoot:'shoot - shot - shot',shut:'shut - shut - shut',spend:'spend - spent - spent'};
-  assert.equal(banks.newIrregular.length,10);
+test('New irr verbs is a separate twenty-card deck with new irregular forms and working shuffle',()=>{
+  const expected={cost:'cost - cost - cost',hit:'hit - hit - hit',hurt:'hurt - hurt - hurt',let:'let - let - let',ring:'ring - rang - rung',rise:'rise - rose - risen',seek:'seek - sought - sought',shoot:'shoot - shot - shot',shut:'shut - shut - shut',spend:'spend - spent - spent',hear:'hear - heard - heard',sit:'sit - sat - sat',stand:'stand - stood - stood',win:'win - won - won',lead:'lead - led - led',hang:'hang - hung - hung',sweep:'sweep - swept - swept',bend:'bend - bent - bent',sink:'sink - sank - sunk',set:'set - set - set'};
+  assert.equal(banks.newIrregular.length,20);
   for(const q of banks.newIrregular){
     const verb=q.prompt.split(' →')[0];
     assert.equal(q.answer,expected[verb]);
@@ -72,9 +72,9 @@ test('New irr verbs is a separate ten-card deck with new irregular forms and wor
   const active=inline.slice(inline.indexOf('function activeDrillBank(){'),inline.indexOf('function syncDrillSide(){'));
   const shuffle=inline.slice(inline.indexOf('function shuffledQuestions(){'),inline.indexOf('function restartDrill('));
   const result=vm.runInNewContext(`${bankSource}\nlet drillDeck='new-irr-verbs';\n${active}\n${shuffle}\n({selected:activeDrillBank(),shuffled:shuffledQuestions()})`);
-  assert.equal(result.selected.length,10);
+  assert.equal(result.selected.length,20);
   assert.deepEqual(Array.from(result.shuffled,q=>q.prompt).sort(),Array.from(banks.newIrregular,q=>q.prompt).sort());
-  assert.match(html,/data-deck="new-irr-verbs"[\s\S]*?<span>New irr verbs<\/span><b>10<\/b>/);
+  assert.match(html,/data-deck="new-irr-verbs"[\s\S]*?<span>New irr verbs<\/span><b>20<\/b>/);
 });
 
 test('Present Perfect Continuous has exactly ten form, correction and build exercises',()=>{
