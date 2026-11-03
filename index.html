@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>English tutoring — Practice & Students</title>
-<meta name="description" content="English practice and student knowledge boards. Track Taras’s C1 grammar, tenses and structures.">
-<link rel="stylesheet" href="students.css?v=20261006-cloud">
+<title>English tutoring — Practice, Tests & Students</title>
+<meta name="description" content="English swipe practice, interactive grammar and B2 reading tests, homework, and student knowledge boards.">
+<link rel="stylesheet" href="students.css?v=20261103-tests">
+<link rel="stylesheet" href="test-library.css?v=20261103-tests">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -487,6 +488,7 @@
 </head>
 <body class="drill-mode">
 
+<button type="button" class="menu-backdrop" id="menuBackdrop" aria-label="Close menu" tabindex="-1" hidden></button>
 <nav class="app-menu" aria-label="Main navigation">
   <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="menuPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg> Menu
@@ -494,6 +496,10 @@
   <div class="menu-panel" id="menuPanel" hidden>
     <a href="#practice" id="practiceNav" aria-current="page"><span aria-hidden="true">✎</span> Practice</a>
     <a href="#students" id="studentsNav"><span aria-hidden="true">◉</span> Students</a>
+    <a href="#tests" id="testsNav"><span aria-hidden="true">▤</span> Tests & homework</a>
+    <p class="menu-group-label">Choose a test</p>
+    <a href="#tests/present-perfect" id="perfectTestNav"><span aria-hidden="true">01</span> Present perfect test</a>
+    <a href="#tests/ielts-reading-b2" id="readingTestNav"><span aria-hidden="true">02</span> IELTS reading · B2</a>
   </div>
 </nav>
 
@@ -562,6 +568,41 @@
     <div class="board-guide"><div class="knowledge-legend" id="knowledgeLegend" aria-label="Knowledge colours"></div></div>
     <div class="topic-board" id="topicBoard"></div>
     <p class="curriculum-note">A teaching checklist for C1 development: earlier-level foundations are included because accurate, flexible use matters at C1. This is not a fixed official CEFR grammar syllabus. Topic selection draws on <a href="https://learnenglish.britishcouncil.org/free-resources/grammar/c1" target="_blank" rel="noopener">British Council C1 grammar</a>, <a href="https://dictionary.cambridge.org/grammar/british-grammar/English" target="_blank" rel="noopener">Cambridge English Grammar Today</a> and <a href="https://www.cambridgeenglish.org/exams-and-tests/qualifications/advanced/format/" target="_blank" rel="noopener">Cambridge C1 Advanced</a>.</p>
+  </div>
+</section>
+
+<section class="tests-view" id="testsView" aria-labelledby="testsTitle" hidden>
+  <div class="test-library" id="testLibrary">
+    <p class="page-eyebrow">English tutoring · Your resources</p>
+    <h1 id="testsTitle" tabindex="-1">Tests & homework</h1>
+    <p class="page-intro">Choose a test, work at your own pace, and review your answers when you finish.</p>
+    <div class="test-card-grid">
+      <a class="test-card" href="#tests/present-perfect">
+        <div class="test-card-top"><span class="test-type">Grammar + reading</span><span class="test-number" aria-hidden="true">01</span></div>
+        <h2>Present perfect<br>simple & continuous</h2>
+        <p>Choose the form, complete the gaps, fix mistakes and build sentences. Finish with a reading challenge.</p>
+        <div class="test-tags"><span>40 questions</span><span>50–60 minutes</span></div>
+        <span class="test-card-action">Open test <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="test-card reading-test-card" href="#tests/ielts-reading-b2">
+        <div class="test-card-top"><span class="test-type">Reading · B2</span><span class="test-number" aria-hidden="true">02</span></div>
+        <h2>IELTS-style<br>reading test</h2>
+        <p>Three accessible passages with matching headings, True / False / Not Given, multiple choice and gap completion.</p>
+        <div class="test-tags"><span>40 questions</span><span>About 60 minutes</span></div>
+        <span class="test-card-action">Open test <span aria-hidden="true">↗</span></span>
+      </a>
+    </div>
+    <p class="test-save-note">Both tests save progress on this browser. Answers and explanations appear after submission. The reading result is a practice score, not an IELTS band.</p>
+    <div class="materials-heading"><p class="page-eyebrow">Earlier worksheets</p><h2>Present perfect · PDFs</h2></div>
+    <div class="material-list">
+      <a class="material-link" href="materials/present_perfect_homework.pdf" target="_blank" rel="noopener"><span class="pdf-icon" aria-hidden="true">PDF</span><span><strong>Present perfect homework</strong><small>Verbs, grammar and question practice</small></span><span class="material-open">Open PDF ↗</span></a>
+      <a class="material-link" href="materials/present_perfect_test.pdf" target="_blank" rel="noopener"><span class="pdf-icon" aria-hidden="true">PDF</span><span><strong>Present perfect test</strong><small>The original printable test</small></span><span class="material-open">Open PDF ↗</span></a>
+      <a class="material-link" href="materials/present_perfect_question_practice_20_each.pdf" target="_blank" rel="noopener"><span class="pdf-icon" aria-hidden="true">PDF</span><span><strong>Question practice · 20 of each</strong><small>Answers, follow-up questions and writing questions</small></span><span class="material-open">Open PDF ↗</span></a>
+    </div>
+  </div>
+  <div class="test-player" id="testPlayer" hidden>
+    <header class="test-player-bar"><a class="test-back" href="#tests">← All tests</a><h1 id="testPlayerTitle" tabindex="-1"></h1><a id="testStandalone" target="_blank" rel="noopener">Open in new tab ↗</a></header>
+    <iframe id="testFrame" title="English practice test"></iframe>
   </div>
 </section>
 
@@ -3102,7 +3143,8 @@ document.getElementById('hintsToggle').onclick = e => {
 
 render();
 </script>
-<script src="students.js?v=20261006-cloud"></script>
+<script src="test-library.js?v=20261103-tests"></script>
+<script src="students.js?v=20261103-tests"></script>
 <script src="vendor/supabase.js?v=2.117.2" defer></script>
 <script src="cloud.js?v=20261006-cloud" defer></script>
 </body>

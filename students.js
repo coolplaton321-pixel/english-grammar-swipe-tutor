@@ -197,10 +197,11 @@
     $('topicBoard').appendChild(section);
   });
 
-  const closeMenu = () => { $('menuPanel').hidden = true; $('menuToggle').setAttribute('aria-expanded','false'); };
+  const closeMenu = () => { $('menuPanel').hidden = true; $('menuBackdrop').hidden = true; $('menuToggle').setAttribute('aria-expanded','false'); };
   $('menuToggle').onclick = () => {
     const open = $('menuPanel').hidden;
     $('menuPanel').hidden = !open;
+    $('menuBackdrop').hidden = !open;
     $('menuToggle').setAttribute('aria-expanded',String(open));
   };
   document.addEventListener('click', event => { if (!event.target.closest('.app-menu')) closeMenu(); });
@@ -218,12 +219,15 @@
     if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) $('topicDialog').close();
   });
   function showView(moveFocus = false) {
+    const testsActive = location.hash === '#tests' || location.hash.startsWith('#tests/');
     const studentsActive = location.hash === '#students' || location.hash.startsWith('#students/');
+    const practiceActive = !studentsActive && !testsActive;
     const student = STUDENTS.find(profile => location.hash === `#students/${profile.id}`);
     const boardActive = Boolean(student);
     if ($('topicDialog').open) $('topicDialog').close();
-    $('practiceView').hidden = studentsActive;
+    $('practiceView').hidden = !practiceActive;
     $('studentsView').hidden = !studentsActive;
+    window.englishTests.show(testsActive ? location.hash : null);
     $('studentDirectory').hidden = boardActive;
     $('studentBoard').hidden = !boardActive;
     if (student) {
@@ -237,18 +241,19 @@
       updateBoard();
     }
     $('studentsView').setAttribute('aria-labelledby',boardActive ? 'studentName' : 'studentsTitle');
-    document.body.classList.toggle('drill-mode', !studentsActive && mode === 'drill');
-    document.body.classList.toggle('hints-open', !studentsActive && !$('globalHints').hidden);
-    if (studentsActive) stopTimer();
-    [['studentsNav',studentsActive],['practiceNav',!studentsActive]].forEach(([id,active]) => {
+    document.body.classList.toggle('drill-mode', practiceActive && mode === 'drill');
+    document.body.classList.toggle('hints-open', practiceActive && !$('globalHints').hidden);
+    if (!practiceActive) stopTimer();
+    [['studentsNav',studentsActive],['practiceNav',practiceActive],['testsNav',testsActive && !window.englishTests.isTest(location.hash)],['perfectTestNav',location.hash === '#tests/present-perfect'],['readingTestNav',location.hash === '#tests/ielts-reading-b2']].forEach(([id,active]) => {
       if (active) $(id).setAttribute('aria-current','page');
       else $(id).removeAttribute('aria-current');
     });
-    document.title = boardActive ? `${student.name} · Grammar board — English tutoring` : studentsActive ? 'Students — English tutoring' : 'Practice — English tutoring';
+    document.title = testsActive ? `${window.englishTests.title(location.hash)} — English tutoring` : boardActive ? `${student.name} · Grammar board — English tutoring` : studentsActive ? 'Students — English tutoring' : 'Practice — English tutoring';
     closeMenu();
     if (moveFocus) {
       window.scrollTo(0,0);
-      if (studentsActive) $(boardActive ? 'studentName' : 'studentsTitle').focus({preventScroll:true});
+      if (testsActive) $(window.englishTests.isTest(location.hash) ? 'testPlayerTitle' : 'testsTitle').focus({preventScroll:true});
+      else if (studentsActive) $(boardActive ? 'studentName' : 'studentsTitle').focus({preventScroll:true});
       else $('menuToggle').focus({preventScroll:true});
     }
   }

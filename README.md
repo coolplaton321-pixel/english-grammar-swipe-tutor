@@ -8,6 +8,11 @@ https://coolplaton321-pixel.github.io/english-grammar-swipe-tutor/
 - `#practice`: existing grammar drills, speaking, reading and hints.
 - `#students`: Taras, Marina and Anton.
 - `#students/taras`, `#students/marina`, `#students/anton`: individual grammar knowledge boards.
+- `#tests`: tests and earlier homework PDFs.
+- `#tests/present-perfect`: the 40-question Present Perfect Simple / Continuous and reading test.
+- `#tests/ielts-reading-b2`: three B2 reading passages with 40 IELTS-style questions.
+
+The top-left menu links to Practice, Students, the test library and both interactive tests. Tests open inside the app, with an option to open the standalone file in a new tab. They keep separate browser-local attempts, show answers and explanations after submission, and unload when leaving so their timers stop. The B2 reading score is a practice score, not an IELTS band. Self-contained test files are in `tests-content/`; the previous homework, printable test and 20-of-each question worksheet are in `materials/`.
 
 Practice includes 100 Present Perfect drills (40 form exercises, 30 past-participle prompts, 15 corrections and 15 sentence builds), 80 verb-form drills and the unchanged 112 mixed-tense drills. The latest 30 verb additions include 15 regular verbs (including try/tried, plan/planned and stop/stopped) and 15 irregular verbs (including forget/forgot/forgotten and steal/stole/stolen). Every new card has V2/V3 answers, a form explanation, and an original Present Perfect example. Existing examples and the pronunciation note for read are preserved. The sidebar counts are calculated from the actual question banks.
 
