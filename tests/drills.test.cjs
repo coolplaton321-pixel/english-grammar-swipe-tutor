@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const bankSource = inline.slice(inline.indexOf('const QUESTIONS = ['),inline.indexOf('/* Default explanations'));
-const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,continuous:PRESENT_PERFECT_CONTINUOUS_QUESTIONS,extra:EXTRA_VERB_FORMS,added:NEW_VERB_FORMS,newIrregular:NEW_IRREGULAR_VERB_QUESTIONS})`);
+const banks = vm.runInNewContext(`${bankSource}\n({mixed:QUESTIONS,verbs:VERB_FORM_QUESTIONS,perfect:PRESENT_PERFECT_QUESTIONS,continuous:PRESENT_PERFECT_CONTINUOUS_QUESTIONS,extra:EXTRA_VERB_FORMS,added:NEW_VERB_FORMS,newIrregular:NEW_IRREGULAR_VERB_QUESTIONS,ing:ING_SPELLING_QUESTIONS})`);
 
 test('all inline practice code parses',()=>{assert.doesNotThrow(()=>new vm.Script(inline));});
 
@@ -27,7 +27,7 @@ test('Present Perfect is doubled; verb forms expand without changing mixed tense
 });
 
 test('expanded decks have unique, complete prompts and valid task types',()=>{
-  for(const bank of [banks.perfect,banks.verbs,banks.continuous,banks.newIrregular]) {
+  for(const bank of [banks.perfect,banks.verbs,banks.continuous,banks.newIrregular,banks.ing]) {
     assert.equal(new Set(bank.map(question=>question.prompt.toLowerCase().trim())).size,bank.length);
     for(const question of bank) {
       for(const field of ['task','tense','prompt','answer','context']) {
@@ -35,8 +35,8 @@ test('expanded decks have unique, complete prompts and valid task types',()=>{
         assert.ok(question[field].trim(),`${field}: ${question.prompt}`);
         assert.doesNotMatch(question[field],/undefined|null/);
       }
-      assert.ok(['pr','ps','vf','prc'].includes(question.tense));
-      assert.ok(['Put the correct form','Write the third form','Fix the mistake','Build the sentence','Choose V2 and V3'].includes(question.task));
+      assert.ok(['pr','ps','vf','prc','ing'].includes(question.tense));
+      assert.ok(['Put the correct form','Write the third form','Fix the mistake','Build the sentence','Choose V2 and V3','Write the -ing form'].includes(question.task));
     }
   }
 });
@@ -54,10 +54,38 @@ test('new participles and their V2 contrasts are correct',()=>{
 });
 
 test('sidebar counts derive from the actual banks',()=>{
-  const buttons=['present-perfect','present-perfect-continuous','tenses','verbs','new-irr-verbs'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
+  const buttons=['present-perfect','present-perfect-continuous','tenses','verbs','new-irr-verbs','ing-spelling'].map(deck=>({dataset:{deck},classList:{toggle(){}},badge:{},querySelector(){return this.badge;}}));
   const syncSource=inline.slice(inline.indexOf('function syncDrillSide(){'),inline.indexOf('function shuffledQuestions(){'));
   vm.runInNewContext(`${bankSource}\nlet drillDeck='verbs';\n${syncSource}\nsyncDrillSide();`,{document:{querySelectorAll:()=>buttons}});
-  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,30,112,80,20]);
+  assert.deepEqual(buttons.map(button=>button.badge.textContent),[100,30,112,80,20,40]);
+});
+
+test('-ING spelling covers the lesson patterns, valid regional forms and sentence corrections',()=>{
+  assert.equal(banks.ing.length,40);
+  const forms=banks.ing.filter(q=>q.task==='Write the -ing form');
+  const fixes=banks.ing.filter(q=>q.task==='Fix the mistake');
+  assert.equal(forms.length,33);
+  assert.equal(fixes.length,7);
+  const expected={work:'working',read:'reading',study:'studying',enjoy:'enjoying',make:'making',write:'writing',take:'taking',practise:'practising',see:'seeing',agree:'agreeing',be:'being',dye:'dyeing',lie:'lying',tie:'tying',die:'dying',run:'running',swim:'swimming',stop:'stopping',plan:'planning',wait:'waiting',help:'helping',snow:'snowing',fix:'fixing',play:'playing',begin:'beginning',prefer:'preferring',open:'opening',visit:'visiting',panic:'panicking',picnic:'picnicking',travel:'travelling / traveling',label:'labelling / labeling',cancel:'cancelling / canceling'};
+  for(const q of forms){
+    const verb=q.prompt.split(' →')[0];
+    assert.equal(q.answer,`${verb} → ${expected[verb]}`);
+  }
+  for(const q of banks.ing){
+    assert.equal(q.tense,'ing');
+    assert.ok(q.theory?.trim()&&q.example?.trim());
+  }
+  assert.deepEqual(Array.from(fixes,q=>q.answer),['She has been running for an hour.','We are lying on the beach.','He is studying for his exam.','They have been swimming all morning.','I am making dinner.','Thank you for agreeing to help.','The children are panicking.']);
+  assert.match(forms.find(q=>q.prompt.startsWith('dye →')).theory,/colour/);
+  assert.match(forms.find(q=>q.prompt.startsWith('travel →')).theory,/British.*American/);
+  assert.match(forms.find(q=>q.prompt.startsWith('prefer →')).theory,/stressed/);
+  const active=inline.slice(inline.indexOf('function activeDrillBank(){'),inline.indexOf('function syncDrillSide(){'));
+  const shuffle=inline.slice(inline.indexOf('function shuffledQuestions(){'),inline.indexOf('function restartDrill('));
+  const metadata=inline.slice(inline.indexOf('/* Default explanations'),inline.indexOf('/* Each task type'));
+  const result=vm.runInNewContext(`${bankSource}\n${metadata}\nlet drillDeck='ing-spelling';\n${active}\n${shuffle}\n({selected:activeDrillBank(),shuffled:shuffledQuestions(),tense:TENSES.ing})`);
+  assert.equal(result.selected.length,40);
+  assert.deepEqual(Array.from(result.shuffled,q=>q.prompt).sort(),Array.from(banks.ing,q=>q.prompt).sort());
+  assert.equal(result.tense.name,'-ING spelling');
 });
 
 test('New irr verbs is a separate twenty-card deck with new irregular forms and working shuffle',()=>{

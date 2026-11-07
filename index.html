@@ -530,6 +530,9 @@
   <button type="button" data-deck="new-irr-verbs">
     <span>New irr verbs</span><b>20</b>
   </button>
+  <button type="button" data-deck="ing-spelling">
+    <span>-ING spelling</span><b>40</b>
+  </button>
 </aside>
 
 <div class="top" id="hud">
@@ -1628,6 +1631,79 @@ const NEW_IRREGULAR_VERB_QUESTIONS = NEW_IRREGULAR_VERBS.map(([verb,second,third
   example
 }));
 
+/* Spelling patterns from the -ing lesson: 33 word forms and 7 corrections. */
+const ING_SPELLING_RULES = {
+  unchanged:"Add -ing to the base form. Keep a final y, including after a consonant: study → studying, enjoy → enjoying.",
+  finalE:"Usually remove a final silent e before adding -ing: make → making, write → writing.",
+  keepEE:"Keep both letters in a final -ee before adding -ing: see → seeing, agree → agreeing.",
+  being:"Be keeps its e when -ing is added: be → being.",
+  dyeing:"Dye keeps its e: dye → dyeing. Dyeing means adding colour. Die has a different spelling: dying.",
+  ie:"Change a final -ie to -y, then add -ing: lie → lying, tie → tying, die → dying.",
+  double:"In a one-syllable verb ending in a short vowel and one consonant letter, double that final consonant before -ing: run → running. Final w, x and y stay single.",
+  twoVowels:"Do not double the final consonant when two vowel letters come before it: wait → waiting.",
+  twoConsonants:"Do not add another consonant when the base already ends in two consonant letters: help → helping.",
+  wxy:"Keep final w, x and y single before -ing: snow → snowing, fix → fixing, play → playing.",
+  stressed:"In longer verbs ending in one vowel letter + one consonant, usually double the consonant when the last syllable is stressed: beGIN → beginning, preFER → preferring.",
+  unstressed:"These verbs have stress on the first syllable, so their final consonant stays single: Open → opening, VIsit → visiting.",
+  finalC:"In the common verbs panic and picnic, add k before -ing: panicking, picnicking.",
+  regionalL:"British spelling doubles the final l in these verbs: travelling, labelling, cancelling. American spelling usually keeps one l: traveling, labeling, canceling. Both regional forms are correct."
+};
+const ING_WORD_FORMS = [
+  ["work","working","unchanged","I am working on a new project."],
+  ["read","reading","unchanged","She has been reading all morning."],
+  ["study","studying","unchanged","He is studying for his exam."],
+  ["enjoy","enjoying","unchanged","We are enjoying the lesson."],
+  ["make","making","finalE","I have been making dinner."],
+  ["write","writing","finalE","She is writing a message."],
+  ["take","taking","finalE","They are taking a short break."],
+  ["practise","practising","finalE","I have been practising my pronunciation."],
+  ["see","seeing","keepEE","Seeing old friends makes me happy."],
+  ["agree","agreeing","keepEE","Thank you for agreeing to help."],
+  ["be","being","being","He is being very patient today."],
+  ["dye","dyeing","dyeing","She is dyeing the fabric blue."],
+  ["lie","lying","ie","We are lying on the beach."],
+  ["tie","tying","ie","He is tying his shoelaces."],
+  ["die","dying","ie","The plant is dying because it needs water."],
+  ["run","running","double","She has been running for an hour."],
+  ["swim","swimming","double","They have been swimming all morning."],
+  ["stop","stopping","double","The bus is stopping outside the school."],
+  ["plan","planning","double","We are planning a trip."],
+  ["wait","waiting","twoVowels","I have been waiting for ten minutes."],
+  ["help","helping","twoConsonants","She is helping her neighbour."],
+  ["snow","snowing","wxy","It has been snowing since breakfast."],
+  ["fix","fixing","wxy","He is fixing his bicycle."],
+  ["play","playing","wxy","The children are playing outside."],
+  ["begin","beginning","stressed","The lesson is beginning now."],
+  ["prefer","preferring","stressed","Preferring tea to coffee is common in my family."],
+  ["open","opening","unstressed","She is opening the window."],
+  ["visit","visiting","unstressed","We are visiting friends this weekend."],
+  ["panic","panicking","finalC","He is panicking about the delay."],
+  ["picnic","picnicking","finalC","They are picnicking by the lake."],
+  ["travel","travelling / traveling","regionalL","We have been travelling around Ireland."],
+  ["label","labelling / labeling","regionalL","She is labelling the boxes."],
+  ["cancel","cancelling / canceling","regionalL","They are cancelling the meeting."]
+];
+const ING_SPELLING_QUESTIONS = ING_WORD_FORMS.map(([verb,form,rule,example]) => ({
+  task:"Write the -ing form", tense:"ing",
+  prompt:`${verb} → -ing: ______`,
+  context:"Write the -ing form of the verb.",
+  answer:`${verb} → ${form}`,
+  theory:ING_SPELLING_RULES[rule], example
+}));
+ING_SPELLING_QUESTIONS.push(...[
+  ["She has been runing for an hour.","She has been running for an hour.","double"],
+  ["We are lieing on the beach.","We are lying on the beach.","ie"],
+  ["He is studing for his exam.","He is studying for his exam.","unchanged"],
+  ["They have been swiming all morning.","They have been swimming all morning.","double"],
+  ["I am makeing dinner.","I am making dinner.","finalE"],
+  ["Thank you for agreing to help.","Thank you for agreeing to help.","keepEE"],
+  ["The children are panicing.","The children are panicking.","finalC"]
+].map(([prompt,answer,rule]) => ({
+  task:"Fix the mistake", tense:"ing", prompt, answer,
+  context:"Correct the spelling of the -ing form.",
+  theory:ING_SPELLING_RULES[rule], example:answer
+})));
+
 /* Dedicated Present Perfect deck: 40 forms + 30 V3 verbs + 15 corrections + 15 builds. */
 const ppForm = (prompt, answer, context) => ({
   task:"Put the correct form", tense:"pr", prompt, answer, context
@@ -1996,11 +2072,13 @@ const DRILL_BANKS = {
   'present-perfect-continuous': PRESENT_PERFECT_CONTINUOUS_QUESTIONS,
   tenses: QUESTIONS,
   verbs: VERB_FORM_QUESTIONS,
-  'new-irr-verbs': NEW_IRREGULAR_VERB_QUESTIONS
+  'new-irr-verbs': NEW_IRREGULAR_VERB_QUESTIONS,
+  'ing-spelling': ING_SPELLING_QUESTIONS
 };
 
 /* Default explanations — used when a question has no theory or example of its own. */
 const THEORY = {
+  ing:"The -ing spelling depends on the ending of the base verb. Check final e, ie, consonant doubling and word stress. Some forms have British and American spellings.",
   prc:"Present Perfect Continuous uses have/has + been + verb-ing for an activity continuing up to now or recent activity with a present effect. It can describe repeated activity too. Use for with a duration and since with a starting point.",
   ps:"Past Simple is for a finished action at a finished time. If the sentence says when — yesterday, last week, in 2019, two hours ago — this is the tense you need.",
   pc:"Past Continuous (was/were + verb–ing) is the long action in progress at a past moment. A short action that interrupts it goes in Past Simple.",
@@ -2008,6 +2086,7 @@ const THEORY = {
   pp:"Past Perfect (had + third form) marks the earlier of two past actions. The later action stays in Past Simple."
 };
 const EXAMPLE = {
+  ing:"work → working · make → making · lie → lying · run → running · study → studying",
   prc:"She has been studying for an hour. Has she been studying since nine? She hasn't been sleeping well lately.",
   ps:"We started the job in March. · I called the supplier two hours ago.",
   pc:"I was driving home when it started to snow. · She was stretching when her phone rang.",
@@ -2016,6 +2095,7 @@ const EXAMPLE = {
 };
 
 const TENSES = {
+  ing:{name:"-ING spelling", c:"#1464F4"},
   prc:{name:"Present Perfect Continuous", c:"#2E8B77"},
   ps:{name:"Past Simple",      c:"var(--ps)"},
   pc:{name:"Past Continuous",  c:"var(--pc)"},
@@ -2027,6 +2107,8 @@ const TENSES = {
 
 /* Each task type gets its own colour, icon and tinted sentence panel. */
 const TASKMETA = {
+  "Write the -ing form":   { c:"#1464F4", tint:"#EEF4FF",
+    i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10"/><path d="M4 12h7"/><path d="M4 17h5"/><path d="M15 15l2 2 4-5"/></svg>' },
   "Fix the mistake":       { c:"#D2544C", tint:"#FCEFEE",
     i:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/></svg>' },
   "Put the correct form":  { c:"#3C6E9F", tint:"#EBF2F9",

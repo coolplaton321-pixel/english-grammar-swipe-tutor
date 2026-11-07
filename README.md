@@ -28,6 +28,8 @@ Each topic includes a purpose, structure, original example, teaching focus and g
 
 Stable topic IDs in `students.js` preserve ratings when titles change. Rating controls support arrow keys, Home and End; native dialogs support Escape and return focus to the topic opener.
 
+The separate **-ING spelling** deck has 40 cards based on the spelling lesson: 33 word forms and 7 sentence corrections. It covers final silent e, retained e, ie changing to y, consonant doubling, word stress, final c, and British/American final-l variants. Every card includes optional theory and an original example, with no rule displayed automatically below the prompt. The deck uses the usual reveal, swipe, scoring and shuffle controls.
+
 ## Colour sync
 
 Choose **Teacher sign in** and use the existing maths tutoring teacher account. Both apps share the existing Supabase project and browser auth session; English ratings are kept in their own `public.english_student_topic_ratings` table. Maths data is not changed. Only the public publishable key is in the client. Row-level security allows non-anonymous authenticated users to read and write only their own ratings.
